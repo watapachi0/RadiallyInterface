@@ -4,33 +4,35 @@ using UnityEngine;
 /*
  * 
  * 
- * 全頂点を共有する形でポリゴン生成した結果
- * 
- * 失敗
- * 
- * 一面ごとに頂点を変えないと、全体で一面として処理されるらしい
- * 適当な一面の色情報を全体で共有する
- * なんならカメラから見た裏側のポリゴンの色情報を共有する
- * そのため、光源の側からみるとすべて真っ黒
- * 光源の反対から見ると色が反映される
- * 
- * さらに、全体で一面扱いなので、エッジが消えたような表示になる
- * 具体的にはスムーズシェーディング100％の状態
- * 
- * 回避策は
- * 3面に接する頂点は、同一座標上に3頂点を持つように配置する
- * 4面なら4頂点
- * 面同士の頂点共有は行わない
+ * MeshTest.csの反省を生かして、頂点座標を3つに分けてみた
  * 
  * 
  * 
  */
 
 
-public class MeshTest : MonoBehaviour {
+public class MeshTest2 : MonoBehaviour {
 
     //頂点座標
     Vector3[] vertex = new Vector3[] {
+        new Vector3(0f,0f,0f),
+        new Vector3(0f,1f,0f),
+        new Vector3(1f,1f,0f),
+        new Vector3(1f,0f,0f),
+        new Vector3(0f,0f,-1f),
+        new Vector3(0f,1f,-1f),
+        new Vector3(1f,1f,-1f),
+        new Vector3(1f,0f,-1f),
+
+        new Vector3(0f,0f,0f),
+        new Vector3(0f,1f,0f),
+        new Vector3(1f,1f,0f),
+        new Vector3(1f,0f,0f),
+        new Vector3(0f,0f,-1f),
+        new Vector3(0f,1f,-1f),
+        new Vector3(1f,1f,-1f),
+        new Vector3(1f,0f,-1f),
+
         new Vector3(0f,0f,0f),
         new Vector3(0f,1f,0f),
         new Vector3(1f,1f,0f),
@@ -43,16 +45,21 @@ public class MeshTest : MonoBehaviour {
     //面情報
     int[] face = new int[] { 0, 1, 3,
                              1, 2, 3,
+
                              4, 6, 5,
                              4, 7, 6,
-                             1, 6, 2,
-                             1, 5, 6,
-                             3, 2, 7,
-                             2, 6, 7,
-                             1, 0, 5,
-                             0, 4, 5,
-                             0, 7, 4,
-                             0, 3, 7
+
+                             1+8, 6+8, 2+8,
+                             1+8, 5+8, 6+8,
+
+                             3+8, 2+16, 7+8,
+                             2+16, 6+16, 7+8,
+
+                             1+16, 0+8, 5+16,
+                             0+8, 4+8, 5+16,
+
+                             0+16, 7+16, 4+16,
+                             0+16, 3+16, 7+16
     };
     //UV情報
     Vector2[] uvs = new Vector2[] {
@@ -63,7 +70,25 @@ public class MeshTest : MonoBehaviour {
         new Vector2(0f,0f),
         new Vector2(0f,1f),
         new Vector2(1f,1f),
-        new Vector2(1f,0f)
+        new Vector2(1f,0f),
+
+        new Vector2(0f,0f),
+        new Vector2(0f,1f),
+        new Vector2(1f,1f),
+        new Vector2(1f,0f),
+        new Vector2(0f,0f),
+        new Vector2(0f,1f),
+        new Vector2(1f,1f),
+        new Vector2(1f,0f),
+
+        new Vector2(0f,0f),
+        new Vector2(0f,1f),
+        new Vector2(1f,1f),
+        new Vector2(1f,0f),
+        new Vector2(0f,0f),
+        new Vector2(0f,1f),
+        new Vector2(1f,1f),
+        new Vector2(1f,0f),
     };
 
     public Material _material;
@@ -81,23 +106,17 @@ public class MeshTest : MonoBehaviour {
         //オブジェクト生成
         //GameObject obj = new GameObject("Object");
         GameObject obj = this.gameObject;
+
         //メッシュフィルター追加
         //MeshFilter mesh_filter = obj.AddComponent<MeshFilter>();
         //メッシュフィルター取得
         MeshFilter mesh_filter = obj.GetComponent<MeshFilter>();
+
         //レンダラー追加
         //obj.AddComponent<MeshRenderer>();
-        for (int i = 0; i < mesh_filter.mesh.vertices.Length; i++) {
-            Debug.Log("頂点" + i + " " + mesh_filter.mesh.vertices[i]);
-        }
-        for (int i = 0; i < mesh_filter.mesh.triangles.Length; i++) {
-            Debug.Log("面" + i + " " + mesh_filter.mesh.triangles[i]);
-        }
-        for (int i = 0; i < mesh_filter.mesh.uv.Length; i++) {
-            Debug.Log("uv" + i + " " + mesh_filter.mesh.uv[i]);
-        }
         //メッシュアタッチ
         mesh_filter.mesh = mesh;
+
         //色決定
         //obj.GetComponent<MeshRenderer>().material.color = new Color(1f, 0.5f, 0.5f, 1f);
         //色決定2
@@ -112,6 +131,7 @@ public class MeshTest : MonoBehaviour {
         //mesh_filter.mesh.colors = x;
         //色決定4
         obj.GetComponent<MeshRenderer>().material = _material;
+
         //UV情報追加
         mesh_filter.mesh.uv = uvs;
         //　Boundsの再計算
