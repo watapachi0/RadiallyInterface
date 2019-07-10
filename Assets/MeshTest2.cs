@@ -103,8 +103,10 @@ public class MeshTest2 : MonoBehaviour {
         mesh.vertices = vertex;
         //メッシュへの面情報の追加
         mesh.triangles = face;
+
         //オブジェクト生成
         //GameObject obj = new GameObject("Object");
+        //オブジェクト取得
         GameObject obj = this.gameObject;
 
         //メッシュフィルター追加
@@ -114,8 +116,8 @@ public class MeshTest2 : MonoBehaviour {
 
         //レンダラー追加
         //obj.AddComponent<MeshRenderer>();
-        //メッシュアタッチ
-        mesh_filter.mesh = mesh;
+        //メッシュアタッチ　　→Mesh.Colorの後の処理との意見
+        //mesh_filter.mesh = mesh;
 
         //色決定
         //obj.GetComponent<MeshRenderer>().material.color = new Color(1f, 0.5f, 0.5f, 1f);
@@ -128,16 +130,20 @@ public class MeshTest2 : MonoBehaviour {
         x[0] = Color.red;
         x[1] = Color.blue;
         x[2] = Color.yellow;
-        //mesh_filter.mesh.colors = x;
+        mesh_filter.mesh.colors = x;
         //色決定4
-        obj.GetComponent<MeshRenderer>().material = _material;
+        //obj.GetComponent<MeshRenderer>().material = _material;
+
+
+        //メッシュアタッチ　　→Mesh.Colorの後に書いてみた
+        mesh_filter.mesh = mesh;
 
         //UV情報追加
         mesh_filter.mesh.uv = uvs;
-        //　Boundsの再計算
-        mesh.RecalculateBounds();
-        //　NormalMapの再計算
-        mesh.RecalculateNormals();
+        //Boundsの再計算　　　→いらない疑惑
+        //mesh.RecalculateBounds();
+        //NormalMapの再計算　 →いらない疑惑
+        //mesh.RecalculateNormals();
     }
 
 
