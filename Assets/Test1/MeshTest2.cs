@@ -92,9 +92,14 @@ public class MeshTest2 : MonoBehaviour {
     };
 
     public Material _material;
-
+    public bool isEmptyObject;
+    public bool isCreateOtherCube;
+    public int mode;
 
     void Start() {
+        if (isCreateOtherCube)
+            isEmptyObject = true;
+
         //メッシュ作成
         Mesh mesh = new Mesh();
         //メッシュリセット
@@ -104,50 +109,86 @@ public class MeshTest2 : MonoBehaviour {
         //メッシュへの面情報の追加
         mesh.triangles = face;
 
-        //オブジェクト生成
-        //GameObject obj = new GameObject("Object");
-        //オブジェクト取得
-        GameObject obj = this.gameObject;
+        GameObject obj;
+        if (isCreateOtherCube) {
+            //オブジェクト生成
+            obj = new GameObject("Object");
+        } else {
+            //オブジェクト取得
+            obj = this.gameObject;
+        }
 
-        //メッシュフィルター追加
-        //MeshFilter mesh_filter = obj.AddComponent<MeshFilter>();
-        //メッシュフィルター取得
-        MeshFilter mesh_filter = obj.GetComponent<MeshFilter>();
-
-        //レンダラー追加
-        //obj.AddComponent<MeshRenderer>();
-        //メッシュアタッチ　　→Mesh.Colorの後の処理との意見
+        MeshFilter mesh_filter;
+        if (isEmptyObject) {
+            //メッシュフィルター追加
+            mesh_filter = obj.AddComponent<MeshFilter>();
+            //レンダラー追加
+            obj.AddComponent<MeshRenderer>();
+        } else {
+            //メッシュフィルター取得
+            mesh_filter = obj.GetComponent<MeshFilter>();
+        }
+        //メッシュアタッチ
         mesh_filter.mesh = mesh;
 
-        //色決定
-        //obj.GetComponent<MeshRenderer>().material.color = new Color(1f, 0.5f, 0.5f, 1f);
-        //色決定2
-        //mesh.colors = new Color(0.5f, 0.5f, 0.5f, 1f);
-        //色決定3
-        int tmp = mesh_filter.mesh.vertices.Length;
-        //Debug.Log(tmp);
-        Color[] x = new Color[tmp];
-        x[0] = Color.red;
-        x[1] = Color.blue;
-        x[2] = Color.yellow;
-        //mesh_filter.mesh.colors = x;
-        //色決定4
-        obj.GetComponent<MeshRenderer>().material = _material;
-
-
-        //メッシュアタッチ　　→Mesh.Colorの後に書いてみた
-        //mesh_filter.mesh = mesh;
+        if (mode < 1) {                 //うまくいった
+            //色決定
+            obj.GetComponent<MeshRenderer>().material.color = new Color(1f, 0.5f, 0.5f, 1f);
+        } else if (mode < 2) {          //うまくいかない？
+            int tmp = mesh.vertices.Length;
+            Debug.Log(tmp);
+            Color[] x = new Color[tmp];
+            x[0] = Color.red;
+            x[1] = Color.blue;
+            x[2] = Color.yellow;
+            for(int i = 0; i < tmp; i++) {
+                if (/* test */false)
+                    break;
+                x[i] = Color.blue;
+            }
+            mesh.colors = x;
+            //色決定2
+            //mesh.colors[0] = new Color(0.5f, 0.5f, 0.5f, 1f);
+        } else if (mode < 3) {          //うまくいかない？
+            //色決定3
+            int tmp = mesh_filter.mesh.vertices.Length;
+            Debug.Log(tmp);
+            Color[] x = new Color[tmp];
+            x[0] = Color.red;
+            x[1] = Color.blue;
+            x[2] = Color.yellow;
+            mesh_filter.mesh.colors = x;
+        } else {                        //うまくいった
+            //色決定4
+            obj.GetComponent<MeshRenderer>().material = _material;
+        }
 
         //UV情報追加
-        mesh_filter.mesh.uv = uvs;
-        //Boundsの再計算　　　→いらない疑惑
-        mesh_filter.mesh.RecalculateBounds();
-        //NormalMapの再計算　 →いらない疑惑
+        //mesh_filter.mesh.uv = uvs;
+        //Boundsの再計算
+        //mesh_filter.mesh.RecalculateBounds();
+        //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
+
+
+        //obj.AddComponent<BoxCollider>();
+        obj.AddComponent<MeshCollider>().sharedMesh=mesh;
+        //obj.GetComponent<MeshCollider>().convex = true;
+        //obj.GetComponent<MeshCollider>().isTrigger = true;
     }
 
 
     void Update() {
 
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        Debug.Log("run");
+        Debug.Log("run " + other.transform.name);
+    }
+
+    public void OnCollisionEnter(Collision collision) {
+        Debug.Log("run");
+        Debug.Log("run " + collision.transform.name);
     }
 }
