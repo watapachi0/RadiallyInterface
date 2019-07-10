@@ -2,10 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * 
+ * オブジェクトの描画と各種コンポーネントのアタッチのみ行う
+ * 
+ * 
+ */
+
 public class TrianglePole : MonoBehaviour {
 
+    private int poleNum = 1;
+    private int poleSum = 6;
+    private float radius = 2f;
+    private float poleHeight = 2f;
+
     //頂点座標
-    Vector3[] vertex = new Vector3[] {
+    Vector3[] vertex;/* = new Vector3[] {
         new Vector3(0f,0f,0f),
         new Vector3(0f,1f,0f),
         new Vector3(1f,1f,0f),
@@ -32,7 +44,7 @@ public class TrianglePole : MonoBehaviour {
         new Vector3(0f,1f,-1f),
         new Vector3(1f,1f,-1f),
         new Vector3(1f,0f,-1f),
-    };
+    };*/
     //面情報
     int[] face = new int[] { 0, 3, 1,
                              1, 3, 2,
@@ -52,118 +64,82 @@ public class TrianglePole : MonoBehaviour {
                              0+16, 4+16, 7+16,
                              0+16, 7+16, 3+16,
     };
-    //UV情報
-    Vector2[] uvs = new Vector2[] {
-        new Vector2(0f,0f),
-        new Vector2(0f,1f),
-        new Vector2(1f,1f),
-        new Vector2(1f,0f),
-        new Vector2(0f,0f),
-        new Vector2(0f,1f),
-        new Vector2(1f,1f),
-        new Vector2(1f,0f),
 
-        new Vector2(0f,0f),
-        new Vector2(0f,1f),
-        new Vector2(1f,1f),
-        new Vector2(1f,0f),
-        new Vector2(0f,0f),
-        new Vector2(0f,1f),
-        new Vector2(1f,1f),
-        new Vector2(1f,0f),
-
-        new Vector2(0f,0f),
-        new Vector2(0f,1f),
-        new Vector2(1f,1f),
-        new Vector2(1f,0f),
-        new Vector2(0f,0f),
-        new Vector2(0f,1f),
-        new Vector2(1f,1f),
-        new Vector2(1f,0f),
-    };
-
+    //マテリアル
     public Material _material;
-    public bool isEmptyObject;
-    public bool isCreateOtherCube;
-    public int mode;
 
     void Start() {
-        if (isCreateOtherCube)
-            isEmptyObject = true;
 
-        //メッシュ作成
-        Mesh mesh = new Mesh();
-        //メッシュリセット
-        mesh.Clear();
-        //メッシュへの頂点情報の追加
-        mesh.vertices = vertex;
-        //メッシュへの面情報の追加
-        mesh.triangles = face;
-
-        GameObject obj;
-        if (isCreateOtherCube) {
-            //オブジェクト生成
-            obj = new GameObject("Object");
-        } else {
-            //オブジェクト取得
-            obj = this.gameObject;
-        }
-
-        MeshFilter mesh_filter;
-        if (isEmptyObject) {
-            //メッシュフィルター追加
-            mesh_filter = obj.AddComponent<MeshFilter>();
-            //レンダラー追加
-            obj.AddComponent<MeshRenderer>();
-        } else {
-            //メッシュフィルター取得
-            mesh_filter = obj.GetComponent<MeshFilter>();
-        }
-        //メッシュアタッチ
-        mesh_filter.mesh = mesh;
-
-        if (mode < 1) {                 //うまくいった
-            //色決定
-            obj.GetComponent<MeshRenderer>().material.color = new Color(1f, 0.5f, 0.5f, 1f);
-        } else if (mode < 2) {          //うまくいかない？
-            int tmp = mesh_filter.mesh.vertices.Length;
-            Debug.Log(tmp);
-            Color[] x = new Color[tmp];
-            x[0] = Color.red;
-            x[1] = Color.blue;
-            x[2] = Color.yellow;
-            for (int i = 0; i < tmp; i++) {
-                if (/* test */false)
-                    break;
-                x[i] = Color.blue;
-            }
-            mesh.colors = x;
-            //色決定2
-            //mesh.colors[0] = new Color(0.5f, 0.5f, 0.5f, 1f);
-        } else if (mode < 3) {          //うまくいかない？
-            //色決定3
-            int tmp = mesh_filter.mesh.vertices.Length;
-            Debug.Log(tmp);
-            Color[] x = new Color[tmp];
-            x[0] = Color.red;
-            x[1] = Color.blue;
-            x[2] = Color.yellow;
-            mesh_filter.mesh.colors = x;
-        } else {                        //うまくいった
-            //色決定4
-            obj.GetComponent<MeshRenderer>().material = _material;
-        }
-
-        //UV情報追加
-        //mesh_filter.mesh.uv = uvs;
-        //Boundsの再計算
-        mesh_filter.mesh.RecalculateBounds();
-        //NormalMapの再計算
-        mesh_filter.mesh.RecalculateNormals();
     }
-
 
     void Update() {
 
+        //初期値を与えられたら処理する
+        if (poleNum != -1) {
+
+            //頂点計算
+            CalcVertices();
+
+            //メッシュ作成
+            Mesh mesh = new Mesh();
+            //メッシュリセット
+            mesh.Clear();
+            //メッシュへの頂点情報の追加
+            mesh.vertices = vertex;
+            //メッシュへの面情報の追加
+            mesh.triangles = face;
+
+            //メッシュフィルター追加
+            MeshFilter mesh_filter = this.gameObject.AddComponent<MeshFilter>();
+            //メッシュアタッチ
+            mesh_filter.mesh = mesh;
+            //レンダラー追加 + マテリアルアタッチ
+            this.gameObject.AddComponent<MeshRenderer>().material = _material;
+            //コライダーアタッチ
+            this.gameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
+
+            //NormalMapの再計算
+            mesh_filter.mesh.RecalculateNormals();
+
+        }
+    }
+
+    //何個のオブジェクト中の何番目のオブジェクトか
+    public void SetPoleNums(int num, int sum, float rad, float height) {
+        poleNum = num;
+        poleSum = sum;
+        radius = rad;
+        poleHeight = height;
+    }
+
+    private void CalcVertices() {
+        //三角柱の外側の頂点座標その1
+        Vector3 vertex1 = new Vector3(radius * Mathf.Sin(poleNum / poleSum * Mathf.PI * 2),
+                                      radius * Mathf.Cos(poleNum / poleSum * Mathf.PI * 2),
+                                      0);
+        //三角柱の外側の頂点座標その1
+        Vector3 vertex2 = new Vector3(radius * Mathf.Sin(( poleNum + 1 ) / poleSum * Mathf.PI * 2),
+                                      radius * Mathf.Cos(( poleNum + 1 ) / poleSum * Mathf.PI * 2),
+                                      0);
+
+        //全頂点数6にそれぞれ座標が3つずつある
+        for (int i = 0; i < 6 * 3; i++) {
+            if (i % 6 == 0) {
+                vertex[i] = new Vector3(0, 0, 0);
+            } else if (i % 6 == 1) {
+                vertex[i] = new Vector3(0, 0, poleHeight);
+            } else if (i % 6 == 2) {
+                vertex[i] = vertex1;
+            } else if (i % 6 == 3) {
+                vertex[i] = new Vector3(vertex1.x, vertex1.y, poleHeight);
+            } else if (i % 6 == 4) {
+                vertex[i] = vertex2;
+            } else if (i % 6 == 5) {
+                vertex[i] = new Vector3(vertex2.x, vertex2.y, poleHeight);
+            } else {
+                Debug.LogWarning("calcration error");
+            }
+
+        }
     }
 }
