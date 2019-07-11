@@ -17,7 +17,7 @@ public class TrianglePole : MonoBehaviour {
     private float poleHeight = 2f;
 
     //頂点座標
-    Vector3[] vertex;/* = new Vector3[] {
+    Vector3[] vertex = new Vector3[18];/* = new Vector3[] {
         new Vector3(0f,0f,0f),
         new Vector3(0f,1f,0f),
         new Vector3(1f,1f,0f),
@@ -46,23 +46,18 @@ public class TrianglePole : MonoBehaviour {
         new Vector3(1f,0f,-1f),
     };*/
     //面情報
-    int[] face = new int[] { 0, 3, 1,
-                             1, 3, 2,
+    int[] face = new int[] { 0, 3, 2,
+                             0, 1, 3,
 
-                             4, 5, 6,
-                             4, 6, 7,
+                             2+6, 3+6, 4,
+                             3+6, 5, 4,
 
-                             1+8, 2+8, 6+8,
-                             1+8, 6+8, 5+8,
+                             4+6, 5+6, 1+6,
+                             4+6, 1+6, 0+6,
 
-                             3+8, 7+8, 2+16,
-                             2+16, 7+8, 6+16,
+                             0+12, 2+12, 4+12,
 
-                             1+16, 5+16, 0+8,
-                             0+8, 5+16, 4+8,
-
-                             0+16, 4+16, 7+16,
-                             0+16, 7+16, 3+16,
+                             1+12, 5+12, 3+12,
     };
 
     //マテリアル
@@ -90,17 +85,22 @@ public class TrianglePole : MonoBehaviour {
             mesh.triangles = face;
 
             //メッシュフィルター追加
-            MeshFilter mesh_filter = this.gameObject.AddComponent<MeshFilter>();
+            MeshFilter mesh_filter = new MeshFilter();
+            this.gameObject.AddComponent<MeshFilter>();
+            mesh_filter = GetComponent<MeshFilter>();
             //メッシュアタッチ
             mesh_filter.mesh = mesh;
             //レンダラー追加 + マテリアルアタッチ
-            this.gameObject.AddComponent<MeshRenderer>().material = _material;
+            this.gameObject.AddComponent<MeshRenderer>();
+            this.gameObject.GetComponent<MeshRenderer>().material = _material;
             //コライダーアタッチ
-            this.gameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
+            this.gameObject.AddComponent<MeshCollider>();
+            this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
 
             //NormalMapの再計算
             mesh_filter.mesh.RecalculateNormals();
 
+            poleNum = -1;
         }
     }
 
@@ -114,14 +114,13 @@ public class TrianglePole : MonoBehaviour {
 
     private void CalcVertices() {
         //三角柱の外側の頂点座標その1
-        Vector3 vertex1 = new Vector3(radius * Mathf.Sin(poleNum / poleSum * Mathf.PI * 2),
-                                      radius * Mathf.Cos(poleNum / poleSum * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(radius * Mathf.Sin(( poleNum + 0 ) / (float)poleSum * Mathf.PI * 2),
+                                      radius * Mathf.Cos(( poleNum + 0 ) / (float)poleSum * Mathf.PI * 2),
                                       0);
-        //三角柱の外側の頂点座標その1
-        Vector3 vertex2 = new Vector3(radius * Mathf.Sin(( poleNum + 1 ) / poleSum * Mathf.PI * 2),
-                                      radius * Mathf.Cos(( poleNum + 1 ) / poleSum * Mathf.PI * 2),
+        //三角柱の外側の頂点座標その2
+        Vector3 vertex2 = new Vector3(radius * Mathf.Sin(( poleNum + 1 ) / (float)poleSum * Mathf.PI * 2),
+                                      radius * Mathf.Cos(( poleNum + 1 ) / (float)poleSum * Mathf.PI * 2),
                                       0);
-
         //全頂点数6にそれぞれ座標が3つずつある
         for (int i = 0; i < 6 * 3; i++) {
             if (i % 6 == 0) {
