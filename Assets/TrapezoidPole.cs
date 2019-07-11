@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /*
  * 
@@ -19,34 +20,8 @@ public class TrapezoidPole : MonoBehaviour {
     private float poleHeight = 2f;
 
     //頂点座標
-    Vector3[] vertex = new Vector3[24];/* = new Vector3[] {
-        new Vector3(0f,0f,0f),
-        new Vector3(0f,1f,0f),
-        new Vector3(1f,1f,0f),
-        new Vector3(1f,0f,0f),
-        new Vector3(0f,0f,-1f),
-        new Vector3(0f,1f,-1f),
-        new Vector3(1f,1f,-1f),
-        new Vector3(1f,0f,-1f),
+    Vector3[] vertex = new Vector3[24];
 
-        new Vector3(0f,0f,0f),
-        new Vector3(0f,1f,0f),
-        new Vector3(1f,1f,0f),
-        new Vector3(1f,0f,0f),
-        new Vector3(0f,0f,-1f),
-        new Vector3(0f,1f,-1f),
-        new Vector3(1f,1f,-1f),
-        new Vector3(1f,0f,-1f),
-
-        new Vector3(0f,0f,0f),
-        new Vector3(0f,1f,0f),
-        new Vector3(1f,1f,0f),
-        new Vector3(1f,0f,0f),
-        new Vector3(0f,0f,-1f),
-        new Vector3(0f,1f,-1f),
-        new Vector3(1f,1f,-1f),
-        new Vector3(1f,0f,-1f),
-    };*/
     //面情報
     int[] face = new int[] { 1, 3, 0,
                              3, 2, 0,
@@ -106,6 +81,11 @@ public class TrapezoidPole : MonoBehaviour {
 
             //NormalMapの再計算
             mesh_filter.mesh.RecalculateNormals();
+
+            //暫定当たり判定用Event Trigger
+            EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
+            currentTrigger.triggers = new List<EventTrigger.Entry>();
+
 
             poleNum = -1;
         }
