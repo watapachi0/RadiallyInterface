@@ -13,11 +13,14 @@ using UnityEngine.EventSystems;
 
 public class TrapezoidPole : MonoBehaviour {
 
-    private int poleNum = 1;
-    private int poleSum = 6;
-    private float radiusOut = 4f;
-    private float radiusIn = 2f;
-    private float poleHeight = 2f;
+    private int poleNum = -1;
+    private int poleSum;
+    private float radiusOut;
+    private float radiusIn;
+    private float poleHeight;
+
+    private createTrapezoidPole createSorce;
+    private centralSystem systemScript;
 
     //頂点座標
     Vector3[] vertex = new Vector3[24];
@@ -39,14 +42,15 @@ public class TrapezoidPole : MonoBehaviour {
                              4+16, 6+16, 0+16,
 
                              7+16, 3+16, 1+16,
-                             5+16, 3+16, 7+16, 
+                             5+16, 3+16, 7+16,
     };
 
     //マテリアル
     public Material _material;
 
     void Start() {
-
+        createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
+        systemScript = GameObject.Find("central").GetComponent<centralSystem>();
     }
 
     void Update() {
@@ -83,9 +87,15 @@ public class TrapezoidPole : MonoBehaviour {
             mesh_filter.mesh.RecalculateNormals();
 
             //暫定当たり判定用Event Trigger
+            //イベントトリガーのアタッチと初期化
             EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
             currentTrigger.triggers = new List<EventTrigger.Entry>();
-
+            //イベントトリガーのトリガーイベント作成
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerEnter;
+            entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
+            //トリガーイベントのアタッチ
+            currentTrigger.triggers.Add(entry);
 
             poleNum = -1;
         }
@@ -140,5 +150,11 @@ public class TrapezoidPole : MonoBehaviour {
             }
 
         }
+        createSorce.callBackVertex(new Vector3[4] { vertex[0], vertex[6], vertex[1],vertex[7]}, int.Parse(gameObject.name));
+    }
+
+    private void OnTouchPointer() {
+        Debug.Log(int.Parse(gameObject.name));
+        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
 }
