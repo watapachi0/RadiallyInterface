@@ -5,7 +5,7 @@ using UnityEngine;
 public class createTrapezoidPole : MonoBehaviour {
 
     public Material material;
-    private int poleSum = 12;
+    private int poleSum = 6;
     private float radiusOut = 4f;
     private float radiusIn = 2f;
     private float poleHeight = 2f;
