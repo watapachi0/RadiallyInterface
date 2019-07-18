@@ -6,7 +6,7 @@ public class createTrapezoidPole : MonoBehaviour {
 
     public Material TrapezoidMaterial;  //キーのマテリアル
     public Material PolygonalMaterial;  //中心の多角柱用のマテリアル
-    private int poleSum = 5;            //キーの数
+    private int poleSum = -1;            //キーの数
     private float radiusOut = 4f;       //システムの外縁の半径
     private float radiusIn = 2f;        //ニュートラルエリアの半径
     private float poleHeight = 2f;      //システムの厚み
@@ -45,7 +45,7 @@ public class createTrapezoidPole : MonoBehaviour {
     }
 
     public void callBackVertex(Vector3[] vertexies, int poleNum) {
-        isCalledBackVertex[poleNum] = true;
+        isCalledBackVertex[poleNum - 1] = true;
         for (int i = 0; i < 8; i++)
             vertex[( poleNum - 1 ) * 8 + i] = vertexies[i % 4];
         vertex[8 * poleSum + poleNum - 1] = transform.position;
