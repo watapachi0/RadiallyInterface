@@ -6,7 +6,7 @@ public class createTrapezoidPole : MonoBehaviour {
 
     public Material TrapezoidMaterial;  //キーのマテリアル
     public Material PolygonalMaterial;  //中心の多角柱用のマテリアル
-    private int poleSum = -1;            //キーの数
+    private int poleSum = 5;            //キーの数
     private float radiusOut = 4f;       //システムの外縁の半径
     private float radiusIn = 2f;        //ニュートラルエリアの半径
     private float poleHeight = 2f;      //システムの厚み
