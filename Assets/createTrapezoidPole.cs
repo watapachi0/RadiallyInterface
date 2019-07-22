@@ -5,8 +5,14 @@ using UnityEngine;
 public class createTrapezoidPole : MonoBehaviour {
 
     public Material TrapezoidMaterial;  //キーのマテリアル
+    public Material TrapezoidMaterialOnTouch;
     public Material PolygonalMaterial;  //中心の多角柱用のマテリアル
+<<<<<<< HEAD
     private int poleSum = 5;            //キーの数
+=======
+    [SerializeField]
+    private int poleSum;            //キーの数
+>>>>>>> a314cc57701b9d842ce6020d88a7a89b36f0d231
     private float radiusOut = 4f;       //システムの外縁の半径
     private float radiusIn = 2f;        //ニュートラルエリアの半径
     private float poleHeight = 2f;      //システムの厚み
@@ -14,6 +20,10 @@ public class createTrapezoidPole : MonoBehaviour {
     private bool[] isCalledBackVertex;  //頂点座標が返されているか確認
 
     void Start() {
+        if (poleSum <= 0) {
+            poleSum = 5;
+        }
+
         //頂点情報の初期化
         vertex = new Vector3[poleSum * 10];
         //台形柱の生成
@@ -24,6 +34,7 @@ public class createTrapezoidPole : MonoBehaviour {
             TrapezoidPole trianglePole = obj.AddComponent<TrapezoidPole>();
             trianglePole.SetPoleNums(i, poleSum, radiusOut, radiusIn, poleHeight);
             trianglePole._material = TrapezoidMaterial;
+            trianglePole._touchMaterial = TrapezoidMaterialOnTouch;
             isCalledBackVertex[i] = false;
         }
     }
