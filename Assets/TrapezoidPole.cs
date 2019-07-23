@@ -199,14 +199,15 @@ public class TrapezoidPole : MonoBehaviour {
         //表示文字
         TmeshC.text = "a";
         //位置調整
-        textCentor.transform.position = ( vertex[0] + vertex[6] ) / 2f * 0.8f;
+        textCentor.transform.position = ( vertex[0] + vertex[2] + vertex[4] + vertex[6] ) / 4f;
         //大きさ
         textCentor.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         textCentor.transform.parent = this.transform;
 
+        /*
         Vector3[] tmp = new Vector3[2] { ( vertex[0] + vertex[2] ) / 2f, ( vertex[4] + vertex[6] ) / 2f };
         float tmpf = 0.2f;
-
+        
         //右側テキスト
         textRight = new GameObject("text");
         MeshRenderer MRR = textRight.AddComponent<MeshRenderer>();
@@ -241,6 +242,6 @@ public class TrapezoidPole : MonoBehaviour {
         textLeft.transform.position = tmp[0] * ( 1 - tmpf ) + tmp[1] * tmpf;
         //大きさ
         textLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        textLeft.transform.parent = this.transform;
+        textLeft.transform.parent = this.transform;*/
     }
 }
