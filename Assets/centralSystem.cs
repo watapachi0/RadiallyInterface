@@ -18,6 +18,7 @@ public class centralSystem : MonoBehaviour {
     protected float radiusOut = 4f;       //システムの外縁の半径
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
     protected float poleHeight = 2f;      //システムの厚み
+    private TextMesh textMesh;
 
     /*[親のpointNum,set]*/
     /* set = "見出し","要素数+1",要素1"a",要素2"b", ... 要素n+1,番外"Error" */
@@ -38,11 +39,11 @@ public class centralSystem : MonoBehaviour {
                                                             { "-", "--", "--", "--", "--", "--", "Error"} };
 
     void Start() {
-
+        textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
     }
 
     void Update() {
-
+        textMesh.text = InputText;
     }
 
     private void ChuringSystem() {
