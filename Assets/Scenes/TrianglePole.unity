@@ -130,8 +130,6 @@ GameObject:
   m_Component:
   - component: {fileID: 72408992}
   - component: {fileID: 72408993}
-  - component: {fileID: 72408995}
-  - component: {fileID: 72408994}
   - component: {fileID: 72408997}
   m_Layer: 0
   m_Name: central
@@ -170,34 +168,7 @@ MonoBehaviour:
   TrapezoidMaterialOnTouch: {fileID: 2100000, guid: 6e12177a9aa49254abb73e99a671114a,
     type: 2}
   PolygonalMaterial: {fileID: 2100000, guid: ed6c6edb633961e4ca284632da3f4ef7, type: 2}
-  poleSum: 10
---- !u!114 &72408994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72408990}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9089a9f603e49c544a2fbbcf1d07139f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _material: {fileID: 2100000, guid: 2151c9f4a143b8d44bfb293fe9742eb7, type: 2}
-  _touchMaterial: {fileID: 2100000, guid: 6e12177a9aa49254abb73e99a671114a, type: 2}
---- !u!114 &72408995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 72408990}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4f668ea65bc3194284a3bf0a187ef2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _material: {fileID: 2100000, guid: 2151c9f4a143b8d44bfb293fe9742eb7, type: 2}
+  poleSum: 5
 --- !u!114 &72408997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,6 +181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00442874001a12f408bb08fab4f2ccbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stage: 0
+  keyObjects: []
 --- !u!1 &376788274
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,6 +392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00442874001a12f408bb08fab4f2ccbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stage: 0
+  keyObjects: []
 --- !u!1 &1360824304
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +508,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1542130954
 MonoBehaviour:
   m_ObjectHideFlags: 0
