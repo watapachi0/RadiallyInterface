@@ -51,8 +51,12 @@ public class TrapezoidPole : MonoBehaviour {
 
     //文字のゲームオブジェクト
     private GameObject textCentor;
-    private GameObject textRight;
-    private GameObject textLeft;
+    //private GameObject textRight;
+    //private GameObject textLeft;
+    TextMesh TmeshC;
+
+    //Text情報
+    private string myText="";
 
     void Start() {
         createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
@@ -105,19 +109,24 @@ public class TrapezoidPole : MonoBehaviour {
 
             /* 侵入イベント用 */
             //侵入時に色を変える
-            entry.eventID = EventTriggerType.PointerEnter;
-            entry.callback.AddListener((x) => OnMouseEnter());
-            currentTrigger.triggers.Add(entry);
+            EventTrigger.Entry entry2 = new EventTrigger.Entry();
+            entry2.eventID = EventTriggerType.PointerEnter;
+            entry2.callback.AddListener((x) => OnMouseEnter());
+            currentTrigger.triggers.Add(entry2);
             //侵入終了時に色を戻す
-            entry.eventID = EventTriggerType.PointerExit;
-            entry.callback.AddListener((x) => OnMouseExit());
-            currentTrigger.triggers.Add(entry);
+            EventTrigger.Entry entry3 = new EventTrigger.Entry();
+            entry3.eventID = EventTriggerType.PointerExit;
+            entry3.callback.AddListener((x) => OnMouseExit());
+            currentTrigger.triggers.Add(entry3);
 
             //テキスト表示
             make3Dtext();
 
             poleNum = -1;
         }
+
+        //テキストの更新
+        TmeshC.text = myText;
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか
@@ -189,7 +198,7 @@ public class TrapezoidPole : MonoBehaviour {
         //中心のUI表示
         textCentor = new GameObject("text");
         MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
-        TextMesh TmeshC = textCentor.AddComponent<TextMesh>();
+        TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
         TmeshC.fontSize = 100;
         //アンカー位置を中心に
@@ -243,5 +252,9 @@ public class TrapezoidPole : MonoBehaviour {
         //大きさ
         textLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         textLeft.transform.parent = this.transform;*/
+    }
+    public string MyText {
+        get { return myText; }
+        set { myText = value; }
     }
 }

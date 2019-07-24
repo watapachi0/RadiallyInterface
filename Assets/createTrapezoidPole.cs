@@ -8,7 +8,7 @@ public class createTrapezoidPole : MonoBehaviour {
     public Material TrapezoidMaterialOnTouch;
     public Material PolygonalMaterial;  //中心の多角柱用のマテリアル
     [SerializeField]
-    private int poleSum;            //キーの数
+    private int poleSum=5;            //キーの数
     private float radiusOut = 4f;       //システムの外縁の半径
     private float radiusIn = 2f;        //ニュートラルエリアの半径
     private float poleHeight = 2f;      //システムの厚み
@@ -46,7 +46,9 @@ public class createTrapezoidPole : MonoBehaviour {
                 polygonalPillar.SetPoleSums(poleSum, radiusIn, poleHeight, vertex);
                 polygonalPillar._material = PolygonalMaterial;
                 //用がなくなるので非アクティブにする
-                this.gameObject.GetComponent<createTrapezoidPole>().enabled = false;
+                //this.gameObject.GetComponent<createTrapezoidPole>().enabled = false;
+                //コンポーネント削除
+                Destroy(this);
             }
         }
     }
