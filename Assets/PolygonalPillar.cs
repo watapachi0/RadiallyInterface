@@ -96,15 +96,14 @@ public class PolygonalPillar : MonoBehaviour {
             face[i * 12 + 5] = 8 * i + 3;
             face[i * 12 + 6] = 8 * i + 4;
             face[i * 12 + 7] = 8 * i + 5;
-            face[i * 12 + 8] = 8 * poleSum + i+1 - 1;
+            face[i * 12 + 8] = 8 * poleSum + i + 1 - 1;
             face[i * 12 + 9] = 8 * i + 7;
             face[i * 12 + 10] = 8 * i + 6;
-            face[i * 12 + 11] = 9 * poleSum + i+1 - 1;
+            face[i * 12 + 11] = 9 * poleSum + i + 1 - 1;
         }
     }
 
     private void OnTouchPointer() {
-        Debug.Log(int.Parse(gameObject.name));
         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
 }

@@ -29,24 +29,25 @@ public class centralSystem : MonoBehaviour {
 
     /*[親のpointNum,set]*/
     /* set = "見出し","要素数+1",要素1"a",要素2"b", ... 要素n+1,番外"Error" */
-    public readonly string[,] textSet = new string[15, 7] { { "k", "ka", "ki", "ku", "ke", "ko", "Error"},
-                                                            { "a", "--", "--", "--", "--", "--", "Error"},
-                                                            { "s", "sa", "si", "su", "se", "so", "Error"},
-                                                            { "t", "ta", "ti", "tu", "te", "to", "Error"},
-                                                            { "i", "--", "--", "--", "--", "--", "Error"},
-                                                            { "n", "na", "ni", "nu", "ne", "no", "Error"},
-                                                            { "h", "ha", "hi", "hu", "he", "ho", "Error"},
-                                                            { "u", "--", "--", "--", "--", "--", "Error"},
-                                                            { "m", "ma", "mi", "mu", "me", "mo", "Error"},
-                                                            { "y", "ya", "--", "yu", "--", "yo", "Error"},
-                                                            { "e", "--", "--", "--", "--", "--", "Error"},
-                                                            { "r", "ra", "ri", "ru", "re", "ro", "Error"},
-                                                            { "w", "wa", "--", "wo", "--", "nn", "Error"},
-                                                            { "o", "--", "--", "--", "--", "--", "Error"},
-                                                            { "-", "--", "--", "--", "--", "--", "Error"} };
+    protected readonly string[,] textSet = new string[15, 7] { { "k", "ka", "ki", "ku", "ke", "ko", "Error"},
+                                                               { "a", "--", "--", "--", "--", "--", "Error"},
+                                                               { "s", "sa", "si", "su", "se", "so", "Error"},
+                                                               { "t", "ta", "ti", "tu", "te", "to", "Error"},
+                                                               { "i", "--", "--", "--", "--", "--", "Error"},
+                                                               { "n", "na", "ni", "nu", "ne", "no", "Error"},
+                                                               { "h", "ha", "hi", "hu", "he", "ho", "Error"},
+                                                               { "u", "--", "--", "--", "--", "--", "Error"},
+                                                               { "m", "ma", "mi", "mu", "me", "mo", "Error"},
+                                                               { "y", "ya", "゛", "yu", "゜", "yo", "Error"},
+                                                               { "e", "--", "--", "--", "--", "--", "Error"},
+                                                               { "r", "ra", "ri", "ru", "re", "ro", "Error"},
+                                                               { "w", "wa", "wo", "nn", "改/確", "空/変", "Error"},
+                                                               { "o", "--", "--", "--", "--", "--", "Error"},
+                                                               { "-", "記号", "BS", "英", "数", "小", "Error"} };
 
     void Start() {
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
+        Debug.Log(textSet.GetLength(0));
     }
 
     void Update() {
@@ -56,6 +57,7 @@ public class centralSystem : MonoBehaviour {
 
     }
 
+    //外部から座標値を取得
     public void UpdateChuringNum(int nextNum) {
         churingNumber = nextNum;
         ChuringSystem();
@@ -70,47 +72,45 @@ public class centralSystem : MonoBehaviour {
             setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
             //次の状態へ
             stage = 1;
-            //Debug.Log("ちゅ：" + ( churingNumber - 1 ) + " 仮入力：" + setText);
-            Debug.Log("stage from 0 to 1");
             if (isGetKeyObjects)
                 SetKeytext();
             return;
         } else if (stage == 1 && baseNumber != churingNumber && churingNumber != 0) {
-            //子音および母音選択状態で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合場合
+            //子音および母音選択状態で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合
             //子音が決定するので計算
-            consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
+            if (baseNumber == poleSum && churingNumber == 1) {
+                //最後のキーから1キーへの入力の際
+                consonant = textSet.GetLength(0)-1;
+            } else if (baseNumber == 1 && churingNumber == poleSum) {
+                //１キーから最後のキーへの入力の際
+                consonant = 0;
+            } else {
+                //それ以外の隣り合うキー値が同じ場合の計算
+                consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
+            }
             //子音と母音から再計算
             setText = textSet[consonant, churingNumber - 1 + 1];
             //次の状態へ
             stage = 2;
-            //Debug.Log("ちゅ：" + ( churingNumber - 1 ) + " 仮入力：" + setText);
             if (isGetKeyObjects)
                 SetKeytext();
             return;
         } else if (stage == 2 && 1 <= churingNumber && churingNumber <= keyNums) {
             //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
             setText = textSet[consonant, churingNumber - 1 + 1];
-            //Debug.Log("ちゅ：" + ( churingNumber - 1 ) + " 仮入力：" + setText);
             if (isGetKeyObjects)
                 SetKeytext();
             return;
         } else if (( stage == 1 || stage == 2 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
-            InputText += setText;
+            InputText = setText;
             setText = "";
             stage = 0;
-            //Debug.Log("ちゅ：" + churingNumber + " 入力：" + InputText);
             if (isGetKeyObjects)
                 SetKeytext();
             return;
         }
         Debug.LogWarning("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . baseNumber = " + baseNumber);
-        //        Debug.Log("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . ");
-    }
-
-    private int SearchWordFromChuring(int SearchWord) {
-
-        return 0;
     }
 
     //キーオブジェクトの取得
@@ -135,7 +135,11 @@ public class centralSystem : MonoBehaviour {
             if (stage == 0) {
                 keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
             } else if (stage == 1) {
-
+                /*********************デバッグ用**************************************************/
+                if (i == 5) {
+                    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                }
+                /*********************デバッグ用終わり********************************************/
                 if (churingNumber - 1 == i) {
                     //左隣の値
                     keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3, 0];
@@ -147,16 +151,45 @@ public class centralSystem : MonoBehaviour {
                     keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
                 } else if (churingNumber - ( poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(最大値)の場合の右隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[poleSum - 1, 0];
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
                 } else if (churingNumber + ( poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(1)の場合の左隣の値
                     keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[0, 0];
                 } else {
                     keyObjects[i].GetComponent<TrapezoidPole>().MyText = "--";
                 }
-
+                /*********************デバッグ用**************************************************/
+                if (i == 5) {
+                    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                }
+                /*********************デバッグ用終わり********************************************/
             } else if (stage == 2) {
+
+                /*********************デバッグ用**************************************************/
+                if (i == 5) {
+                    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                }
+                /*********************デバッグ用終わり********************************************/
                 keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+/*
+                if (0 < i && i < poleSum) {
+                    //現在座標の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                } else if (churingNumber - ( poleSum - 1 ) == i) {
+                    //現在地(churingNumber)が端(最大値)の場合の右隣の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
+                } else if (churingNumber + ( poleSum - 1 ) == i) {
+                    //現在地(churingNumber)が端(1)の場合の左隣の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                } else {
+                    Debug.LogWarning("Error. Unknown input.");
+                }
+                */
+                /*********************デバッグ用**************************************************/
+                if (i == 5) {
+                    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                }
+                /*********************デバッグ用終わり********************************************/
             }
         }
     }
@@ -176,31 +209,5 @@ public class centralSystem : MonoBehaviour {
 
     public float PoleHeight {
         get { return poleHeight; }
-    }
-
-    /**************************************************************************/
-    //pointからのセット内容返信用
-    public string getSringData(int stage, int pointNum/*,int setNum大文字小文字など*/) {
-        if (textSet.GetLength(0) > stage && textSet.GetLength(1) > pointNum) {
-            return textSet[stage, pointNum];
-        } else {
-            //debug
-            return "debug text";
-        }
-    }
-
-    //Circleオブジェクトからすべてのpointを取得・停止する
-    public void StopAllPointFromCircleChildren(GameObject parentCircle) {
-        int i = 0;
-        GameObject childPoint = parentCircle.transform.Find(i.ToString()).gameObject;
-        while (childPoint/*オブジェクトの存在を確認*/) {
-            childPoint.GetComponent<pointSystem>().SetActive(false);
-
-            i++;
-            if (parentCircle.transform.Find(i.ToString()) == null)
-                break;
-            else
-                childPoint = parentCircle.transform.Find(i.ToString()).gameObject;
-        }
     }
 }

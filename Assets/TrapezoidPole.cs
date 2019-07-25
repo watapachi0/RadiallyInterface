@@ -51,12 +51,10 @@ public class TrapezoidPole : MonoBehaviour {
 
     //文字のゲームオブジェクト
     private GameObject textCentor;
-    //private GameObject textRight;
-    //private GameObject textLeft;
     TextMesh TmeshC;
 
     //Text情報
-    private string myText="";
+    private string myText = "";
 
     void Start() {
         createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
@@ -125,6 +123,7 @@ public class TrapezoidPole : MonoBehaviour {
             poleNum = -1;
         }
 
+
         //テキストの更新
         TmeshC.text = myText;
     }
@@ -182,7 +181,6 @@ public class TrapezoidPole : MonoBehaviour {
     }
 
     private void OnTouchPointer() {
-        Debug.Log(int.Parse(gameObject.name));
         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
 
@@ -212,46 +210,6 @@ public class TrapezoidPole : MonoBehaviour {
         //大きさ
         textCentor.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         textCentor.transform.parent = this.transform;
-
-        /*
-        Vector3[] tmp = new Vector3[2] { ( vertex[0] + vertex[2] ) / 2f, ( vertex[4] + vertex[6] ) / 2f };
-        float tmpf = 0.2f;
-        
-        //右側テキスト
-        textRight = new GameObject("text");
-        MeshRenderer MRR = textRight.AddComponent<MeshRenderer>();
-        TextMesh TmeshR = textRight.AddComponent<TextMesh>();
-        //文字サイズ
-        TmeshR.fontSize = 100;
-        //アンカー位置を中心に
-        TmeshR.anchor = TextAnchor.MiddleCenter;
-        //真ん中寄せ
-        TmeshR.alignment = TextAlignment.Center;
-        //表示文字
-        TmeshR.text = "a";
-        //位置調整
-        textRight.transform.position = tmp[0] * tmpf + tmp[1] * ( 1 - tmpf );
-        //大きさ
-        textRight.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        textRight.transform.parent = this.transform;
-
-        //左側テキスト
-        textLeft = new GameObject("text");
-        MeshRenderer MRL = textLeft.AddComponent<MeshRenderer>();
-        TextMesh TmeshL = textLeft.AddComponent<TextMesh>();
-        //文字サイズ
-        TmeshL.fontSize = 100;
-        //アンカー位置を中心に
-        TmeshL.anchor = TextAnchor.MiddleCenter;
-        //真ん中寄せ
-        TmeshL.alignment = TextAlignment.Center;
-        //表示文字
-        TmeshL.text = "a";
-        //位置調整
-        textLeft.transform.position = tmp[0] * ( 1 - tmpf ) + tmp[1] * tmpf;
-        //大きさ
-        textLeft.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        textLeft.transform.parent = this.transform;*/
     }
     public string MyText {
         get { return myText; }
