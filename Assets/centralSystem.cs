@@ -75,8 +75,8 @@ public class centralSystem : MonoBehaviour {
             if (isGetKeyObjects)
                 SetKeytext();
             return;
-        } else if (stage == 1 && baseNumber != churingNumber) {
-            //子音および母音選択状態で、最初のキー値と入力キー値が違う場合
+        } else if (stage == 1 && baseNumber != churingNumber && churingNumber != 0) {
+            //子音および母音選択状態で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合場合
             //子音が決定するので計算
             consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
             //子音と母音から再計算
@@ -87,7 +87,7 @@ public class centralSystem : MonoBehaviour {
             if (isGetKeyObjects)
                 SetKeytext();
             return;
-        } else if (stage == 2 && 0 < churingNumber && churingNumber <= keyNums) {
+        } else if (stage == 2 && 1 <= churingNumber && churingNumber <= keyNums) {
             //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
             setText = textSet[consonant, churingNumber - 1 + 1];
             //Debug.Log("ちゅ：" + ( churingNumber - 1 ) + " 仮入力：" + setText);
@@ -104,8 +104,8 @@ public class centralSystem : MonoBehaviour {
                 SetKeytext();
             return;
         }
-        Debug.LogWarning("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . baseNumber = "+ baseNumber);
-//        Debug.Log("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . ");
+        Debug.LogWarning("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . baseNumber = " + baseNumber);
+        //        Debug.Log("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . ");
     }
 
     private int SearchWordFromChuring(int SearchWord) {
@@ -135,28 +135,26 @@ public class centralSystem : MonoBehaviour {
             if (stage == 0) {
                 keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
             } else if (stage == 1) {
-                if (churingNumber > 1 && churingNumber < poleSum) {
-                    if (churingNumber - 1 <= i && i <= churingNumber + 1)
-                        keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[i, 0];
-                    else
-                        keyObjects[i].GetComponent<TrapezoidPole>().MyText = "--";
-                } else if (churingNumber == 1) {
-                    if (churingNumber - 1 <= i && i <= churingNumber + 1)
-                        if (churingNumber - 1 == i)
-                            keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[poleSum - 1, 0];
-                        else
-                            keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[i, 0];
-                    else
-                        keyObjects[i].GetComponent<TrapezoidPole>().MyText = "--";
-                } else if (churingNumber == poleSum) {
-                    if (churingNumber - 1 <= i && i <= churingNumber + 1)
-                        if (i == churingNumber + 1)
-                            keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[0, 0];
-                        else
-                            keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[i, 0];
-                    else
-                        keyObjects[i].GetComponent<TrapezoidPole>().MyText = "--";
+
+                if (churingNumber - 1 == i) {
+                    //左隣の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3, 0];
+                } else if (churingNumber == i) {
+                    //現在座標の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 1, 0];
+                } else if (churingNumber + 1 == i) {
+                    //右隣の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
+                } else if (churingNumber - ( poleSum - 1 ) == i) {
+                    //現在地(churingNumber)が端(最大値)の場合の右隣の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[poleSum - 1, 0];
+                } else if (churingNumber + ( poleSum - 1 ) == i) {
+                    //現在地(churingNumber)が端(1)の場合の左隣の値
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[0, 0];
+                } else {
+                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = "--";
                 }
+
             } else if (stage == 2) {
                 keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
             }
