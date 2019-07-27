@@ -103,6 +103,7 @@ public class centralSystem : MonoBehaviour {
             return;
         } else if (( stage == 1 || stage == 2 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
+            ConvertToSystemCommand();
             InputText = setText;
             setText = "";
             stage = 0;
@@ -111,6 +112,31 @@ public class centralSystem : MonoBehaviour {
             return;
         }
         Debug.LogWarning("Error. stage = " + stage + " . churingNumber = " + churingNumber + " . baseNumber = " + baseNumber);
+    }
+
+    //入力された内容をシステムコマンドに変換する(setText内で完結させる)
+    private void ConvertToSystemCommand() {
+        if (setText == "--") {
+            setText = "入力なし";
+        } else if (setText == "改/確") {
+            setText = "改行/確定";
+        } else if (setText == "空/変") {
+            setText = "空白/変換";
+        } else if (setText == "記号") {
+            setText = "記号など";
+        } else if (setText == "BS") {
+            setText = "BackSpace";
+        } else if (setText == "英") {
+            setText = "英語";
+        } else if (setText == "数") {
+            setText = "数字";
+        } else if (setText == "小") {
+            setText = "小文字";
+        } else if (setText == "゛") {
+            setText = "濁点";
+        } else if (setText == "゜") {
+            setText = "半濁点";
+        }
     }
 
     //キーオブジェクトの取得
