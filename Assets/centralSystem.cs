@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class centralSystem : MonoBehaviour {
 
@@ -45,16 +46,33 @@ public class centralSystem : MonoBehaviour {
                                                                { "o", "--", "--", "--", "--", "--", "Error"},
                                                                { "-", "記号", "BS", "英", "数", "小", "Error"} };
 
+    protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か", "き", "く", "け", "こ", "Error"},
+                                                                       { "あ", "--", "--", "--", "--", "--", "Error"},
+                                                                       { "さ", "さ", "し", "す", "せ", "そ", "Error"},
+                                                                       { "た", "た", "ち", "つ", "て", "と", "Error"},
+                                                                       { "い", "--", "--", "--", "--", "--", "Error"},
+                                                                       { "な", "な", "に", "ぬ", "ね", "の", "Error"},
+                                                                       { "は", "は", "ひ", "ふ", "へ", "ほ", "Error"},
+                                                                       { "う", "--", "--", "--", "--", "--", "Error"},
+                                                                       { "ま", "ま", "み", "む", "め", "も", "Error"},
+                                                                       { "や", "や", "゛", "ゆ", "゜", "よ", "Error"},
+                                                                       { "え", "--", "--", "--", "--", "--", "Error"},
+                                                                       { "ら", "ら", "り", "る", "れ", "ろ", "Error"},
+                                                                       { "わ", "わ", "を", "ん", "改/確", "空/変", "Error"},
+                                                                       { "お", "--", "--", "--", "--", "--", "Error"},
+                                                                       { "--", "記号", "BS", "英", "数", "小", "Error"} };
     void Start() {
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         Debug.Log(textSet.GetLength(0));
+        SceneManager.LoadScene()
     }
 
     void Update() {
         textMesh.text = InputText;
-        if (!isGetKeyObjects)
+        if (!isGetKeyObjects) {
             GetKeyObjects();
-
+            SetKeytext();
+        }
     }
 
     //外部から座標値を取得
@@ -80,7 +98,7 @@ public class centralSystem : MonoBehaviour {
             //子音が決定するので計算
             if (baseNumber == poleSum && churingNumber == 1) {
                 //最後のキーから1キーへの入力の際
-                consonant = textSet.GetLength(0)-1;
+                consonant = textSet.GetLength(0) - 1;
             } else if (baseNumber == 1 && churingNumber == poleSum) {
                 //１キーから最後のキーへの入力の際
                 consonant = 0;
@@ -197,20 +215,20 @@ public class centralSystem : MonoBehaviour {
                 }
                 /*********************デバッグ用終わり********************************************/
                 keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
-/*
-                if (0 < i && i < poleSum) {
-                    //現在座標の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
-                } else if (churingNumber - ( poleSum - 1 ) == i) {
-                    //現在地(churingNumber)が端(最大値)の場合の右隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
-                } else if (churingNumber + ( poleSum - 1 ) == i) {
-                    //現在地(churingNumber)が端(1)の場合の左隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
-                } else {
-                    Debug.LogWarning("Error. Unknown input.");
-                }
-                */
+                /*
+                                if (0 < i && i < poleSum) {
+                                    //現在座標の値
+                                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                                } else if (churingNumber - ( poleSum - 1 ) == i) {
+                                    //現在地(churingNumber)が端(最大値)の場合の右隣の値
+                                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
+                                } else if (churingNumber + ( poleSum - 1 ) == i) {
+                                    //現在地(churingNumber)が端(1)の場合の左隣の値
+                                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                                } else {
+                                    Debug.LogWarning("Error. Unknown input.");
+                                }
+                                */
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
                     Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
