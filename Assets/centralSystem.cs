@@ -36,24 +36,26 @@ public class centralSystem : MonoBehaviour {
      * 2    アルファベット
      * 3    数字記号
      */
-     
+
     /*[親のpointNum,set]*/
+    protected string[,] textSet;
+
     /* set = "見出し","要素数+1",要素1"a",要素2"b", ... 要素n+1,番外"Error" */
-    protected readonly string[,] textSet = new string[15, 7] { { "k", "ka", "ki", "ku", "ke", "ko", "Error"},
-                                                               { "a", "--", "--", "--", "--", "--", "Error"},
-                                                               { "s", "sa", "si", "su", "se", "so", "Error"},
-                                                               { "t", "ta", "ti", "tu", "te", "to", "Error"},
-                                                               { "i", "--", "--", "--", "--", "--", "Error"},
-                                                               { "n", "na", "ni", "nu", "ne", "no", "Error"},
-                                                               { "h", "ha", "hi", "hu", "he", "ho", "Error"},
-                                                               { "u", "--", "--", "--", "--", "--", "Error"},
-                                                               { "m", "ma", "mi", "mu", "me", "mo", "Error"},
-                                                               { "y", "ya", "゛", "yu", "゜", "yo", "Error"},
-                                                               { "e", "--", "--", "--", "--", "--", "Error"},
-                                                               { "r", "ra", "ri", "ru", "re", "ro", "Error"},
-                                                               { "w", "wa", "wo", "nn", "改/確", "空/変", "Error"},
-                                                               { "o", "--", "--", "--", "--", "--", "Error"},
-                                                               { "-", "記号", "BS", "英", "数", "小", "Error"} };
+    protected readonly string[,] textSetDebug = new string[15, 7] { { "k", "ka", "ki", "ku", "ke", "ko", "Error"},
+                                                                    { "a", "--", "--", "--", "--", "--", "Error"},
+                                                                    { "s", "sa", "si", "su", "se", "so", "Error"},
+                                                                    { "t", "ta", "ti", "tu", "te", "to", "Error"},
+                                                                    { "i", "--", "--", "--", "--", "--", "Error"},
+                                                                    { "n", "na", "ni", "nu", "ne", "no", "Error"},
+                                                                    { "h", "ha", "hi", "hu", "he", "ho", "Error"},
+                                                                    { "u", "--", "--", "--", "--", "--", "Error"},
+                                                                    { "m", "ma", "mi", "mu", "me", "mo", "Error"},
+                                                                    { "y", "ya", "゛", "yu", "゜", "yo", "Error"},
+                                                                    { "e", "--", "--", "--", "--", "--", "Error"},
+                                                                    { "r", "ra", "ri", "ru", "re", "ro", "Error"},
+                                                                    { "w", "wa", "wo", "nn", "改/確", "空/変", "Error"},
+                                                                    { "o", "--", "--", "--", "--", "--", "Error"},
+                                                                    { "-", "記号", "BS", "英", "数", "小", "Error"} };
 
     protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か", "き", "く", "け", "こ", "Error"},
                                                                        { "あ", "--", "--", "--", "--", "--", "Error"},
@@ -70,6 +72,17 @@ public class centralSystem : MonoBehaviour {
                                                                        { "わ", "わ", "を", "ん", "改/確", "空/変", "Error"},
                                                                        { "お", "--", "--", "--", "--", "--", "Error"},
                                                                        { "--", "記号", "BS", "英", "数", "小", "Error"} };
+    private void Awake() {
+        //variablesの初期化
+        variables.poleSum = keyNums - 1;
+        variables.poleSum = poleSum;
+        variables.radiusOut = radiusOut;
+        variables.radiusIn = radiusIn;
+        variables.poleHeight = poleHeight;
+        //文字セット初期化
+        textSet = textSetHiragana;
+    }
+
     void Start() {
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         Debug.Log(textSet.GetLength(0));
@@ -249,6 +262,7 @@ public class centralSystem : MonoBehaviour {
     }
 
     //システムの形などのコールバック用ゲッター
+    /*
     public int PoleSum {
         get { return poleSum; }
     }
@@ -263,5 +277,5 @@ public class centralSystem : MonoBehaviour {
 
     public float PoleHeight {
         get { return poleHeight; }
-    }
+    }*/
 }
