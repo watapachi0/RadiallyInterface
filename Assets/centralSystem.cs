@@ -40,37 +40,105 @@ public class centralSystem : MonoBehaviour {
     protected string[,] textSet;
 
     /* set = "見出し","要素数+1",要素1"a",要素2"b", ... 要素n+1,番外"Error" */
-    protected readonly string[,] textSetDebug = new string[15, 7] { { "k", "ka", "ki", "ku", "ke", "ko", "Error"},
-                                                                    { "a", "--", "--", "--", "--", "--", "Error"},
-                                                                    { "s", "sa", "si", "su", "se", "so", "Error"},
-                                                                    { "t", "ta", "ti", "tu", "te", "to", "Error"},
-                                                                    { "i", "--", "--", "--", "--", "--", "Error"},
-                                                                    { "n", "na", "ni", "nu", "ne", "no", "Error"},
-                                                                    { "h", "ha", "hi", "hu", "he", "ho", "Error"},
-                                                                    { "u", "--", "--", "--", "--", "--", "Error"},
-                                                                    { "m", "ma", "mi", "mu", "me", "mo", "Error"},
-                                                                    { "y", "ya", "゛", "yu", "゜", "yo", "Error"},
-                                                                    { "e", "--", "--", "--", "--", "--", "Error"},
-                                                                    { "r", "ra", "ri", "ru", "re", "ro", "Error"},
-                                                                    { "w", "wa", "wo", "nn", "改/確", "空/変", "Error"},
-                                                                    { "o", "--", "--", "--", "--", "--", "Error"},
-                                                                    { "-", "記号", "BS", "かな", "数", "小", "Error"} };
+    //デバッグ用
+    protected readonly string[,] textSetDebug = new string[15, 7] {    { "k", "ka"   , "ki", "ku"  , "ke"   , "ko"   , "Error"},
+                                                                       { "a", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "s", "sa"   , "si", "su"  , "se"   , "so"   , "Error"},
+                                                                       { "t", "ta"   , "ti", "tu"  , "te"   , "to"   , "Error"},
+                                                                       { "i", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "n", "na"   , "ni", "nu"  , "ne"   , "no"   , "Error"},
+                                                                       { "h", "ha"   , "hi", "hu"  , "he"   , "ho"   , "Error"},
+                                                                       { "u", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "m", "ma"   , "mi", "mu"  , "me"   , "mo"   , "Error"},
+                                                                       { "y", "ya"   , "゛", "yu"  , "゜"   , "yo"   , "Error"},
+                                                                       { "e", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "r", "ra"   , "ri", "ru"  , "re"   , "ro"   , "Error"},
+                                                                       { "w", "wa"   , "wo", "nn"  , "改/確", "空/変", "Error"},
+                                                                       { "o", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "-", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
+    //ひらがな
+    protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か"   , "き", "く", "け"   , "こ"   , "Error"},
+                                                                       { "あ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "Error"},
+                                                                       { "た", "た"   , "ち", "つ", "て"   , "と"   , "Error"},
+                                                                       { "い", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error"},
+                                                                       { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "Error"},
+                                                                       { "う", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error"},
+                                                                       { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "Error"},
+                                                                       { "え", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error"},
+                                                                       { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error"},
+                                                                       { "お", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "--", "記/数", "BS", "英", "カナ" , "小"   , "Error"} };
+    //カタカナ
+    protected readonly string[,] textSetKatakana = new string[15, 7] { { "カ", "カ"   , "キ", "ク", "ケ"   , "コ"   , "Error"},
+                                                                       { "ア", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "サ", "サ"   , "シ", "ス", "セ"   , "ソ"   , "Error"},
+                                                                       { "タ", "タ"   , "チ", "ツ", "テ"   , "ト"   , "Error"},
+                                                                       { "イ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ナ", "ナ"   , "ニ", "ヌ", "ネ"   , "ノ"   , "Error"},
+                                                                       { "ハ", "ハ"   , "ヒ", "フ", "ヘ"   , "ホ"   , "Error"},
+                                                                       { "ウ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "マ", "マ"   , "ミ", "ム", "メ"   , "モ"   , "Error"},
+                                                                       { "ヤ", "ヤ"   , "゛", "ユ", "゜"   , "ヨ"   , "Error"},
+                                                                       { "エ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ラ", "ラ"   , "リ", "ル", "レ"   , "ロ"   , "Error"},
+                                                                       { "ワ", "ワ"   , "ヲ", "ン", "改/確", "空/変", "Error"},
+                                                                       { "オ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "--", "記/数", "BS", "英", "かな" , "小"   , "Error"} };
+    //小文字アルファベット
+    protected readonly string[,] textSetAlphabet = new string[15, 7] { { "abc" , "a"    , "b" , "c"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "def" , "d"    , "e" , "f"   , "--"   , "--"   , "Error"},
+                                                                       { "ghi" , "g"    , "h" , "i"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "jkl" , "j"    , "k" , "l"   , "--"   , "--"   , "Error"},
+                                                                       { "mno" , "m"    , "n" , "o"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "pqrs", "p"    , "q" , "r"   , "s"    , "--"   , "Error"},
+                                                                       { "tuv" , "t"    , "u" , "v"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "wxyz", "w"    , "x" , "y"   , "z"    , "--"   , "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "改/確", "空/変", "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "--"  , "記/数", "BS", "かな", "カナ" , "Ａ"   , "Error"} };
+    //大文字アルファベット
+    protected readonly string[,] textSetALPHABET = new string[15, 7] { { "ABC" , "A"    , "B" , "C"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "DEF" , "D"    , "E" , "F"   , "--"   , "--"   , "Error"},
+                                                                       { "GHI" , "G"    , "H" , "I"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "JKL" , "J"    , "K" , "L"   , "--"   , "--"   , "Error"},
+                                                                       { "MNO" , "M"    , "N" , "O"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "PQRS", "P"    , "Q" , "R"   , "S"    , "--"   , "Error"},
+                                                                       { "TUV" , "T"    , "U" , "V"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "WXYZ", "W"    , "X" , "Y"   , "Z"    , "--"   , "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "改/確", "空/変", "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "--"  , "記/数", "BS", "かな", "カナ" , "ａ"   , "Error"} };
+    //数字と記号
+    protected readonly string[,] textSetSignNum = new string[15, 7] {  { "1-/:;" , "1" , "-"   , "/" , ":"    , ";"    , "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "2()\\&", "2" , "("   , ")" , "\\"   , "&"    , "Error"},
+                                                                       { "3@\".,", "3" , "@"   , "\"", "."    , ","    , "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "4?!'"  , "4" , "?"   , "!" , "'"    , "--"   , "Error"},
+                                                                       { "5[]{}" , "5" , "["   , "]" , "{"    , "}"    , "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "6#%^*" , "6" , "#"   , "%" , "^"    , "*"    , "Error"},
+                                                                       { "7+=_|" , "7" , "+"   , "=" , "_"    , "|"    , "Error"},
+                                                                       { ""      , ""  , "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "8~<>$" , "8" , "~"   , "<" , ">"    , "$"    , "Error"},
+                                                                       { "9"     , "9" , "--"  , "--", "改/確", "空/変", "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "0"     , "0" , "かな", "BS", "英"   , "カナ" , "Error"} };
 
-    protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か", "き", "く", "け", "こ", "Error"},
-                                                                       { "あ", "--", "--", "--", "--", "--", "Error"},
-                                                                       { "さ", "さ", "し", "す", "せ", "そ", "Error"},
-                                                                       { "た", "た", "ち", "つ", "て", "と", "Error"},
-                                                                       { "い", "--", "--", "--", "--", "--", "Error"},
-                                                                       { "な", "な", "に", "ぬ", "ね", "の", "Error"},
-                                                                       { "は", "は", "ひ", "ふ", "へ", "ほ", "Error"},
-                                                                       { "う", "--", "--", "--", "--", "--", "Error"},
-                                                                       { "ま", "ま", "み", "む", "め", "も", "Error"},
-                                                                       { "や", "や", "゛", "ゆ", "゜", "よ", "Error"},
-                                                                       { "え", "--", "--", "--", "--", "--", "Error"},
-                                                                       { "ら", "ら", "り", "る", "れ", "ろ", "Error"},
-                                                                       { "わ", "わ", "を", "ん", "改/確", "空/変", "Error"},
-                                                                       { "お", "--", "--", "--", "--", "--", "Error"},
-                                                                       { "--", "記号", "BS", "英", "数", "小", "Error"} };
+    //濁点、半濁点、小文字対応
+    //    protected readonly string[,] RetranslationSet;
     private void Awake() {
         //variablesの初期化
         variables.poleSum = poleSum;
@@ -160,11 +228,16 @@ public class centralSystem : MonoBehaviour {
 
     //他文字セットなどのキーの解釈
     private void SystemCommandChuring() {
-        if (setText == "英") {
-            textSet = textSetDebug;
+        if (setText == "英" || setText == "ａ") {
+            textSet = textSetAlphabet;
+        } else if (setText == "Ａ") {
+            textSet = textSetALPHABET;
         } else if (setText == "かな") {
             textSet = textSetHiragana;
-
+        } else if (setText == "カナ") {
+            textSet = textSetKatakana;
+        } else if (setText == "記/数") {
+            textSet = textSetSignNum;
         }
     }
 
@@ -176,7 +249,7 @@ public class centralSystem : MonoBehaviour {
             setText = "改行/確定";
         } else if (setText == "空/変") {
             setText = "空白/変換";
-        } else if (setText == "記号") {
+        } else if (setText == "記/数") {
             setText = "記号など";
         } else if (setText == "BS") {
             setText = "BackSpace";
@@ -184,14 +257,18 @@ public class centralSystem : MonoBehaviour {
             setText = "英語";
         } else if (setText == "かな") {
             setText = "ひらがな";
-        } else if (setText == "数") {
-            setText = "数字";
+        } else if (setText == "カナ") {
+            setText = "カタカナ";
         } else if (setText == "小") {
             setText = "小文字";
         } else if (setText == "゛") {
             setText = "濁点";
         } else if (setText == "゜") {
             setText = "半濁点";
+        } else if (setText == "ａ") {
+            setText = "ａｂｃ";
+        } else if (setText == "Ａ") {
+            setText = "ＡＢＣ";
         }
     }
 

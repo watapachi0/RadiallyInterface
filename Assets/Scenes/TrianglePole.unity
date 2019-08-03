@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 72408992}
   - component: {fileID: 72408993}
   - component: {fileID: 72408997}
+  - component: {fileID: 72408991}
   m_Layer: 0
   m_Name: central
   m_TagString: Untagged
@@ -138,6 +139,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &72408991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72408990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2af9161ff291c254089511d817c18b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RadiusIn: 2
+  RadiusOut: 4
+  PoleHeight: 2
+  PoleSum: 5
+  Material_PolygonalPillar: {fileID: 2100000, guid: ed6c6edb633961e4ca284632da3f4ef7,
+    type: 2}
+  Material_TrapezoidPole_Normal: {fileID: 2100000, guid: 96d5ec50c7c9c4d4094637701571174e,
+    type: 2}
+  Material_TrapezoidPole_Touch: {fileID: 2100000, guid: 6e12177a9aa49254abb73e99a671114a,
+    type: 2}
 --- !u!4 &72408992
 Transform:
   m_ObjectHideFlags: 0
@@ -164,11 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ff4d76516bf964db1178366e8d93ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TrapezoidMaterial: {fileID: 2100000, guid: 96d5ec50c7c9c4d4094637701571174e, type: 2}
-  TrapezoidMaterialOnTouch: {fileID: 2100000, guid: 6e12177a9aa49254abb73e99a671114a,
-    type: 2}
-  PolygonalMaterial: {fileID: 2100000, guid: ed6c6edb633961e4ca284632da3f4ef7, type: 2}
-  poleSum: 5
 --- !u!114 &72408997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,8 +539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9089a9f603e49c544a2fbbcf1d07139f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _material: {fileID: 2100000, guid: 2151c9f4a143b8d44bfb293fe9742eb7, type: 2}
-  _touchMaterial: {fileID: 2100000, guid: 6e12177a9aa49254abb73e99a671114a, type: 2}
 --- !u!4 &1542130955
 Transform:
   m_ObjectHideFlags: 0
