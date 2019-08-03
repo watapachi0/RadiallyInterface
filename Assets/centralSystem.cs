@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class centralSystem : MonoBehaviour {
 
-    private int keyNums = 6;
     private int churingNumber = -100;//各ボタンから得られるカーソル位置情報
     [SerializeField]
     private int stage = 0;//インターフェースの処理段階       -100=Error  -2=システムアイコン入力済み  -1=外縁  0=Nutral  1=子音および母音選択  2=子音決定済み母音選択  3=母音決定
@@ -55,7 +54,7 @@ public class centralSystem : MonoBehaviour {
                                                                     { "r", "ra", "ri", "ru", "re", "ro", "Error"},
                                                                     { "w", "wa", "wo", "nn", "改/確", "空/変", "Error"},
                                                                     { "o", "--", "--", "--", "--", "--", "Error"},
-                                                                    { "-", "記号", "BS", "英", "数", "小", "Error"} };
+                                                                    { "-", "記号", "BS", "かな", "数", "小", "Error"} };
 
     protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か", "き", "く", "け", "こ", "Error"},
                                                                        { "あ", "--", "--", "--", "--", "--", "Error"},
@@ -74,7 +73,6 @@ public class centralSystem : MonoBehaviour {
                                                                        { "--", "記号", "BS", "英", "数", "小", "Error"} };
     private void Awake() {
         //variablesの初期化
-        variables.poleSum = keyNums - 1;
         variables.poleSum = poleSum;
         variables.radiusOut = radiusOut;
         variables.radiusIn = radiusIn;
@@ -103,7 +101,7 @@ public class centralSystem : MonoBehaviour {
     }
 
     private void ChuringSystem() {
-        if (stage == 0 && 0 < churingNumber && churingNumber <= keyNums) {
+        if (stage == 0 && 0 < churingNumber && churingNumber <= poleSum + 1) {
             //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
             //最初のキー値を決定
             baseNumber = churingNumber;
@@ -113,7 +111,6 @@ public class centralSystem : MonoBehaviour {
             stage = 1;
             if (isGetKeyObjects)
                 SetKeytext();
-            return;
         } else if (stage == 1 && baseNumber != churingNumber && churingNumber != 0) {
             //子音および母音選択状態で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合
             //子音が決定するので計算
@@ -133,26 +130,42 @@ public class centralSystem : MonoBehaviour {
             stage = 2;
             if (isGetKeyObjects)
                 SetKeytext();
-            return;
-        } else if (stage == 2 && 1 <= churingNumber && churingNumber <= keyNums) {
+        } else if (stage == 2 && 1 <= churingNumber && churingNumber <= poleSum + 1) {
             //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
             setText = textSet[consonant, churingNumber - 1 + 1];
             if (isGetKeyObjects)
                 SetKeytext();
-            return;
         } else if (( stage == 1 || stage == 2 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
+            //まず、特殊なコマンドは実行する
+            SystemCommandChuring();
+            //表示用にわかりやすい名前に書き換える
             ConvertToSystemCommand();
+            //表示
             InputText = setText;
+            //準備用の変数を初期化
             setText = "";
+            //中心へ戻った
             stage = 0;
+            //各テキストの初期化
             if (isGetKeyObjects)
                 SetKeytext();
-            return;
+
+        } else {
+            Debug.LogWarning("Error. stage = " + stage + " ." +
+                             " churingNumber = " + churingNumber + " ." +
+                             " baseNumber = " + baseNumber);
         }
-        Debug.LogWarning("Error. stage = " + stage + " ." +
-                         " churingNumber = " + churingNumber + " ." +
-                         " baseNumber = " + baseNumber);
+    }
+
+    //他文字セットなどのキーの解釈
+    private void SystemCommandChuring() {
+        if (setText == "英") {
+            textSet = textSetDebug;
+        } else if (setText == "かな") {
+            textSet = textSetHiragana;
+
+        }
     }
 
     //入力された内容をシステムコマンドに変換する(setText内で完結させる)
@@ -169,6 +182,8 @@ public class centralSystem : MonoBehaviour {
             setText = "BackSpace";
         } else if (setText == "英") {
             setText = "英語";
+        } else if (setText == "かな") {
+            setText = "ひらがな";
         } else if (setText == "数") {
             setText = "数字";
         } else if (setText == "小") {
