@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/oldSystem/circle.unity
-    guid: 9de1b9ab5092732439ddce09407a1416
+    path: Assets/Scenes/TrianglePole.unity
+    guid: d788ba706346ee74ab8f8973f97e464f
   m_configObjects: {}
