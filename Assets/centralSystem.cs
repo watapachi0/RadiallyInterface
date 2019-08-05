@@ -6,28 +6,30 @@ using UnityEngine;
 public class centralSystem : MonoBehaviour {
 
     private int churingNumber = -100;//各ボタンから得られるカーソル位置情報
-    [SerializeField]
-    private int stage = 0;//インターフェースの処理段階       -100=Error  -2=システムアイコン入力済み  -1=外縁  0=Nutral  1=子音および母音選択  2=子音決定済み母音選択  3=母音決定
-    private string InputText = "";
-    private string setText = "";
+    protected int stage = 0;//インターフェースの処理段階       -100=Error  -2=システムアイコン入力済み  -1=外縁  0=Nutral  1=子音および母音選択  2=子音決定済み母音選択  3=母音決定
+    protected string InputText = "";
+    protected string setText = "";
     private int baseNumber;
     private int consonant;  //子音
 
     /* システムの形決定 */
+    [SerializeField]
     protected int poleSum = 5;            //キーの数
+    [SerializeField]
     protected float radiusOut = 4f;       //システムの外縁の半径
+    [SerializeField]
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
+    [SerializeField]
     protected float poleHeight = 2f;      //システムの厚み
     private TextMesh textMesh;
 
     /* キーを取得済みフラグ */
     private bool isGetKeyObjects = false;
     /* キーオブジェクト */                          //中身はキーを再表示する度に再設定
-    [SerializeField]
     private GameObject[] keyObjects;
 
-    /* 現在の文字種 */
-    private int CharacterType = 0;
+    // 現在の文字種
+    //private int CharacterType = 0;
     /* int  type
      * -1   デバッグ用
      * 0    標準。表示なし
@@ -39,7 +41,15 @@ public class centralSystem : MonoBehaviour {
     /*[親のpointNum,set]*/
     protected string[,] textSet;
 
-    /* set = "見出し","要素数+1",要素1"a",要素2"b", ... 要素n+1,番外"Error" */
+    /* か行見出し　か行あ段　か行い段  …
+     * あ
+     * さ行見出し　さ行あ段　さ行い段  …
+     * た行見出し　た行あ段　た行い段  …
+     * い
+     * な行見出し　な行あ段　な行い段  …
+     * ：
+     * ：
+     */
     //デバッグ用
     protected readonly string[,] textSetDebug = new string[15, 7] {    { "k", "ka"   , "ki", "ku"  , "ke"   , "ko"   , "Error"},
                                                                        { "a", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
@@ -138,7 +148,73 @@ public class centralSystem : MonoBehaviour {
                                                                        { "0"     , "0" , "かな", "BS", "英"   , "カナ" , "Error"} };
 
     //濁点、半濁点、小文字対応
-    //    protected readonly string[,] RetranslationSet;
+    /* あ行の検索index   あ   い   う   …
+     * あ行の濁点文字    あ゛ い゛ う゛ …
+     * あ行の半濁点文字　あ゜ い゜ う゜ …
+     * あ行の小文字      ぁ   ぃ   ぅ   …
+     * か行の検索index   か   き   く   …
+     *      :
+     *      :
+     */
+    protected readonly string[,] RetranslationSet =new string[48, 6] { { "あ", "い", "う", "え", "お", "Error" },
+                                                                       { ""  , ""  , "ゔ", ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { "ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "Error" },
+                                                                       
+                                                                       { "か", "き", "く", "け", "こ", "Error" },
+                                                                       { "が", "ぎ", "ぐ", "げ", "ご", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       
+                                                                       { "さ", "し", "す", "せ", "そ", "Error" },
+                                                                       { "ざ", "じ", "ず", "ぜ", "ぞ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       
+                                                                       { "た", "ち", "つ", "て", "と", "Error" },
+                                                                       { "だ", "ぢ", "づ", "で", "ど", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , "っ", ""  , ""  , "Error" },
+                                                                       
+                                                                       { "は", "ひ", "ふ", "へ", "ほ", "Error" },
+                                                                       { "ば", "び", "ぶ", "べ", "ぼ", "Error" },
+                                                                       { "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       
+                                                                       { "や", ""  , "ゆ", ""  , "よ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { "ゃ", ""  , "ゅ", ""  , "ょ", "Error" },
+                                                                       
+                                                                       { "ア", "イ", "ウ", "エ", "オ", "Error" },
+                                                                       { ""  , ""  , "ヴ", ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { "ァ", "ィ", "ゥ", "ェ", "ォ", "Error" },
+                                                                       
+                                                                       { "カ", "キ", "ク", "ケ", "コ", "Error" },
+                                                                       { "ガ", "ギ", "グ", "ゲ", "ゴ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { "ヵ", ""  , ""  , "ヶ", ""  , "Error" },
+                                                                       
+                                                                       { "サ", "シ", "ス", "セ", "ソ", "Error" },
+                                                                       { "ザ", "ジ", "ズ", "ゼ", "ゾ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+
+                                                                       { "タ", "チ", "ツ", "テ", "ト", "Error" },
+                                                                       { "ダ", "ヂ", "ヅ", "デ", "ド", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , "ッ", ""  , ""  , "Error" },
+
+                                                                       { "ハ", "ヒ", "フ", "ヘ", "ホ", "Error" },
+                                                                       { "バ", "ビ", "ブ", "ベ", "ボ", "Error" },
+                                                                       { "パ", "ピ", "プ", "ペ", "ポ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+
+                                                                       { "ヤ", ""  , "ユ", ""  , "ヨ", "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                       { "ャ", ""  , "ュ", ""  , "ョ", "Error" } };
     private void Awake() {
         //variablesの初期化
         variables.poleSum = poleSum;
@@ -151,7 +227,7 @@ public class centralSystem : MonoBehaviour {
 
     void Start() {
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
-        Debug.Log(textSet.GetLength(0));
+        //Debug.Log(textSet.GetLength(0));
     }
 
     void Update() {
@@ -238,7 +314,38 @@ public class centralSystem : MonoBehaviour {
             textSet = textSetKatakana;
         } else if (setText == "記/数") {
             textSet = textSetSignNum;
+        } else if (setText == "゛") {
+            int i = 0, j = 0;
+            if (HaveRetranslationText(ref i, ref j)) {
+                setText = RetranslationSet[i * 4 + 1, j];
+//                Debug.Log("run the 濁点");
+            }
+        } else if (setText == "゜") {
+            int i = 0, j = 0;
+            if (HaveRetranslationText(ref i, ref j)) {
+                setText = RetranslationSet[i * 4 + 2, j];
+//                Debug.Log("run the 半濁点");
+            }
+        } else if (setText == "小") {
+            int i=0, j=0;
+            if (HaveRetranslationText(ref i, ref j)) {
+                setText = RetranslationSet[i * 4 + 3, j];
+//                Debug.Log("run the 小文字");
+            }
         }
+    }
+
+    //直前の入力と再解釈用二次配列を照らし合わせていき、対象か否か判定。対象ならその配列番号を保存
+    private bool HaveRetranslationText(ref int i,ref int j) {
+        for (i = 0; i < RetranslationSet.GetLength(0) / 4; i++) {
+            for (j = 0; j < RetranslationSet.GetLength(1) - 1; j++) {
+                if (InputText == RetranslationSet[i * 4, j]) {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     //入力された内容をシステムコマンドに変換する(setText内で完結させる)
@@ -296,7 +403,7 @@ public class centralSystem : MonoBehaviour {
             } else if (stage == 1) {
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                //    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
                 if (churingNumber - 1 == i) {
@@ -319,14 +426,14 @@ public class centralSystem : MonoBehaviour {
                 }
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                //    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
             } else if (stage == 2) {
 
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                //    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
                 keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
@@ -346,7 +453,7 @@ public class centralSystem : MonoBehaviour {
                 */
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                //    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
             }

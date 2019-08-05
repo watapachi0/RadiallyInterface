@@ -199,8 +199,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00442874001a12f408bb08fab4f2ccbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage: 0
-  keyObjects: []
+  poleSum: 5
+  radiusOut: 8
+  radiusIn: 4
+  poleHeight: 2
 --- !u!1 &376788274
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,8 +412,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00442874001a12f408bb08fab4f2ccbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage: 0
-  keyObjects: []
+  poleSum: 5
+  radiusOut: 4
+  radiusIn: 2
+  poleHeight: 2
 --- !u!1 &1360824304
 GameObject:
   m_ObjectHideFlags: 0

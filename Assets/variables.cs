@@ -5,7 +5,7 @@ using UnityEngine;
 public class variables : MonoBehaviour {
 
     //現在の文字種
-    public static int CharacterType { get; set; }
+    //public static int CharacterType { get; set; }
     /* int  type
      * -1   デバッグ用
      * 0    標準。表示なし
@@ -64,7 +64,7 @@ public class variables : MonoBehaviour {
 
     private void Awake() {
         //文字種初期化
-        CharacterType = 0;
+        //CharacterType = 0;
         //内径
         radiusIn = RadiusIn;
         //外形
