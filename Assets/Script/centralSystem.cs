@@ -16,6 +16,8 @@ public class centralSystem : MonoBehaviour {
     [SerializeField]
     protected int poleSum = 5;            //キーの数
     [SerializeField]
+    protected int trapezoidDivisionNum = 1;     //キー当たりの分割数
+    [SerializeField]
     protected float radiusOut = 4f;       //システムの外縁の半径
     [SerializeField]
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
@@ -156,46 +158,46 @@ public class centralSystem : MonoBehaviour {
      *      :
      *      :
      */
-    protected readonly string[,] RetranslationSet =new string[48, 6] { { "あ", "い", "う", "え", "お", "Error" },
+    protected readonly string[,] RetranslationSet = new string[48, 6] { { "あ", "い", "う", "え", "お", "Error" },
                                                                        { ""  , ""  , "ゔ", ""  , ""  , "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { "ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "Error" },
-                                                                       
+
                                                                        { "か", "き", "く", "け", "こ", "Error" },
                                                                        { "が", "ぎ", "ぐ", "げ", "ご", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       
+
                                                                        { "さ", "し", "す", "せ", "そ", "Error" },
                                                                        { "ざ", "じ", "ず", "ぜ", "ぞ", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       
+
                                                                        { "た", "ち", "つ", "て", "と", "Error" },
                                                                        { "だ", "ぢ", "づ", "で", "ど", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { ""  , ""  , "っ", ""  , ""  , "Error" },
-                                                                       
+
                                                                        { "は", "ひ", "ふ", "へ", "ほ", "Error" },
                                                                        { "ば", "び", "ぶ", "べ", "ぼ", "Error" },
                                                                        { "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       
+
                                                                        { "や", ""  , "ゆ", ""  , "よ", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { "ゃ", ""  , "ゅ", ""  , "ょ", "Error" },
-                                                                       
+
                                                                        { "ア", "イ", "ウ", "エ", "オ", "Error" },
                                                                        { ""  , ""  , "ヴ", ""  , ""  , "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { "ァ", "ィ", "ゥ", "ェ", "ォ", "Error" },
-                                                                       
+
                                                                        { "カ", "キ", "ク", "ケ", "コ", "Error" },
                                                                        { "ガ", "ギ", "グ", "ゲ", "ゴ", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { "ヵ", ""  , ""  , "ヶ", ""  , "Error" },
-                                                                       
+
                                                                        { "サ", "シ", "ス", "セ", "ソ", "Error" },
                                                                        { "ザ", "ジ", "ズ", "ゼ", "ゾ", "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
@@ -218,6 +220,7 @@ public class centralSystem : MonoBehaviour {
     private void Awake() {
         //variablesの初期化
         variables.poleSum = poleSum;
+        variables.trapezoidDivisionNum = trapezoidDivisionNum;
         variables.radiusOut = radiusOut;
         variables.radiusIn = radiusIn;
         variables.poleHeight = poleHeight;
@@ -318,25 +321,25 @@ public class centralSystem : MonoBehaviour {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 setText = RetranslationSet[i * 4 + 1, j];
-//                Debug.Log("run the 濁点");
+                //                Debug.Log("run the 濁点");
             }
         } else if (setText == "゜") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 setText = RetranslationSet[i * 4 + 2, j];
-//                Debug.Log("run the 半濁点");
+                //                Debug.Log("run the 半濁点");
             }
         } else if (setText == "小") {
-            int i=0, j=0;
+            int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 setText = RetranslationSet[i * 4 + 3, j];
-//                Debug.Log("run the 小文字");
+                //                Debug.Log("run the 小文字");
             }
         }
     }
 
     //直前の入力と再解釈用二次配列を照らし合わせていき、対象か否か判定。対象ならその配列番号を保存
-    private bool HaveRetranslationText(ref int i,ref int j) {
+    private bool HaveRetranslationText(ref int i, ref int j) {
         for (i = 0; i < RetranslationSet.GetLength(0) / 4; i++) {
             for (j = 0; j < RetranslationSet.GetLength(1) - 1; j++) {
                 if (InputText == RetranslationSet[i * 4, j]) {
@@ -398,62 +401,64 @@ public class centralSystem : MonoBehaviour {
     //キーに文字を割り当てる
     private void SetKeytext() {
         for (int i = 1; i <= poleSum; i++) {
+            //TrapezoidPole keyObjectITrapezoid = keyObjects[i].GetComponent<TrapezoidPole>();
+            MultipleTrapezoidPole keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPole>();
             if (stage == 0) {
-                keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
+                keyObjectITrapezoid.MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
             } else if (stage == 1) {
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                //    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                    //    Debug.Log("1mytext is " + keyObjectITrapezoid.MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
                 if (churingNumber - 1 == i) {
                     //左隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3, 0];
+                    keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3, 0];
                 } else if (churingNumber == i) {
                     //現在座標の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 1, 0];
+                    keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 1, 0];
                 } else if (churingNumber + 1 == i) {
                     //右隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
+                    keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
                 } else if (churingNumber - ( poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(最大値)の場合の右隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
+                    keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
                 } else if (churingNumber + ( poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(1)の場合の左隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[0, 0];
+                    keyObjectITrapezoid.MyText = textSet[0, 0];
                 } else {
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = "--";
+                    keyObjectITrapezoid.MyText = "--";
                 }
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                //    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                    //    Debug.Log("2mytext is " + keyObjectITrapezoid.MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
             } else if (stage == 2) {
 
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                //    Debug.Log("1mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                    //    Debug.Log("1mytext is " + keyObjectITrapezoid.MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
-                keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                keyObjectITrapezoid.MyText = textSet[consonant, i];
                 /*
                 if (0 < i && i < poleSum) {
                     //現在座標の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                    keyObjectITrapezoid.MyText = textSet[consonant, i];
                 } else if (churingNumber - ( poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(最大値)の場合の右隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
+                    keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
                 } else if (churingNumber + ( poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(1)の場合の左隣の値
-                    keyObjects[i].GetComponent<TrapezoidPole>().MyText = textSet[consonant, i];
+                    keyObjectITrapezoid.MyText = textSet[consonant, i];
                 } else {
                     Debug.LogWarning("Error. Unknown input.");
                 }
                 */
                 /*********************デバッグ用**************************************************/
                 if (i == 5) {
-                //    Debug.Log("2mytext is " + keyObjects[i].GetComponent<TrapezoidPole>().MyText);
+                    //    Debug.Log("2mytext is " + keyObjectITrapezoid.MyText);
                 }
                 /*********************デバッグ用終わり********************************************/
             }

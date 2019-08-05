@@ -8,7 +8,6 @@ using UnityEngine.EventSystems;
  * オブジェクトの描画と各種コンポーネントのアタッチのみ行う
  * 台形
  * 
- * 
  */
 
 public class TrapezoidPole : MonoBehaviour {
@@ -160,7 +159,7 @@ public class TrapezoidPole : MonoBehaviour {
         Vector3 vertex4 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       variables.radiusIn * Mathf.Cos(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       0);
-        //全頂点数6にそれぞれ座標が3つずつある
+        //全頂点数8にそれぞれ座標が3つずつある
         for (int i = 0; i < 8 * 3; i++) {
             if (i % 8 == 0) {
                 vertex[i] = vertex3;

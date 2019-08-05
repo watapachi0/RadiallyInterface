@@ -63,20 +63,22 @@ public class PolygonalPillar : MonoBehaviour {
 
     //何個のオブジェクト中の何番目のオブジェクトか
     private void SetFace() {
-        face = new int[variables.poleSum * 12];
-        for (int i = 0; i < variables.poleSum; i++) {
-            face[i * 12 + 0] = 8 * i + 2;
-            face[i * 12 + 1] = 8 * i + 1;
-            face[i * 12 + 2] = 8 * i + 0;
-            face[i * 12 + 3] = 8 * i + 1;
-            face[i * 12 + 4] = 8 * i + 2;
-            face[i * 12 + 5] = 8 * i + 3;
-            face[i * 12 + 6] = 8 * i + 4;
-            face[i * 12 + 7] = 8 * i + 5;
-            face[i * 12 + 8] = 8 * variables.poleSum + i + 1 - 1;
-            face[i * 12 + 9] = 8 * i + 7;
-            face[i * 12 + 10] = 8 * i + 6;
-            face[i * 12 + 11] = 9 * variables.poleSum + i + 1 - 1;
+        //底面それぞれ3頂点+(ポリゴン二枚なので)側面6頂点 * 角数 * 分割数
+        face = new int[12 * variables.poleSum * variables.trapezoidDivisionNum];
+        for (int i = 0; i < variables.poleSum * variables.trapezoidDivisionNum; i++) {
+            //以下で、poleSum分割の三角柱ができる
+            face[i * 12 + 0] = 8 * i + 2;  //側面1
+            face[i * 12 + 1] = 8 * i + 1;  //
+            face[i * 12 + 2] = 8 * i + 0;  //
+            face[i * 12 + 3] = 8 * i + 1;  //側面2
+            face[i * 12 + 4] = 8 * i + 2;  //
+            face[i * 12 + 5] = 8 * i + 3;  //
+            face[i * 12 + 6] = 8 * i + 4;  //底面1
+            face[i * 12 + 7] = 8 * i + 5;  //
+            face[i * 12 + 8] = 8 * variables.poleSum * variables.trapezoidDivisionNum + i + 1 - 1;   //底面1の角部分
+            face[i * 12 + 9] = 8 * i + 7;   //底面2
+            face[i * 12 + 10] = 8 * i + 6;  //
+            face[i * 12 + 11] = 9 * variables.poleSum * variables.trapezoidDivisionNum + i + 1 - 1;  //底面2の角部分
         }
     }
 

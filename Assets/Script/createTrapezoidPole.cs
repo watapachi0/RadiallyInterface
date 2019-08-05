@@ -15,7 +15,8 @@ public class createTrapezoidPole : MonoBehaviour {
         isCalledBackVertex = new bool[variables.poleSum];
         for (int i = 0; i < variables.poleSum; i++) {
             obj = new GameObject(( i + 1 ).ToString());
-            TrapezoidPole trianglePole = obj.AddComponent<TrapezoidPole>();
+            //TrapezoidPole trianglePole = obj.AddComponent<TrapezoidPole>();
+            MultipleTrapezoidPole trianglePole = obj.AddComponent<MultipleTrapezoidPole>();
             isCalledBackVertex[i] = false;
         }
     }

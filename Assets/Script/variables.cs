@@ -41,6 +41,9 @@ public class variables : MonoBehaviour {
     //台形の強調ライン用マテリアル
     public static Material material_LineRenderer { get; set; }
 
+    //台形部分の分割数
+    public static int trapezoidDivisionNum { get; set; }
+
 
 
     /* Inspector用 */
