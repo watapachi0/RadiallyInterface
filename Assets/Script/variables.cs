@@ -38,6 +38,9 @@ public class variables : MonoBehaviour {
     //台形用接触時マテリアル
     public static Material material_TrapezoidPole_Touch { get; set; }
 
+    //台形の強調ライン用マテリアル
+    public static Material material_LineRenderer { get; set; }
+
 
 
     /* Inspector用 */
@@ -62,6 +65,9 @@ public class variables : MonoBehaviour {
     [SerializeField]
     private Material Material_TrapezoidPole_Touch;
 
+    [SerializeField]
+    private Material Material_LineRenderer;
+
     private void Awake() {
         //文字種初期化
         //CharacterType = 0;
@@ -80,5 +86,7 @@ public class variables : MonoBehaviour {
         material_TrapezoidPole_Normal = Material_TrapezoidPole_Normal;
         //台形柱接触
         material_TrapezoidPole_Touch = Material_TrapezoidPole_Touch;
+        //台形の強調ライン
+        material_LineRenderer = Material_LineRenderer;
     }
 }

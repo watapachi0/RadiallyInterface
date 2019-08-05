@@ -110,6 +110,32 @@ public class TrapezoidPole : MonoBehaviour {
         //テキスト表示
         make3Dtext();
 
+        //縁取り
+        LineRenderer lineRenderer = this.gameObject.AddComponent<LineRenderer>();
+        //ローカルで描画
+        lineRenderer.useWorldSpace = false;
+        //頂点数
+        lineRenderer.positionCount = 16;
+        //幅
+        lineRenderer.startWidth = 0.1f;
+        //頂点　一筆書きのため、重複あり
+        float ShiftSlightly = 0.01f;    //見づらかったからすこしずらした
+        Vector3[] lineVertecies = new Vector3[16] { vertex[0] + Vector3.back    * ShiftSlightly, vertex[2] + Vector3.back    * ShiftSlightly, vertex[4] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
+                                                    vertex[7] + Vector3.forward * ShiftSlightly, vertex[5] + Vector3.forward * ShiftSlightly, vertex[3] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly,
+                                                    vertex[7] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly, vertex[0] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
+                                                    vertex[4] + Vector3.back    * ShiftSlightly, vertex[5] + Vector3.forward * ShiftSlightly, vertex[3] + Vector3.forward * ShiftSlightly, vertex[2] + Vector3.back    * ShiftSlightly };
+        lineRenderer.SetPositions(lineVertecies);
+        //線の折れる部分の丸み具合
+        lineRenderer.numCornerVertices = 20;
+        //線の端の丸み具合
+        lineRenderer.numCapVertices = 20;
+        //線の色
+        lineRenderer.material = variables.material_LineRenderer;
+        //影を発生させない
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        //影の影響を受けない
+        lineRenderer.receiveShadows = false;
+
     }
 
     void Update() {
