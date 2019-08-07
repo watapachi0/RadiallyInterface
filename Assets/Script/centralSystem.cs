@@ -13,15 +13,10 @@ public class centralSystem : MonoBehaviour {
     private int consonant;  //子音
 
     /* システムの形決定 */
-    [SerializeField]
     protected int poleSum = 5;            //キーの数
-    [SerializeField]
-    protected int trapezoidDivisionNum = 1;     //キー当たりの分割数
-    [SerializeField]
+    private int trapezoidDivisionNum = 3;     //キー当たりの分割数
     protected float radiusOut = 4f;       //システムの外縁の半径
-    [SerializeField]
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
-    [SerializeField]
     protected float poleHeight = 2f;      //システムの厚み
     private TextMesh textMesh;
 
@@ -221,6 +216,7 @@ public class centralSystem : MonoBehaviour {
         //variablesの初期化
         variables.poleSum = this.poleSum;
         variables.trapezoidDivisionNum = this.trapezoidDivisionNum;
+        Debug.Log(variables.trapezoidDivisionNum);
         variables.radiusOut = this.radiusOut;
         variables.radiusIn = this.radiusIn;
         variables.poleHeight = this.poleHeight;
@@ -235,7 +231,7 @@ public class centralSystem : MonoBehaviour {
 
     void Update() {
         textMesh.text = InputText;
-        if (!isGetKeyObjects) {
+        if (!isGetKeyObjects && GameObject.Find(0.ToString())) {
             GetKeyObjects();
             SetKeytext();
         }
@@ -396,6 +392,7 @@ public class centralSystem : MonoBehaviour {
                 isGetKeyObjects = true;
             }
         }
+
     }
 
     //キーに文字を割り当てる

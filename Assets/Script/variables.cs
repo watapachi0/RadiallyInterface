@@ -45,7 +45,6 @@ public class variables : MonoBehaviour {
     public static int trapezoidDivisionNum { get; set; }
 
 
-
     /* Inspector用 */
     [SerializeField]
     private float RadiusIn;

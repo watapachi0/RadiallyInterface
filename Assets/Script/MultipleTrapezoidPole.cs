@@ -28,13 +28,13 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     Vector3[] SideVertex = new Vector3[24];
 
     //面情報
-    int[] EndFace1 = new int[6]  { 1,      3,      0,
-                                   3,      2,      0 };
-    int[] SideFace = new int[24] { 1,      3,      0,
-                                   3,      2,      0,
+    int[] EndFace = new int[6]  { 1,      0,      3,
+                                  0,      2,      3 };
+    int[] SideFace = new int[24] { 2,      5,      4,
+                                   2,      3,      5,
 
-                                   7,      6,      4,
-                                   5,      7,      4,
+                                   1,      6,      7,
+                                   1,      0,      6,
 
                                    2 + 8,  4 + 8,  0 + 8,
                                    4 + 8,  6 + 8,  0 + 8,
@@ -62,15 +62,14 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         poleNum = int.Parse(transform.name) - 1;
 
         // CombineMeshes()する時に使う配列   始端と終端も含めるので+2
-        CombineInstance[] combineInstanceAry = new CombineInstance[variables.trapezoidDivisionNum + 0];
+        CombineInstance[] combineInstanceAry = new CombineInstance[variables.trapezoidDivisionNum + 2];
 
         //メッシュ作成
-        Mesh tmp = new Mesh();
-        Mesh[] mesh = new Mesh[variables.trapezoidDivisionNum];
         for (DivisionNum = 0; DivisionNum < variables.trapezoidDivisionNum; DivisionNum++) {
+            //Debug.Log("run in " + transform.name);
             //頂点計算
             CalcVertices();
-            /*
+
             if (DivisionNum == 0) {
                 //最初の一枚だけ別計算
                 //メッシュ作成
@@ -80,45 +79,44 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 //メッシュへの頂点情報の追加
                 meshFirst.vertices = EndVertex;
                 //メッシュへの面情報の追加
-                meshFirst.triangles = EndFace1;
+                meshFirst.triangles = EndFace;
 
                 // 合成するMesh（同じMeshを円形に並べたMesh）
                 combineInstanceAry[0].mesh = meshFirst;
-            }*/
-
-            mesh[DivisionNum] = tmp;
+                combineInstanceAry[0].transform = Matrix4x4.Translate(transform.position);
+            }
+            Mesh mesh = new Mesh();
             //メッシュリセット
-            mesh[DivisionNum].Clear();
+            mesh.Clear();
             //メッシュへの頂点情報の追加
-            mesh[DivisionNum].vertices = SideVertex;
-            Debug.Log(mesh[DivisionNum].name);
+            mesh.vertices = SideVertex;
             //メッシュへの面情報の追加
-            mesh[DivisionNum].triangles = SideFace;
+            mesh.triangles = SideFace;
 
             //合成するMesh（同じMeshを円形に並べたMesh）
-            combineInstanceAry[DivisionNum + 0].mesh = mesh[DivisionNum];
-            /*
-            if (DivisionNum == variables.trapezoidDivisionNum - 1) {
+            combineInstanceAry[DivisionNum + 1].mesh = mesh;
+            combineInstanceAry[DivisionNum + 1].transform = Matrix4x4.Translate(transform.position);
+
+            if (DivisionNum + 1 == variables.trapezoidDivisionNum) {
                 //最後の一枚だけ別計算
                 //メッシュ作成
-                Mesh meshFirst = new Mesh();
+                Mesh meshLast = new Mesh();
                 //メッシュリセット
-                meshFirst.Clear();
+                meshLast.Clear();
                 //メッシュへの頂点情報の追加
-                meshFirst.vertices = EndVertex;
+                meshLast.vertices = EndVertex;
                 //メッシュへの面情報の追加
-                meshFirst.triangles = EndFace1;
+                meshLast.triangles = EndFace;
 
                 // 合成するMesh（同じMeshを円形に並べたMesh）
-                combineInstanceAry[DivisionNum + 2].mesh = meshFirst;
-            }*/
+                combineInstanceAry[DivisionNum + 2].mesh = meshLast;
+                combineInstanceAry[DivisionNum + 2].transform = Matrix4x4.Translate(transform.position);
+            }
         }
         //合成した（する）メッシュ
         Mesh combinedMesh = new Mesh();
         combinedMesh.name = transform.name;
         combinedMesh.CombineMeshes(combineInstanceAry);
-        //上書きする
-        //this.GetComponent<MeshFilter>().mesh = combinedMesh;
 
         //メッシュフィルター追加
         MeshFilter mesh_filter = new MeshFilter();
@@ -130,8 +128,8 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         this.gameObject.AddComponent<MeshRenderer>();
         this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Normal;
         //コライダーアタッチ
-        //this.gameObject.AddComponent<MeshCollider>();
-        //this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh_filter.mesh;
+        this.gameObject.AddComponent<MeshCollider>();
+        this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh_filter.mesh;
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
@@ -197,23 +195,23 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     private void CalcVertices() {
-        float parcent0 = (float)( DivisionNum + 0 ) / variables.trapezoidDivisionNum;
-        float parcent1 = (float)( DivisionNum + 1 ) / variables.trapezoidDivisionNum;
+        float parcent0 = (float)( DivisionNum + 0 );
+        float parcent1 = (float)( DivisionNum + 1 );
         //台形の外側の頂点座標その1
-        Vector3 vertex1 = new Vector3(variables.radiusOut * Mathf.Sin(( poleNum + parcent0 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      variables.radiusOut * Mathf.Cos(( poleNum + parcent0 ) / (float)variables.poleSum * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(variables.radiusOut * Mathf.Sin(( (float)poleNum * variables.trapezoidDivisionNum + parcent0 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      variables.radiusOut * Mathf.Cos(( (float)poleNum * variables.trapezoidDivisionNum + parcent0 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0);
         //台形の外側の頂点座標その2 
-        Vector3 vertex2 = new Vector3(variables.radiusOut * Mathf.Sin(( poleNum + parcent1 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      variables.radiusOut * Mathf.Cos(( poleNum + parcent1 ) / (float)variables.poleSum * Mathf.PI * 2),
+        Vector3 vertex2 = new Vector3(variables.radiusOut * Mathf.Sin(( (float)poleNum * variables.trapezoidDivisionNum + parcent1 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      variables.radiusOut * Mathf.Cos(( (float)poleNum * variables.trapezoidDivisionNum + parcent1 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0);
         //台形の内側の頂点座標その1
-        Vector3 vertex3 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + parcent0 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      variables.radiusIn * Mathf.Cos(( poleNum + parcent0 ) / (float)variables.poleSum * Mathf.PI * 2),
+        Vector3 vertex3 = new Vector3(variables.radiusIn * Mathf.Sin(( (float)poleNum * variables.trapezoidDivisionNum + parcent0 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      variables.radiusIn * Mathf.Cos(( (float)poleNum * variables.trapezoidDivisionNum + parcent0 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0);
         //台形の内側の頂点座標その2
-        Vector3 vertex4 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + parcent1 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      variables.radiusIn * Mathf.Cos(( poleNum + parcent1 ) / (float)variables.poleSum * Mathf.PI * 2),
+        Vector3 vertex4 = new Vector3(variables.radiusIn * Mathf.Sin(( (float)poleNum * variables.trapezoidDivisionNum + parcent1 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      variables.radiusIn * Mathf.Cos(( (float)poleNum * variables.trapezoidDivisionNum + parcent1 ) / (float)( variables.poleSum * variables.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0);
         //全頂点数8にそれぞれ座標が2つずつある
         for (int i = 0; i < 8 * 2; i++) {
@@ -237,6 +235,20 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 Debug.LogWarning("Calcration Error");
             }
 
+        }
+        //端面用
+        if (DivisionNum == 0) {
+            //最初の端面
+            EndVertex[0] = vertex1;
+            EndVertex[1] = new Vector3(vertex1.x, vertex1.y, variables.poleHeight);
+            EndVertex[2] = vertex3;
+            EndVertex[3] = new Vector3(vertex3.x, vertex3.y, variables.poleHeight);
+        } else if (DivisionNum + 1 == variables.trapezoidDivisionNum) {
+            //最後の端面
+            EndVertex[0] = new Vector3(vertex2.x, vertex2.y, variables.poleHeight);
+            EndVertex[1] = vertex2;
+            EndVertex[2] = new Vector3(vertex4.x, vertex4.y, variables.poleHeight);
+            EndVertex[3] = vertex4;
         }
         createSorce.callBackVertex(new Vector3[4] { SideVertex[0], SideVertex[6], SideVertex[1], SideVertex[7] }, ( int.Parse(gameObject.name) - 1 ) * variables.trapezoidDivisionNum + DivisionNum + 1);
     }
