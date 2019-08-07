@@ -219,11 +219,11 @@ public class centralSystem : MonoBehaviour {
                                                                        { "ャ", ""  , "ュ", ""  , "ョ", "Error" } };
     private void Awake() {
         //variablesの初期化
-        variables.poleSum = poleSum;
-        variables.trapezoidDivisionNum = trapezoidDivisionNum;
-        variables.radiusOut = radiusOut;
-        variables.radiusIn = radiusIn;
-        variables.poleHeight = poleHeight;
+        variables.poleSum = this.poleSum;
+        variables.trapezoidDivisionNum = this.trapezoidDivisionNum;
+        variables.radiusOut = this.radiusOut;
+        variables.radiusIn = this.radiusIn;
+        variables.poleHeight = this.poleHeight;
         //文字セット初期化
         textSet = textSetHiragana;
     }
