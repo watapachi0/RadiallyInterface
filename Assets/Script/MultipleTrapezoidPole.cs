@@ -28,6 +28,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     Vector3[] SideVertex = new Vector3[24];
     //LineRenderer用の頂点情報
     Vector3[] LineVertex;
+    Vector3[] lineVertecies;   //lineVertexの配置を格納
 
     //面情報
     int[] EndFace = new int[6]  { 1,      0,      3,
@@ -67,7 +68,9 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         poleNum = int.Parse(transform.name) - 1;
 
         //LineVertex初期化  最初の面4頂点+中間面4頂点+最後の面4頂点
-        LineVertex = new Vector3[4 + variables.trapezoidDivisionNum * 4 + 4];
+        LineVertex = new Vector3[4 + ( variables.trapezoidDivisionNum - 1 ) * 4 + 4];
+        //格納先も初期化
+        lineVertecies = new Vector3[8 + 4 * ( variables.trapezoidDivisionNum - 1 ) + 8];
 
         // CombineMeshes()する時に使う配列   始端と終端も含めるので+2
         CombineInstance[] combineInstanceAry = new CombineInstance[variables.trapezoidDivisionNum + 2];
@@ -176,15 +179,13 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         //ローカルで描画
         lineRenderer.useWorldSpace = false;
         //頂点数
-        lineRenderer.positionCount = 16;
+        lineRenderer.positionCount = lineVertecies.Length;
         //幅
         lineRenderer.startWidth = 0.1f;
         //頂点　一筆書きのため、重複あり
         float ShiftSlightly = 0.01f;    //見づらかったからすこしずらした
-        Vector3[] lineVertecies = new Vector3[16] { vertex[0] + Vector3.back    * ShiftSlightly, vertex[2] + Vector3.back    * ShiftSlightly, vertex[4] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
-                                                            vertex[7] + Vector3.forward * ShiftSlightly, vertex[5] + Vector3.forward * ShiftSlightly, vertex[3] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly,
-                                                            vertex[7] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly, vertex[0] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
-                                                            vertex[4] + Vector3.back    * ShiftSlightly, vertex[5] + Vector3.forward * ShiftSlightly, vertex[3] + Vector3.forward * ShiftSlightly, vertex[2] + Vector3.back    * ShiftSlightly };
+        //順番の格納
+        SetLineVertecies();
         lineRenderer.SetPositions(lineVertecies);
         //線の折れる部分の丸み具合
         lineRenderer.numCornerVertices = 20;
@@ -250,9 +251,12 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         //LineRenderer用
         for (int i = 0; i < 4; i++) {
             LineVertex[DivisionNum * 4 + i] = SideVertex[i];
-            if (DivisionNum + 1 == variables.trapezoidDivisionNum) {
-                LineVertex[DivisionNum * 4 + i + 4] = SideVertex[i + 4];
-            }
+        }
+        if (DivisionNum + 1 == variables.trapezoidDivisionNum) {
+            LineVertex[DivisionNum * 4 + 0 + 4] = SideVertex[6];
+            LineVertex[DivisionNum * 4 + 1 + 4] = SideVertex[7];
+            LineVertex[DivisionNum * 4 + 2 + 4] = SideVertex[4];
+            LineVertex[DivisionNum * 4 + 3 + 4] = SideVertex[5];
         }
 
         //端面用
@@ -282,6 +286,33 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 textPosition = ( SideVertex[0] + SideVertex[2] + SideVertex[4] + SideVertex[6] ) / 4f;
             }
         }
+    }
+
+    //LineVertexからlineVerteciesに整列しなおす（長いので別メソッド）
+    private void SetLineVertecies() {
+        lineVertecies[1 - 1] = LineVertex[1 - 1];
+        lineVertecies[2 - 1] = LineVertex[2 - 1];
+        lineVertecies[3 + ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 6 - 1];
+        lineVertecies[4 + ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 5 - 1];
+        lineVertecies[5 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[1 - 1];
+        lineVertecies[6 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[3 - 1];
+        lineVertecies[7 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 - 1];
+        lineVertecies[8 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[2 - 1];
+        lineVertecies[9 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 - 1];
+        lineVertecies[10 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 8 - 1];
+        lineVertecies[11 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 6 - 1];
+        lineVertecies[12 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 8 - 1];
+        lineVertecies[13 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 7 - 1];
+        lineVertecies[14 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 5 - 1];
+        lineVertecies[15 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 7 - 1];
+        lineVertecies[16 + 4 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[3 - 1];
+        for (int i = 1; i < variables.trapezoidDivisionNum; i++) {
+            lineVertecies[2 + i - 1] = LineVertex[4 * i + 2 - 1];
+            lineVertecies[4 + ( variables.trapezoidDivisionNum - 1 ) + i - 1] = LineVertex[4 * ( ( variables.trapezoidDivisionNum - 1 ) - i + 1 ) + 1 - 1];
+            lineVertecies[9 + 2 * ( variables.trapezoidDivisionNum - 1 ) + i - 1] = LineVertex[4 * i + 4 - 1];
+            lineVertecies[15 + 3 * ( variables.trapezoidDivisionNum - 1 ) + i - 1] = LineVertex[4 * ( ( variables.trapezoidDivisionNum - 1 ) - i + 1 ) + 3 - 1];
+        }
+
     }
 
     private void OnTouchPointer() {

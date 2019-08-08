@@ -14,7 +14,7 @@ public class centralSystem : MonoBehaviour {
 
     /* システムの形決定 */
     protected int poleSum = 5;            //キーの数
-    private int trapezoidDivisionNum = 4;     //キー当たりの分割数
+    private int trapezoidDivisionNum = 3;     //キー当たりの分割数
     protected float radiusOut = 4f;       //システムの外縁の半径
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
     protected float poleHeight = 2f;      //システムの厚み
