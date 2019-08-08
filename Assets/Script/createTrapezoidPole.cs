@@ -9,10 +9,10 @@ public class createTrapezoidPole : MonoBehaviour {
 
     void Start() {
         //頂点情報の初期化
-        vertex = new Vector3[variables.poleSum * 10];
+        vertex = new Vector3[variables.poleSum * variables.trapezoidDivisionNum * 10];
         //台形柱の生成
         GameObject obj;
-        isCalledBackVertex = new bool[variables.poleSum];
+        isCalledBackVertex = new bool[variables.poleSum * variables.trapezoidDivisionNum];
         for (int i = 0; i < variables.poleSum; i++) {
             obj = new GameObject(( i + 1 ).ToString());
             //TrapezoidPole trianglePole = obj.AddComponent<TrapezoidPole>();
@@ -39,10 +39,10 @@ public class createTrapezoidPole : MonoBehaviour {
     }
 
     public void callBackVertex(Vector3[] vertexies, int poleNum) {
-        isCalledBackVertex[poleNum - 1] = true;
+        isCalledBackVertex[poleNum - 0] = true;
         for (int i = 0; i < 8; i++)
-            vertex[( poleNum - 1 ) * 8 + i] = vertexies[i % 4];
-        vertex[8 * variables.poleSum + poleNum - 1] = transform.position;
-        vertex[9 * variables.poleSum + poleNum - 1] = new Vector3(transform.position.x, transform.position.y, transform.position.z + variables.poleHeight);
+            vertex[( poleNum - 0 ) * 8 + i] = vertexies[i % 4];
+        vertex[8 * variables.poleSum * variables.trapezoidDivisionNum + poleNum - 0] = transform.position;
+        vertex[9 * variables.poleSum * variables.trapezoidDivisionNum + poleNum - 0] = new Vector3(transform.position.x, transform.position.y, transform.position.z + variables.poleHeight);
     }
 }

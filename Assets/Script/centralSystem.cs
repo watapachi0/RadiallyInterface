@@ -14,7 +14,7 @@ public class centralSystem : MonoBehaviour {
 
     /* システムの形決定 */
     protected int poleSum = 5;            //キーの数
-    private int trapezoidDivisionNum = 3;     //キー当たりの分割数
+    private int trapezoidDivisionNum = 4;     //キー当たりの分割数
     protected float radiusOut = 4f;       //システムの外縁の半径
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
     protected float poleHeight = 2f;      //システムの厚み
@@ -24,16 +24,6 @@ public class centralSystem : MonoBehaviour {
     private bool isGetKeyObjects = false;
     /* キーオブジェクト */                          //中身はキーを再表示する度に再設定
     private GameObject[] keyObjects;
-
-    // 現在の文字種
-    //private int CharacterType = 0;
-    /* int  type
-     * -1   デバッグ用
-     * 0    標準。表示なし
-     * 1    ひらがな
-     * 2    アルファベット
-     * 3    数字記号
-     */
 
     /*[親のpointNum,set]*/
     protected string[,] textSet;
@@ -226,7 +216,6 @@ public class centralSystem : MonoBehaviour {
 
     void Start() {
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
-        //Debug.Log(textSet.GetLength(0));
     }
 
     void Update() {
@@ -317,19 +306,16 @@ public class centralSystem : MonoBehaviour {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 setText = RetranslationSet[i * 4 + 1, j];
-                //                Debug.Log("run the 濁点");
             }
         } else if (setText == "゜") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 setText = RetranslationSet[i * 4 + 2, j];
-                //                Debug.Log("run the 半濁点");
             }
         } else if (setText == "小") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 setText = RetranslationSet[i * 4 + 3, j];
-                //                Debug.Log("run the 小文字");
             }
         }
     }
@@ -403,11 +389,6 @@ public class centralSystem : MonoBehaviour {
             if (stage == 0) {
                 keyObjectITrapezoid.MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
             } else if (stage == 1) {
-                /*********************デバッグ用**************************************************/
-                if (i == 5) {
-                    //    Debug.Log("1mytext is " + keyObjectITrapezoid.MyText);
-                }
-                /*********************デバッグ用終わり********************************************/
                 if (churingNumber - 1 == i) {
                     //左隣の値
                     keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3, 0];
@@ -426,57 +407,9 @@ public class centralSystem : MonoBehaviour {
                 } else {
                     keyObjectITrapezoid.MyText = "--";
                 }
-                /*********************デバッグ用**************************************************/
-                if (i == 5) {
-                    //    Debug.Log("2mytext is " + keyObjectITrapezoid.MyText);
-                }
-                /*********************デバッグ用終わり********************************************/
             } else if (stage == 2) {
-
-                /*********************デバッグ用**************************************************/
-                if (i == 5) {
-                    //    Debug.Log("1mytext is " + keyObjectITrapezoid.MyText);
-                }
-                /*********************デバッグ用終わり********************************************/
                 keyObjectITrapezoid.MyText = textSet[consonant, i];
-                /*
-                if (0 < i && i < poleSum) {
-                    //現在座標の値
-                    keyObjectITrapezoid.MyText = textSet[consonant, i];
-                } else if (churingNumber - ( poleSum - 1 ) == i) {
-                    //現在地(churingNumber)が端(最大値)の場合の右隣の値
-                    keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
-                } else if (churingNumber + ( poleSum - 1 ) == i) {
-                    //現在地(churingNumber)が端(1)の場合の左隣の値
-                    keyObjectITrapezoid.MyText = textSet[consonant, i];
-                } else {
-                    Debug.LogWarning("Error. Unknown input.");
-                }
-                */
-                /*********************デバッグ用**************************************************/
-                if (i == 5) {
-                    //    Debug.Log("2mytext is " + keyObjectITrapezoid.MyText);
-                }
-                /*********************デバッグ用終わり********************************************/
             }
         }
     }
-
-    //システムの形などのコールバック用ゲッター
-    /*
-    public int PoleSum {
-        get { return poleSum; }
-    }
-
-    public float RadiusOut {
-        get { return radiusOut; }
-    }
-
-    public float RadiusIn {
-        get { return radiusIn; }
-    }
-
-    public float PoleHeight {
-        get { return poleHeight; }
-    }*/
 }
