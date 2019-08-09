@@ -14,7 +14,7 @@ public class centralSystem : MonoBehaviour {
 
     /* システムの形決定 */
     protected int poleSum = 5;            //キーの数
-    private int trapezoidDivisionNum = 3;     //キー当たりの分割数
+    private int trapezoidDivisionNum = 1;     //キー当たりのメッシュ数　1以上
     protected float radiusOut = 4f;       //システムの外縁の半径
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
     protected float poleHeight = 2f;      //システムの厚み
@@ -206,7 +206,6 @@ public class centralSystem : MonoBehaviour {
         //variablesの初期化
         variables.poleSum = this.poleSum;
         variables.trapezoidDivisionNum = this.trapezoidDivisionNum;
-        Debug.Log(variables.trapezoidDivisionNum);
         variables.radiusOut = this.radiusOut;
         variables.radiusIn = this.radiusIn;
         variables.poleHeight = this.poleHeight;

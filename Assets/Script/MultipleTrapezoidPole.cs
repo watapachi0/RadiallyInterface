@@ -290,27 +290,27 @@ public class MultipleTrapezoidPole : MonoBehaviour {
 
     //LineVertexからlineVerteciesに整列しなおす（長いので別メソッド）
     private void SetLineVertecies() {
-        lineVertecies[1 - 1] = LineVertex[1 - 1];
-        lineVertecies[2 - 1] = LineVertex[2 - 1];
-        lineVertecies[3 + ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 6 - 1];
-        lineVertecies[4 + ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 5 - 1];
-        lineVertecies[5 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[1 - 1];
-        lineVertecies[6 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[3 - 1];
-        lineVertecies[7 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 - 1];
-        lineVertecies[8 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[2 - 1];
-        lineVertecies[9 + 2 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 - 1];
-        lineVertecies[10 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 8 - 1];
-        lineVertecies[11 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 6 - 1];
-        lineVertecies[12 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 8 - 1];
-        lineVertecies[13 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 7 - 1];
-        lineVertecies[14 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 5 - 1];
-        lineVertecies[15 + 3 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[4 * ( variables.trapezoidDivisionNum - 1 ) + 7 - 1];
-        lineVertecies[16 + 4 * ( variables.trapezoidDivisionNum - 1 ) - 1] = LineVertex[3 - 1];
+        lineVertecies[0] = LineVertex[0];
+        lineVertecies[1] = LineVertex[1];
+        lineVertecies[1 + variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 1];
+        lineVertecies[2 + variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 0];
+        lineVertecies[2 + 2 * variables.trapezoidDivisionNum] = LineVertex[0];
+        lineVertecies[3 + 2 * variables.trapezoidDivisionNum] = LineVertex[2];
+        lineVertecies[4 + 2 * variables.trapezoidDivisionNum] = LineVertex[3];
+        lineVertecies[5 + 2 * variables.trapezoidDivisionNum] = LineVertex[1];
+        lineVertecies[6 + 2 * variables.trapezoidDivisionNum] = LineVertex[3];
+        lineVertecies[6 + 3 * variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 3];
+        lineVertecies[7 + 3 * variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 1];
+        lineVertecies[8 + 3 * variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 3];
+        lineVertecies[9 + 3 * variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 2];
+        lineVertecies[10 + 3 * variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 0];
+        lineVertecies[11 + 3 * variables.trapezoidDivisionNum] = LineVertex[4 * variables.trapezoidDivisionNum + 2];
+        lineVertecies[11 + 4 * variables.trapezoidDivisionNum] = LineVertex[2];
         for (int i = 1; i < variables.trapezoidDivisionNum; i++) {
-            lineVertecies[2 + i - 1] = LineVertex[4 * i + 2 - 1];
-            lineVertecies[4 + ( variables.trapezoidDivisionNum - 1 ) + i - 1] = LineVertex[4 * ( ( variables.trapezoidDivisionNum - 1 ) - i + 1 ) + 1 - 1];
-            lineVertecies[9 + 2 * ( variables.trapezoidDivisionNum - 1 ) + i - 1] = LineVertex[4 * i + 4 - 1];
-            lineVertecies[15 + 3 * ( variables.trapezoidDivisionNum - 1 ) + i - 1] = LineVertex[4 * ( ( variables.trapezoidDivisionNum - 1 ) - i + 1 ) + 3 - 1];
+            lineVertecies[1 + i] = LineVertex[4 * i + 1];
+            lineVertecies[2 + variables.trapezoidDivisionNum + i] = LineVertex[4 * ( variables.trapezoidDivisionNum - i ) + 0];
+            lineVertecies[6 + 2 * variables.trapezoidDivisionNum + i] = LineVertex[4 * i + 3];
+            lineVertecies[11 + 3 * variables.trapezoidDivisionNum + i] = LineVertex[4 * ( variables.trapezoidDivisionNum - i ) + 2];
         }
 
     }
