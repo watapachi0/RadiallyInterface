@@ -14,7 +14,7 @@ public class centralSystem : MonoBehaviour {
 
     /* システムの形決定 */
     protected int poleSum = 5;            //キーの数
-    private int trapezoidDivisionNum = 1;     //キー当たりのメッシュ数　1以上
+    private int trapezoidDivisionNum = 5;     //キー当たりのメッシュ数　1以上
     protected float radiusOut = 4f;       //システムの外縁の半径
     protected float radiusIn = 2f;        //ニュートラルエリアの半径
     protected float poleHeight = 2f;      //システムの厚み
@@ -202,6 +202,12 @@ public class centralSystem : MonoBehaviour {
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
                                                                        { "ャ", ""  , "ュ", ""  , "ョ", "Error" } };
+
+    private bool[] useSystemCommand = new bool[10] { true, true, true, true, true, true, true, true, true, true };
+    protected readonly string[] SystemCommandName = new string[10] { "改/確", "空/変", "記/数", "BS", "カナ", "小", "英", "かな", "Ａ", "ａ" };
+    private bool[] dispSystemCommand = new bool[10] { true, true, true, true, true, true, true, true, true, true };
+    //protected readonly Vector3[] SystemCommandVector = new Vector3[10] { new Vector3(), Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero };
+
     private void Awake() {
         //variablesの初期化
         variables.poleSum = this.poleSum;
@@ -209,6 +215,12 @@ public class centralSystem : MonoBehaviour {
         variables.radiusOut = this.radiusOut;
         variables.radiusIn = this.radiusIn;
         variables.poleHeight = this.poleHeight;
+        variables.SystemCommandNum = 10;
+        variables.SystemCommandRadius = 5;
+        variables.useSystemCommand = this.useSystemCommand;
+        variables.SystemCommandName = this.SystemCommandName;
+        variables.displaySystemCommand = this.dispSystemCommand;
+        //variables.SystemCommandVector = this.SystemCommandVector;
         //文字セット初期化
         textSet = textSetHiragana;
     }

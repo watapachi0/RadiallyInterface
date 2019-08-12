@@ -19,6 +19,12 @@ public class createTrapezoidPole : MonoBehaviour {
             MultipleTrapezoidPole trianglePole = obj.AddComponent<MultipleTrapezoidPole>();
             isCalledBackVertex[i] = false;
         }
+        //システムキーの生成
+        for (int i = 0; i < variables.SystemCommandNum; i++) {
+            GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            systemKey.name = "systemKey" + i.ToString();
+            systemKey.AddComponent<SystemKeyPole>();
+        }
     }
 
     void Update() {

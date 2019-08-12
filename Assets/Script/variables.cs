@@ -44,6 +44,23 @@ public class variables : MonoBehaviour {
     //台形部分の分割数
     public static int trapezoidDivisionNum { get; set; }
 
+    //システムアイコンの数
+    public static int SystemCommandNum { get; set; }
+
+    //そのシステムアイコンを表示するか
+    public static bool[] displaySystemCommand { get; set; }
+
+    //システムアイコンの名前
+    public static string[] SystemCommandName { get; set; }
+
+    //そのシステムアイコンを使えるようにするか
+    public static bool[] useSystemCommand { get; set; }
+
+    //システムアイコンの座標
+    //public static Vector3[] SystemCommandVector { get; set; }
+
+    //システムアイコンの配置される円の半径
+    public static float SystemCommandRadius { get; set; }
 
     /* Inspector用 */
     [SerializeField]

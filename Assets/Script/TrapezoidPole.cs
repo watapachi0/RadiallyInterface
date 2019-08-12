@@ -40,6 +40,8 @@ public class TrapezoidPole : MonoBehaviour {
                              5 + 16, 3 + 16, 7 + 16,
     };
 
+    MeshRenderer meshRenderer;
+
     //文字のゲームオブジェクト
     TextMesh TmeshC;
 
@@ -74,8 +76,8 @@ public class TrapezoidPole : MonoBehaviour {
         //メッシュアタッチ
         mesh_filter.mesh = mesh;
         //レンダラー追加 + マテリアルアタッチ
-        this.gameObject.AddComponent<MeshRenderer>();
-        this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Normal;
+        meshRenderer= this.gameObject.AddComponent<MeshRenderer>();
+        meshRenderer.material = variables.material_TrapezoidPole_Normal;
         //コライダーアタッチ
         this.gameObject.AddComponent<MeshCollider>();
         this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
@@ -190,11 +192,11 @@ public class TrapezoidPole : MonoBehaviour {
     }
 
     private void OnMouseEnter() {
-        this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Touch;
+        meshRenderer.material = variables.material_TrapezoidPole_Touch;
     }
 
     private void OnMouseExit() {
-        this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Normal;
+        meshRenderer.material = variables.material_TrapezoidPole_Normal;
     }
 
     private void make3Dtext() {
