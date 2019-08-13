@@ -244,16 +244,12 @@ public class centralSystem : MonoBehaviour {
     }
 
     private void ChuringSystem() {
-        if (stage == 0 && 0 < churingNumber && churingNumber <= poleSum + 1) {
-            //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
-            //最初のキー値を決定
-            baseNumber = churingNumber;
-            //とりあえず母音を保存
-            setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
-            //次の状態へ
-            stage = 1;
-            if (isGetKeyObjects)
-                SetKeytext();
+        if (churingNumber < 0) {
+            //churingNumberがマイナス＝システムキーに触れたとき
+            Debug.Log("run");
+            //数値を反転し、システムキーの名前を参照する
+            setText = SystemCommandName[-churingNumber];
+            stage = 3;
         } else if (stage == 1 && baseNumber != churingNumber && churingNumber != 0) {
             //子音および母音選択状態で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合
             //子音が決定するので計算
@@ -278,7 +274,17 @@ public class centralSystem : MonoBehaviour {
             setText = textSet[consonant, churingNumber - 1 + 1];
             if (isGetKeyObjects)
                 SetKeytext();
-        } else if (( stage == 1 || stage == 2 ) && churingNumber == 0) {
+        } else if (stage == 0 && 0 < churingNumber && churingNumber <= poleSum + 1) {
+            //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
+            //最初のキー値を決定
+            baseNumber = churingNumber;
+            //とりあえず母音を保存
+            setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
+            //次の状態へ
+            stage = 1;
+            if (isGetKeyObjects)
+                SetKeytext();
+        } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
             //まず、特殊なコマンドは実行する
             SystemCommandChuring();
@@ -293,7 +299,9 @@ public class centralSystem : MonoBehaviour {
             //各テキストの初期化
             if (isGetKeyObjects)
                 SetKeytext();
-
+        } else if (stage == 3) {
+            //stage3で、システムキー以外の接触のとき
+            //なにもしない
         } else {
             Debug.LogWarning("Error. stage = " + stage + " ." +
                              " churingNumber = " + churingNumber + " ." +
