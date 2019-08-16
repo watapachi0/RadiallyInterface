@@ -121,9 +121,9 @@ public class TrapezoidPole : MonoBehaviour {
         //頂点数
         lineRenderer.positionCount = 16;
         //幅
-        lineRenderer.startWidth = 0.1f;
+        lineRenderer.startWidth = variables.lineRendererWidth;
         //頂点　一筆書きのため、重複あり
-        float ShiftSlightly = 0.01f;    //見づらかったからすこしずらした
+        float ShiftSlightly = variables.lineShiftSlightly;    //見づらかったからすこしずらした
         Vector3[] lineVertecies = new Vector3[16] { vertex[0] + Vector3.back    * ShiftSlightly, vertex[2] + Vector3.back    * ShiftSlightly, vertex[4] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
                                                     vertex[7] + Vector3.forward * ShiftSlightly, vertex[5] + Vector3.forward * ShiftSlightly, vertex[3] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly,
                                                     vertex[7] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly, vertex[0] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
@@ -140,6 +140,8 @@ public class TrapezoidPole : MonoBehaviour {
         //影の影響を受けない
         lineRenderer.receiveShadows = false;
 
+        //クリエイト元を親にする
+        transform.parent = createSorce.gameObject.transform;
     }
 
     void Update() {
@@ -151,19 +153,23 @@ public class TrapezoidPole : MonoBehaviour {
         //台形の外側の頂点座標その1
         Vector3 vertex1 = new Vector3(variables.radiusOut * Mathf.Sin(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       variables.radiusOut * Mathf.Cos(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      0);
+                                      0)
+                                      + variables.createSourcePosition;
         //台形の外側の頂点座標その2
         Vector3 vertex2 = new Vector3(variables.radiusOut * Mathf.Sin(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       variables.radiusOut * Mathf.Cos(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      0);
+                                      0)
+                                      + variables.createSourcePosition;
         //台形の内側の頂点座標その1
         Vector3 vertex3 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       variables.radiusIn * Mathf.Cos(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      0);
+                                      0)
+                                      + variables.createSourcePosition;
         //台形の内側の頂点座標その2
         Vector3 vertex4 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       variables.radiusIn * Mathf.Cos(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
-                                      0);
+                                      0)
+                                      + variables.createSourcePosition;
         //全頂点数8にそれぞれ座標が3つずつある
         for (int i = 0; i < 8 * 3; i++) {
             if (i % 8 == 0) {
@@ -204,14 +210,14 @@ public class TrapezoidPole : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "L_index_bPointer") {
+        if (other.gameObject.name.Substring(2) == "index_endPointer") {
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
             meshRenderer.material = variables.material_TrapezoidPole_Touch;
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if (other.gameObject.name == "L_index_bPointer")
+        if (other.gameObject.name.Substring(2) == "index_endPointer")
             meshRenderer.material = variables.material_TrapezoidPole_Normal;
     }
 
@@ -233,7 +239,7 @@ public class TrapezoidPole : MonoBehaviour {
         //位置調整（台形の中心に設定）
         textCentor.transform.position = ( vertex[0] + vertex[2] + vertex[4] + vertex[6] ) / 4f;
         //大きさ
-        textCentor.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        textCentor.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         //子オブジェクトに設定
         textCentor.transform.parent = this.transform;
     }

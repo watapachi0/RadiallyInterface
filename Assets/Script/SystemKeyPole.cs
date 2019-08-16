@@ -20,12 +20,14 @@ public class SystemKeyPole : MonoBehaviour {
         systemScript = GameObject.Find("central").GetComponent<centralSystem>();
     }
     void Start() {
-        //　systemKey(9文字)を頭から削除したものが自分の名前
+        //systemKey(9文字)を頭から削除したものが自分の名前
         myNum = int.Parse(transform.name.Substring(9));
         transform.position = new Vector3(variables.systemCommandRadius * Mathf.Sin((float)myNum / variables.systemCommandNum * Mathf.PI * 2),
                                          variables.systemCommandRadius * Mathf.Cos((float)myNum / variables.systemCommandNum * Mathf.PI * 2),
-                                         0);
+                                         variables.poleHeight / 2)
+                                         + variables.createSourcePosition;
         transform.localEulerAngles = new Vector3(270, 0, 0);
+        transform.localScale = new Vector3(( variables.radiusOut - variables.radiusIn ), variables.poleHeight / 2, ( variables.radiusOut - variables.radiusIn ));
 
         meshRenderer = GetComponent<MeshRenderer>();
         //影を発生させない
@@ -33,8 +35,8 @@ public class SystemKeyPole : MonoBehaviour {
         //影の影響を受けない
         meshRenderer.receiveShadows = false;
 
-        this.gameObject.GetComponent<MeshCollider>().convex = true;
-        this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+        CapsuleCollider capsuleCollider = this.gameObject.GetComponent<CapsuleCollider>();
+        capsuleCollider.isTrigger = true;
 
         if (!variables.isOnXR) {
             //暫定当たり判定用Event Trigger
@@ -70,6 +72,9 @@ public class SystemKeyPole : MonoBehaviour {
             meshRenderer.material = variables.material_TrapezoidPole_Normal;
         else
             meshRenderer.material = variables.material_TrapezoidPole_Touch;
+
+        //クリエイト元を親にする
+        transform.parent = createSorce.gameObject.transform;
     }
 
     void Update() {
@@ -84,13 +89,25 @@ public class SystemKeyPole : MonoBehaviour {
 
     private void OnMouseEnter() {
         if (variables.useSystemCommand[myNum] && variables.displaySystemCommand[myNum]) {
-            meshRenderer.material = variables.material_TrapezoidPole_Touch;
             systemScript.UpdateChuringNum(-myNum);
+            meshRenderer.material = variables.material_TrapezoidPole_Touch;
         }
     }
 
     private void OnMouseExit() {
         if (variables.useSystemCommand[myNum] && variables.displaySystemCommand[myNum])
+            meshRenderer.material = variables.material_TrapezoidPole_Normal;
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.name.Substring(2) == "index_endPointer") {
+            systemScript.UpdateChuringNum(-myNum);
+            meshRenderer.material = variables.material_TrapezoidPole_Touch;
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.gameObject.name.Substring(2) == "index_endPointer")
             meshRenderer.material = variables.material_TrapezoidPole_Normal;
     }
 
@@ -100,7 +117,7 @@ public class SystemKeyPole : MonoBehaviour {
         MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
         TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
-        TmeshC.fontSize =variables.systemTextFontSize;
+        TmeshC.fontSize = variables.systemTextFontSize;
         //文字色
         TmeshC.color = variables.material_SystemText.color;
         //アンカー位置を中心に
@@ -112,7 +129,7 @@ public class SystemKeyPole : MonoBehaviour {
         //位置調整（台形の中心に設定）
         TmeshC.transform.position = transform.position;
         //大きさ
-        textCentor.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        textCentor.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         //子オブジェクトに設定
         textCentor.transform.parent = this.transform;
     }

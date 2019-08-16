@@ -20,7 +20,7 @@ public class createTrapezoidPole : MonoBehaviour {
             isCalledBackVertex[i] = false;
         }
         //システムキーの生成
-        for (int i = 0; i < variables.systemCommandNum && false; i++) {
+        for (int i = 0; i < variables.systemCommandNum; i++) {
             GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             systemKey.name = "systemKey" + i.ToString();
             systemKey.AddComponent<SystemKeyPole>();
@@ -48,6 +48,7 @@ public class createTrapezoidPole : MonoBehaviour {
         isCalledBackVertex[poleNum - 0] = true;
         for (int i = 0; i < 8; i++)
             vertex[( poleNum - 0 ) * 8 + i] = vertexies[i % 4];
+
         vertex[8 * variables.poleSum * variables.trapezoidDivisionNum + poleNum - 0] = transform.position;
         vertex[9 * variables.poleSum * variables.trapezoidDivisionNum + poleNum - 0] = new Vector3(transform.position.x, transform.position.y, transform.position.z + variables.poleHeight);
     }

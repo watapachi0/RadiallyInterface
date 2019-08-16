@@ -35,21 +35,21 @@ public class PolygonalPillar : MonoBehaviour {
 
         //メッシュフィルター追加
         MeshFilter mesh_filter = new MeshFilter();
-        this.gameObject.AddComponent<MeshFilter>();
-        mesh_filter = GetComponent<MeshFilter>();
+        mesh_filter = this.gameObject.AddComponent<MeshFilter>();
         //メッシュアタッチ
         mesh_filter.mesh = mesh;
         //レンダラー追加 + マテリアルアタッチ
-        this.gameObject.AddComponent<MeshRenderer>();
-        this.gameObject.GetComponent<MeshRenderer>().material = variables.material_PolygonalPillar;
+        MeshRenderer meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
+        meshRenderer.material = variables.material_PolygonalPillar;
         //コライダーアタッチ
-        this.gameObject.AddComponent<MeshCollider>();
-        this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
-        this.gameObject.GetComponent<MeshCollider>().convex = true;
-        this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+        MeshCollider meshCollider = this.gameObject.AddComponent<MeshCollider>();
+        meshCollider.sharedMesh = mesh;
+        meshCollider.convex = true;
+        meshCollider.isTrigger = true;
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
+
         if (!variables.isOnXR) {
             //当たり判定用 Event Trigger
             //イベントトリガーのアタッチと初期化
@@ -62,6 +62,9 @@ public class PolygonalPillar : MonoBehaviour {
                                                                   //トリガーイベントのアタッチ
             currentTrigger.triggers.Add(entry);
         }
+
+        //クリエイト元を親にする
+        transform.parent = systemScript.gameObject.transform;
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか
@@ -90,7 +93,7 @@ public class PolygonalPillar : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name == "L_index_bPointer")
+        if (other.gameObject.name.Substring(2) == "index_endPointer")
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
 }

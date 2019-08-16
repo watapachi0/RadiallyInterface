@@ -226,6 +226,10 @@ public class centralSystem : MonoBehaviour {
         textSet = textSetHiragana;
         //XRであるかどうか
         variables.isOnXR = XRSettings.enabled;
+        variables.createSourcePosition = transform.position;
+        //各種他のスクリプトを入れる
+        //this.gameObject.AddComponent<createTrapezoidPole>();
+        //this.gameObject.AddComponent<createPointer>();
     }
 
     void Start() {

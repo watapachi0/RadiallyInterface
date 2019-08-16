@@ -18,7 +18,7 @@ public class createPointer : MonoBehaviour {
     private string[] fingerJoint = new string[5] { "meta", "a", "b", "c", "end" };
     /* LoPoly Rigged Hand 用 終 */
 
-    private void Awake() {
+    void Start() {
         GameObject[,,] fingers = new GameObject[LandR.Length, fingerName.Length, fingerJoint.Length];
         for (int LR = 0; LR < LandR.Length; LR++) {
             GameObject hand;
@@ -42,7 +42,7 @@ public class createPointer : MonoBehaviour {
             //else
             //    hand = GameObject.Find("Leap Rig").transform.Find("Hand Models").transform.Find("LoPoly Rigged Hand Right").transform.Find(LandR[LR] + "_Wrist").transform.Find(LandR[LR] + "_Palm").gameObject;
             /* 以下一行バージョン 終 */
-            
+
             //行列に保存
             fingers[LR, 0, 0] = hand;
 
@@ -78,12 +78,8 @@ public class createPointer : MonoBehaviour {
         }
     }
 
-    void Start() {
+    void Update() {
         //１フレーム目で本スクリプトを削除
         Destroy(this);
-    }
-
-    void Update() {
-
     }
 }
