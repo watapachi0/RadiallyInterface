@@ -22,8 +22,8 @@ public class SystemKeyPole : MonoBehaviour {
     void Start() {
         //　systemKey(9文字)を頭から削除したものが自分の名前
         myNum = int.Parse(transform.name.Substring(9));
-        transform.position = new Vector3(variables.SystemCommandRadius * Mathf.Sin((float)myNum / variables.SystemCommandNum * Mathf.PI * 2),
-                                         variables.SystemCommandRadius * Mathf.Cos((float)myNum / variables.SystemCommandNum * Mathf.PI * 2),
+        transform.position = new Vector3(variables.systemCommandRadius * Mathf.Sin((float)myNum / variables.systemCommandNum * Mathf.PI * 2),
+                                         variables.systemCommandRadius * Mathf.Cos((float)myNum / variables.systemCommandNum * Mathf.PI * 2),
                                          0);
         transform.localEulerAngles = new Vector3(270, 0, 0);
 
@@ -33,29 +33,33 @@ public class SystemKeyPole : MonoBehaviour {
         //影の影響を受けない
         meshRenderer.receiveShadows = false;
 
-        //暫定当たり判定用Event Trigger
-        //イベントトリガーのアタッチと初期化
-        EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
-        currentTrigger.triggers = new List<EventTrigger.Entry>();
-        //イベントトリガーのトリガーイベント作成
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
-                                                              //トリガーイベントのアタッチ
-        currentTrigger.triggers.Add(entry);
+        this.gameObject.GetComponent<MeshCollider>().convex = true;
+        this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
 
-        /* 侵入イベント用 */
-        //侵入時に色を変える
-        EventTrigger.Entry entry2 = new EventTrigger.Entry();
-        entry2.eventID = EventTriggerType.PointerEnter;
-        entry2.callback.AddListener((x) => OnMouseEnter());
-        currentTrigger.triggers.Add(entry2);
-        //侵入終了時に色を戻す
-        EventTrigger.Entry entry3 = new EventTrigger.Entry();
-        entry3.eventID = EventTriggerType.PointerExit;
-        entry3.callback.AddListener((x) => OnMouseExit());
-        currentTrigger.triggers.Add(entry3);
+        if (!variables.isOnXR) {
+            //暫定当たり判定用Event Trigger
+            //イベントトリガーのアタッチと初期化
+            EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
+            currentTrigger.triggers = new List<EventTrigger.Entry>();
+            //イベントトリガーのトリガーイベント作成
+            //EventTrigger.Entry entry = new EventTrigger.Entry();
+            //entry.eventID = EventTriggerType.PointerEnter;
+            //entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
+            //トリガーイベントのアタッチ
+            //currentTrigger.triggers.Add(entry);
 
+            /* 侵入イベント用 */
+            //侵入時に色を変える
+            EventTrigger.Entry entry2 = new EventTrigger.Entry();
+            entry2.eventID = EventTriggerType.PointerEnter;
+            entry2.callback.AddListener((x) => OnMouseEnter());
+            currentTrigger.triggers.Add(entry2);
+            //侵入終了時に色を戻す
+            EventTrigger.Entry entry3 = new EventTrigger.Entry();
+            entry3.eventID = EventTriggerType.PointerExit;
+            entry3.callback.AddListener((x) => OnMouseExit());
+            currentTrigger.triggers.Add(entry3);
+        }
         //テキスト表示
         make3Dtext();
 
@@ -70,17 +74,19 @@ public class SystemKeyPole : MonoBehaviour {
 
     void Update() {
         //テキストの更新
-        TmeshC.text = variables.SystemCommandName[myNum];
+        TmeshC.text = variables.systemCommandName[myNum];
     }
 
-    private void OnTouchPointer() {
-        if (variables.useSystemCommand[myNum] && variables.displaySystemCommand[myNum])
-            systemScript.UpdateChuringNum(-myNum);
-    }
+    //private void OnTouchPointer() {
+    //    if (variables.useSystemCommand[myNum] && variables.displaySystemCommand[myNum])
+    //        systemScript.UpdateChuringNum(-myNum);
+    //}
 
     private void OnMouseEnter() {
-        if (variables.useSystemCommand[myNum] && variables.displaySystemCommand[myNum])
+        if (variables.useSystemCommand[myNum] && variables.displaySystemCommand[myNum]) {
             meshRenderer.material = variables.material_TrapezoidPole_Touch;
+            systemScript.UpdateChuringNum(-myNum);
+        }
     }
 
     private void OnMouseExit() {
@@ -94,7 +100,9 @@ public class SystemKeyPole : MonoBehaviour {
         MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
         TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
-        TmeshC.fontSize = 100;
+        TmeshC.fontSize =variables.systemTextFontSize;
+        //文字色
+        TmeshC.color = variables.material_SystemText.color;
         //アンカー位置を中心に
         TmeshC.anchor = TextAnchor.MiddleCenter;
         //真ん中寄せ

@@ -76,11 +76,14 @@ public class TrapezoidPole : MonoBehaviour {
         //メッシュアタッチ
         mesh_filter.mesh = mesh;
         //レンダラー追加 + マテリアルアタッチ
-        meshRenderer= this.gameObject.AddComponent<MeshRenderer>();
+        meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
         meshRenderer.material = variables.material_TrapezoidPole_Normal;
         //コライダーアタッチ
         this.gameObject.AddComponent<MeshCollider>();
         this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
+        this.gameObject.GetComponent<MeshCollider>().convex = true;
+        this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
@@ -90,11 +93,11 @@ public class TrapezoidPole : MonoBehaviour {
         EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
         currentTrigger.triggers = new List<EventTrigger.Entry>();
         //イベントトリガーのトリガーイベント作成
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
-                                                              //トリガーイベントのアタッチ
-        currentTrigger.triggers.Add(entry);
+        //EventTrigger.Entry entry = new EventTrigger.Entry();
+        //entry.eventID = EventTriggerType.PointerEnter;
+        //entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
+        //トリガーイベントのアタッチ
+        //currentTrigger.triggers.Add(entry);
 
         /* 侵入イベント用 */
         //侵入時に色を変える
@@ -187,16 +190,29 @@ public class TrapezoidPole : MonoBehaviour {
         createSorce.callBackVertex(new Vector3[4] { vertex[0], vertex[6], vertex[1], vertex[7] }, int.Parse(gameObject.name));
     }
 
-    private void OnTouchPointer() {
-        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-    }
+    //private void OnTouchPointer() {
+    //systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+    //}
 
     private void OnMouseEnter() {
+        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
         meshRenderer.material = variables.material_TrapezoidPole_Touch;
     }
 
     private void OnMouseExit() {
         meshRenderer.material = variables.material_TrapezoidPole_Normal;
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.name == "L_index_bPointer") {
+            systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+            meshRenderer.material = variables.material_TrapezoidPole_Touch;
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.gameObject.name == "L_index_bPointer")
+            meshRenderer.material = variables.material_TrapezoidPole_Normal;
     }
 
     private void make3Dtext() {
@@ -205,7 +221,9 @@ public class TrapezoidPole : MonoBehaviour {
         MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
         TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
-        TmeshC.fontSize = 100;
+        TmeshC.fontSize = variables.systemTextFontSize;
+        //文字色
+        TmeshC.color = variables.material_SystemText.color;
         //アンカー位置を中心に
         TmeshC.anchor = TextAnchor.MiddleCenter;
         //真ん中寄せ

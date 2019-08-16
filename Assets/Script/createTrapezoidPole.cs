@@ -20,7 +20,7 @@ public class createTrapezoidPole : MonoBehaviour {
             isCalledBackVertex[i] = false;
         }
         //システムキーの生成
-        for (int i = 0; i < variables.SystemCommandNum; i++) {
+        for (int i = 0; i < variables.systemCommandNum && false; i++) {
             GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             systemKey.name = "systemKey" + i.ToString();
             systemKey.AddComponent<SystemKeyPole>();

@@ -45,20 +45,23 @@ public class PolygonalPillar : MonoBehaviour {
         //コライダーアタッチ
         this.gameObject.AddComponent<MeshCollider>();
         this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
+        this.gameObject.GetComponent<MeshCollider>().convex = true;
+        this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
-
-        //当たり判定用 Event Trigger
-        //イベントトリガーのアタッチと初期化
-        EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
-        currentTrigger.triggers = new List<EventTrigger.Entry>();
-        //イベントトリガーのトリガーイベント作成
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
-        //トリガーイベントのアタッチ
-        currentTrigger.triggers.Add(entry);
+        if (!variables.isOnXR) {
+            //当たり判定用 Event Trigger
+            //イベントトリガーのアタッチと初期化
+            EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
+            currentTrigger.triggers = new List<EventTrigger.Entry>();
+            //イベントトリガーのトリガーイベント作成
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerEnter;
+            entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
+                                                                  //トリガーイベントのアタッチ
+            currentTrigger.triggers.Add(entry);
+        }
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか
@@ -84,5 +87,10 @@ public class PolygonalPillar : MonoBehaviour {
 
     private void OnTouchPointer() {
         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.name == "L_index_bPointer")
+            systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
 }

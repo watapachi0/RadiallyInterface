@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 //using System.Windows.Forms;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class centralSystem : MonoBehaviour {
 
@@ -15,9 +16,9 @@ public class centralSystem : MonoBehaviour {
     /* システムの形決定 */
     protected int poleSum = 5;            //キーの数
     private int trapezoidDivisionNum = 5;     //キー当たりのメッシュ数　1以上
-    protected float radiusOut = 4f;       //システムの外縁の半径
-    protected float radiusIn = 2f;        //ニュートラルエリアの半径
-    protected float poleHeight = 2f;      //システムの厚み
+    protected float radiusOut = 1f;       //システムの外縁の半径
+    protected float radiusIn = 0.7f;        //ニュートラルエリアの半径
+    protected float poleHeight = 1f;      //システムの厚み
     private TextMesh textMesh;
 
     /* キーを取得済みフラグ */
@@ -210,19 +211,21 @@ public class centralSystem : MonoBehaviour {
 
     private void Awake() {
         //variablesの初期化
-        variables.poleSum = this.poleSum;
-        variables.trapezoidDivisionNum = this.trapezoidDivisionNum;
-        variables.radiusOut = this.radiusOut;
-        variables.radiusIn = this.radiusIn;
-        variables.poleHeight = this.poleHeight;
-        variables.SystemCommandNum = 10;
-        variables.SystemCommandRadius = 5;
+        //variables.poleSum = this.poleSum;
+        //variables.trapezoidDivisionNum = this.trapezoidDivisionNum;
+        //variables.radiusOut = this.radiusOut;
+        //variables.radiusIn = this.radiusIn;
+        //variables.poleHeight = this.poleHeight;
+        variables.systemCommandNum = 10;
+        //variables.systemCommandRadius = 5;
         variables.useSystemCommand = this.useSystemCommand;
-        variables.SystemCommandName = this.SystemCommandName;
+        variables.systemCommandName = this.SystemCommandName;
         variables.displaySystemCommand = this.dispSystemCommand;
         //variables.SystemCommandVector = this.SystemCommandVector;
         //文字セット初期化
         textSet = textSetHiragana;
+        //XRであるかどうか
+        variables.isOnXR = XRSettings.enabled;
     }
 
     void Start() {

@@ -45,57 +45,79 @@ public class variables : MonoBehaviour {
     public static int trapezoidDivisionNum { get; set; }
 
     //システムアイコンの数
-    public static int SystemCommandNum { get; set; }
+    public static int systemCommandNum { get; set; }
 
     //そのシステムアイコンを表示するか
     public static bool[] displaySystemCommand { get; set; }
 
     //システムアイコンの名前
-    public static string[] SystemCommandName { get; set; }
+    public static string[] systemCommandName { get; set; }
 
     //そのシステムアイコンを使えるようにするか
     public static bool[] useSystemCommand { get; set; }
 
     //システムアイコンの座標
-    //public static Vector3[] SystemCommandVector { get; set; }
+    //public static Vector3[] systemCommandVector { get; set; }
 
     //システムアイコンの配置される円の半径
-    public static float SystemCommandRadius { get; set; }
+    public static float systemCommandRadius { get; set; }
+
+    //文字の色
+    public static Material material_SystemText { get; set; }
+
+    //文字の大きさ
+    public static int systemTextFontSize { get; set; }
+
+    //VRで使用しているか
+    public static bool isOnXR { get; set; }
 
     /* Inspector用 */
-    [SerializeField]
+    [SerializeField, Header("円環の内径(単位cm)")]
     private float RadiusIn;
 
-    [SerializeField]
+    [SerializeField, Header("円環の外径(単位cm)")]
     private float RadiusOut;
 
-    [SerializeField]
+    [SerializeField, Header("円環の厚さ(単位cm)")]
     private float PoleHeight;
 
-    [SerializeField]
+    [SerializeField, Header("システムのキーの数（規定値 5 ）"), Tooltip("変更する際はスクリプトの見直すが必要")]
     private int PoleSum;
 
-    [SerializeField]
+    [SerializeField, Header("円環内部の多角形のマテリアル")]
     private Material Material_PolygonalPillar;
 
-    [SerializeField]
+    [SerializeField, Header("キーの常態のマテリアル")]
     private Material Material_TrapezoidPole_Normal;
 
-    [SerializeField]
+    [SerializeField, Header("キーの接触時のマテリアル")]
     private Material Material_TrapezoidPole_Touch;
 
-    [SerializeField]
+    [SerializeField, Header("キーの輪郭線のマテリアル")]
     private Material Material_LineRenderer;
+
+    [SerializeField, Header("円環外側のシステムキーのマテリアル")]
+    private Material Material_SystemText;
+
+    [SerializeField, Header("円環外側のシステムキーの半径(単位cm)")]
+    private float SystemCommandRadius;
+
+    [SerializeField, Header("テキストのフォントサイズ"), Tooltip("システム上に表示されるテキストのフォントサイズ")]
+    private int SystemTextFontSize;
+
+    [SerializeField, Header("キーの分割数"), Tooltip("キーを表示するための台形のポリゴンを任意の回数分割する"), Range(0, 29)]//MeshColliderのConvexが三角形ポリゴン255枚以下の必要があるため
+    private int TrapezoidDivisionNum;
+
 
     private void Awake() {
         //文字種初期化
         //CharacterType = 0;
         //内径
-        radiusIn = RadiusIn;
+        radiusIn = RadiusIn / 100;
         //外形
-        radiusOut = RadiusOut;
+        radiusOut = RadiusOut / 100;
         //厚さ
-        poleHeight = PoleHeight;
+        poleHeight = PoleHeight / 100;
         //キー数
         poleSum = PoleSum;
 
@@ -107,5 +129,15 @@ public class variables : MonoBehaviour {
         material_TrapezoidPole_Touch = Material_TrapezoidPole_Touch;
         //台形の強調ライン
         material_LineRenderer = Material_LineRenderer;
+
+        //台形の分割回数
+        trapezoidDivisionNum = TrapezoidDivisionNum + 1;
+
+        //システムキーの半径
+        systemCommandRadius = SystemCommandRadius / 100;
+        //テキストのマテリアル
+        material_SystemText = Material_SystemText;
+        //テキストのフォントサイズ
+        systemTextFontSize = SystemTextFontSize;
     }
 }

@@ -140,39 +140,40 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         //コライダーアタッチ
         this.gameObject.AddComponent<MeshCollider>();
         this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh_filter.mesh;
+        this.gameObject.GetComponent<MeshCollider>().convex = true;
+        this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
 
 
-        //暫定当たり判定用Event Trigger
-        //イベントトリガーのアタッチと初期化
-        EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
-        currentTrigger.triggers = new List<EventTrigger.Entry>();
-        //イベントトリガーのトリガーイベント作成
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
-        //トリガーイベントのアタッチ
-        currentTrigger.triggers.Add(entry);
+        //XRじゃないなら
+        if (!variables.isOnXR) {
+            //暫定当たり判定用Event Trigger
+            //イベントトリガーのアタッチと初期化
+            EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
+            currentTrigger.triggers = new List<EventTrigger.Entry>();
+            //イベントトリガーのトリガーイベント作成
+            //EventTrigger.Entry entry = new EventTrigger.Entry();
+            //entry.eventID = EventTriggerType.PointerEnter;
+            //entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
+            //トリガーイベントのアタッチ
+            //currentTrigger.triggers.Add(entry);
 
-        /* 侵入イベント用 */
-        //侵入時に色を変える
-        EventTrigger.Entry entry2 = new EventTrigger.Entry();
-        entry2.eventID = EventTriggerType.PointerEnter;
-        entry2.callback.AddListener((x) => OnMouseEnter());
-        currentTrigger.triggers.Add(entry2);
-        //侵入終了時に色を戻す
-        EventTrigger.Entry entry3 = new EventTrigger.Entry();
-        entry3.eventID = EventTriggerType.PointerExit;
-        entry3.callback.AddListener((x) => OnMouseExit());
-        currentTrigger.triggers.Add(entry3);
-
+            /* 侵入イベント用 */
+            //侵入時に色を変える
+            EventTrigger.Entry entry2 = new EventTrigger.Entry();
+            entry2.eventID = EventTriggerType.PointerEnter;
+            entry2.callback.AddListener((x) => OnMouseEnter());
+            currentTrigger.triggers.Add(entry2);
+            //侵入終了時に色を戻す
+            EventTrigger.Entry entry3 = new EventTrigger.Entry();
+            entry3.eventID = EventTriggerType.PointerExit;
+            entry3.callback.AddListener((x) => OnMouseExit());
+            currentTrigger.triggers.Add(entry3);
+        }
         //テキスト表示
         make3Dtext();
-
-
-
 
         //縁取り
         LineRenderer lineRenderer = this.gameObject.AddComponent<LineRenderer>();
@@ -195,9 +196,6 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         //影の影響を受けない
         lineRenderer.receiveShadows = false;
-
-
-
     }
 
     void Update() {
@@ -318,16 +316,29 @@ public class MultipleTrapezoidPole : MonoBehaviour {
 
     }
 
-    private void OnTouchPointer() {
-        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-    }
+    //private void OnTouchPointer() {
+    //    systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+    //}
 
     private void OnMouseEnter() {
+        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
         this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Touch;
     }
 
     private void OnMouseExit() {
         this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Normal;
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        if (other.gameObject.name == "L_index_bPointer") {
+            systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+            this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Touch;
+        }
+    }
+
+    public void OnTriggerExit(Collider other) {
+        if (other.gameObject.name == "L_index_bPointer")
+            this.gameObject.GetComponent<MeshRenderer>().material = variables.material_TrapezoidPole_Normal;
     }
 
     private void make3Dtext() {
@@ -336,7 +347,9 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
         TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
-        TmeshC.fontSize = 100;
+        TmeshC.fontSize = variables.systemTextFontSize;
+        //文字色
+        TmeshC.color = variables.material_SystemText.color;
         //アンカー位置を中心に
         TmeshC.anchor = TextAnchor.MiddleCenter;
         //真ん中寄せ
