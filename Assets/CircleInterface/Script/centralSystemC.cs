@@ -227,9 +227,6 @@ public class centralSystemC : MonoBehaviour {
         //XRであるかどうか
         variablesC.isOnXR = XRSettings.enabled;
         variablesC.createSourcePosition = transform.position;
-        //各種他のスクリプトを入れる
-        //this.gameObject.AddComponent<createTrapezoidPoleC>();
-        //this.gameObject.AddComponent<createPointerC>();
     }
 
     void Start() {

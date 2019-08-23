@@ -229,19 +229,19 @@ public class MultipleTrapezoidPole : MonoBehaviour {
             if (i % 8 == 0) {
                 SideVertex[i] = vertex3;
             } else if (i % 8 == 1) {
-                SideVertex[i] = new Vector3(vertex3.x, vertex3.y, variables.poleHeight);
+                SideVertex[i] = new Vector3(vertex3.x, vertex3.y, vertex3.z + variables.poleHeight);
             } else if (i % 8 == 2) {
                 SideVertex[i] = vertex1;
             } else if (i % 8 == 3) {
-                SideVertex[i] = new Vector3(vertex1.x, vertex1.y, variables.poleHeight);
+                SideVertex[i] = new Vector3(vertex1.x, vertex1.y, vertex1.z + variables.poleHeight);
             } else if (i % 8 == 4) {
                 SideVertex[i] = vertex2;
             } else if (i % 8 == 5) {
-                SideVertex[i] = new Vector3(vertex2.x, vertex2.y, variables.poleHeight);
+                SideVertex[i] = new Vector3(vertex2.x, vertex2.y, vertex2.z + variables.poleHeight);
             } else if (i % 8 == 6) {
                 SideVertex[i] = vertex4;
             } else if (i % 8 == 7) {
-                SideVertex[i] = new Vector3(vertex4.x, vertex4.y, variables.poleHeight);
+                SideVertex[i] = new Vector3(vertex4.x, vertex4.y, vertex4.z + variables.poleHeight);
             } else {
                 Debug.LogWarning("Calcration Error");
             }
@@ -263,14 +263,14 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         if (DivisionNum == 0) {
             //最初の端面
             EndVertex[0] = vertex1;
-            EndVertex[1] = new Vector3(vertex1.x, vertex1.y, variables.poleHeight);
+            EndVertex[1] = new Vector3(vertex1.x, vertex1.y, vertex1.z + variables.poleHeight);
             EndVertex[2] = vertex3;
-            EndVertex[3] = new Vector3(vertex3.x, vertex3.y, variables.poleHeight);
+            EndVertex[3] = new Vector3(vertex3.x, vertex3.y, vertex3.z + variables.poleHeight);
         } else if (DivisionNum + 1 == variables.trapezoidDivisionNum) {
             //最後の端面
-            EndVertex[0] = new Vector3(vertex2.x, vertex2.y, variables.poleHeight);
+            EndVertex[0] = new Vector3(vertex2.x, vertex2.y, vertex2.z + variables.poleHeight);
             EndVertex[1] = vertex2;
-            EndVertex[2] = new Vector3(vertex4.x, vertex4.y, variables.poleHeight);
+            EndVertex[2] = new Vector3(vertex4.x, vertex4.y, vertex4.z + variables.poleHeight);
             EndVertex[3] = vertex4;
         }
 
