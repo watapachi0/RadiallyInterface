@@ -285,8 +285,13 @@ public class centralSystemC : MonoBehaviour {
             setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
             //次の状態へ
             stage = 1;
-            if (isGetKeyObjects)
-                SetKeytext();
+            /* ここで副輪を呼ぶ */
+            GameObject subCircle = new GameObject("subCircle");
+            variables.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
+            subCircle.transform.position = keyObjects[churingNumber].transform.Find("text").transform.position;
+            subCircle.AddComponent<createTrapezoidPoleC>();
+            //if (isGetKeyObjects)
+            //    SetKeytext();
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
             //まず、特殊なコマンドは実行する

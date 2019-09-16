@@ -154,6 +154,8 @@ MonoBehaviour:
   RadiusIn: 2
   RadiusOut: 4
   PoleHeight: 2
+  LineRendererWidth: 0
+  LineShiftSlightly: 0
   PoleSum: 5
   Material_PolygonalPillar: {fileID: 2100000, guid: ed6c6edb633961e4ca284632da3f4ef7,
     type: 2}
@@ -163,6 +165,10 @@ MonoBehaviour:
     type: 2}
   Material_LineRenderer: {fileID: 2100000, guid: dc644cad552521a45842bb536ce42064,
     type: 2}
+  Material_SystemText: {fileID: 2100000, guid: 96d5ec50c7c9c4d4094637701571174e, type: 2}
+  SystemCommandRadius: 0
+  SystemTextFontSize: 0
+  TrapezoidDivisionNum: 0
 --- !u!4 &72408992
 Transform:
   m_ObjectHideFlags: 0

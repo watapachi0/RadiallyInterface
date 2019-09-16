@@ -71,7 +71,7 @@ public class variablesC : MonoBehaviour {
     //VRで使用しているか
     public static bool isOnXR { get; set; }
 
-    //xentralSystemのgameObjectの座標
+    //centralSystemのgameObjectの座標
     public static Vector3 createSourcePosition { get; set; }
 
     //キーの縁取りの太さ

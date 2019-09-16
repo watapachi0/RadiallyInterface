@@ -22,6 +22,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     private createTrapezoidPoleC createSorce;
     private centralSystemC systemScript;
+    private GameObject myParent = null;
 
     //頂点座標
     Vector3[] EndVertex = new Vector3[4];
@@ -61,11 +62,15 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     public string MyText { get; set; } = "";
 
     private void Awake() {
-        createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
-        systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
     }
 
     void Start() {
+        if (myParent == null)
+            createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
+        else
+            createSorce = myParent.GetComponent<createTrapezoidPoleC>();
+        systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
+        
         //自分の番号を名前から取得し初期化
         poleNum = int.Parse(transform.name) - 1;
 
@@ -208,22 +213,22 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         Vector3 vertex1 = new Vector3(variablesC.radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + /*variablesC.createSourcePosition*/transform.position;
         //台形の外側の頂点座標その2 
         Vector3 vertex2 = new Vector3(variablesC.radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + /*variablesC.createSourcePosition*/transform.position;
         //台形の内側の頂点座標その1
         Vector3 vertex3 = new Vector3(variablesC.radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + /*variablesC.createSourcePosition*/transform.position;
         //台形の内側の頂点座標その2
         Vector3 vertex4 = new Vector3(variablesC.radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + /*variablesC.createSourcePosition*/transform.position;
         //全頂点数8にそれぞれ座標が2つずつある
         for (int i = 0; i < 8 * 2; i++) {
             if (i % 8 == 0) {
@@ -273,7 +278,6 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             EndVertex[2] = new Vector3(vertex4.x, vertex4.y, vertex4.z + variablesC.poleHeight);
             EndVertex[3] = vertex4;
         }
-
         createSorce.callBackVertex(new Vector3[4] { SideVertex[0], SideVertex[6], SideVertex[1], SideVertex[7] }, ( int.Parse(gameObject.name) - 1 ) * variablesC.trapezoidDivisionNum + DivisionNum + 0);
 
         //Textの座標を計算する
@@ -360,5 +364,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         textCentor.transform.localScale = new Vector3(fontScale, fontScale, fontScale);
         //子オブジェクトに設定
         textCentor.transform.parent = this.transform;
+    }
+    public void setMyParent(GameObject parent) {
+        myParent = parent;
     }
 }

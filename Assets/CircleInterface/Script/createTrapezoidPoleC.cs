@@ -17,14 +17,16 @@ public class createTrapezoidPoleC : MonoBehaviour {
             obj = new GameObject(( i + 1 ).ToString());
             //TrapezoidPole trianglePoleC = obj.AddComponent<TrapezoidPoleC>();
             MultipleTrapezoidPoleC trianglePole = obj.AddComponent<MultipleTrapezoidPoleC>();
+            obj.transform.position = transform.position;
+            trianglePole.setMyParent(this.gameObject);
             isCalledBackVertex[i] = false;
         }
         //システムキーの生成
-        for (int i = 0; i < variablesC.systemCommandNum; i++) {
+        /*for (int i = 0; i < variablesC.systemCommandNum; i++) {
             GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             systemKey.name = "systemKey" + i.ToString();
             systemKey.AddComponent<SystemKeyPoleC>();
-        }
+        }*/
     }
 
     void Update() {
