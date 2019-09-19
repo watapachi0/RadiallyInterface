@@ -203,7 +203,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         transform.parent = createSorce.gameObject.transform;
     }
 
-    void Update() {
+    void Update() { 
         //テキストの更新
         TmeshC.text = MyText;
     }
