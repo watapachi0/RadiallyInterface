@@ -7,12 +7,16 @@ public class TypingSystem : MonoBehaviour {
 
     public TextMesh InputTextObject;//入力を表示する欄
     public TextMesh TaskTextObject;//タスクを表示する欄
+    [SerializeField]
     private string[] taskIndex;//txtファイルから取り出したタスク配列
     private int taskNum;//全タスク数
+    [SerializeField]
     private string[] taskIndexQueue;//タスクのキュー
+    [SerializeField]
     private int currentTaskNum = 0;//現在のキューの実行状況
-    private int currentCharPosition;//カラオケ表記用
+    //private int currentCharPosition;//カラオケ表記用
     private string inputText = "";
+    private bool currentTaskClear = false;  //タスク内容をクリアしたか
 
     void Start() {
         taskReady();
@@ -20,8 +24,24 @@ public class TypingSystem : MonoBehaviour {
     }
 
     void Update() {
-        displayInputText();
-        displayTaskText();
+        if (currentTaskClear) {
+            inputText = "";
+            currentTaskNum++;
+            currentTaskClear = false;
+        }
+
+        /* とりあえず　一周したら止める */
+        if (currentTaskNum >= taskNum) {
+            Debug.Log("task clear.");
+            TaskTextObject.text = "task clear.";
+            currentTaskNum = 0;
+            Destroy(this);
+        }
+        /* とりあえず　終わり */
+        else {
+            displayInputText();
+            displayTaskText();
+        }
     }
 
     //一覧のテキストファイルから読み込んで変数に格納
@@ -88,6 +108,9 @@ public class TypingSystem : MonoBehaviour {
                 break;
             //なければそのままスルー
             TextClear += taskIndexQueue[currentTaskNum][i];
+            //タスク内容をクリアしたか
+            if (i + 1 == taskIndexQueue[currentTaskNum].Length)
+                currentTaskClear = true;
         }
         //タグの締め
         TaskTextObject.text += TextClear + "</color>";
