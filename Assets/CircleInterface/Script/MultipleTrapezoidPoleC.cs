@@ -33,6 +33,11 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     //色の変更など
     MeshRenderer meshRenderer;
 
+    //stage情報保存
+    int stage;
+    //ring1であるか
+    public bool isRing1Pole = false;
+
     //面情報
     int[] EndFace = new int[6]  { 1,      0,      3,
                                   0,      2,      3 };
@@ -65,12 +70,15 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     }
 
     void Start() {
+        //stage情報初期化
+        stage = variablesC.stage;
+
         if (myParent == null)
             createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
         else
             createSorce = myParent.GetComponent<createTrapezoidPoleC>();
         systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
-        
+
         //自分の番号を名前から取得し初期化
         poleNum = int.Parse(transform.name) - 1;
 
@@ -203,7 +211,9 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         transform.parent = createSorce.gameObject.transform;
     }
 
-    void Update() { 
+    void Update() {
+        //stage情報取得
+        stage = variablesC.stage;
         //テキストの更新
         TmeshC.text = MyText;
     }

@@ -248,6 +248,9 @@ public class centralSystemC : MonoBehaviour {
     }
 
     private void ChuringSystem() {
+        Debug.Log("stage = " + stage + " . " +
+                         "churingNumber = " + churingNumber + " . " +
+                         "baseNumber = " + baseNumber + " .");
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             //数値を反転し、システムキーの名前を参照する
@@ -285,11 +288,11 @@ public class centralSystemC : MonoBehaviour {
             setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
             //次の状態へ
             stage = 1;
-            /* ここで副輪を呼ぶ */
+            /* ここで副輪を呼ぶ *//*
             GameObject subCircle = new GameObject("subCircle");
             variables.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
             subCircle.transform.position = keyObjects[churingNumber].transform.Find("text").transform.position;
-            subCircle.AddComponent<createTrapezoidPoleC>();
+            subCircle.AddComponent<createTrapezoidPoleC>();*/
             //if (isGetKeyObjects)
             //    SetKeytext();
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {

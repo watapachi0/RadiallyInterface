@@ -1,0 +1,18 @@
+ring1
+ring2
+
+stage0（そのままorポインタ帰還）
+ring1 濃く　入力可能
+ring2　存在せず
+
+stage1（ring1に接触～ring2に接触中）
+ring1 薄く　入力停止　ring2呼び出す
+ring2 濃く　入力可能
+
+stage2（ring2の外か中に移動～中心部に移動中）
+ring1 （更に）薄く　入力停止
+ring2 薄く　入力不可
+
+stage0（ポインタ帰還）
+ring1　濃く　入力可能
+ring2　消す

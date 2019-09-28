@@ -80,6 +80,28 @@ public class variablesC : MonoBehaviour {
     //キーの縁取りの本体からのずらし加減
     public static float lineShiftSlightly { get; set; }
 
+    //システムの状態
+    public static int stage { get; set; }
+    /* ring1 → 主に真ん中にいるリング
+     * ring2 → 途中で出現する2個目のリング
+     *
+     * stage: 0（そのままorポインタ帰還）
+     * ring1 濃く　入力可能
+     * ring2 存在せず
+     * 
+     * stage: 1（ring1に接触～ring2に接触中）
+     * ring1 薄く　入力停止　ring2呼び出す
+     * ring2 濃く　入力可能
+     * 
+     * stage: 2（ring2の外か中に移動～中心部に移動中）
+     * ring1 （更に）薄く　入力停止
+     * ring2 薄く　入力不可
+     * 
+     * stage: 0（ポインタ帰還）
+     * ring1 濃く　入力可能
+     * ring2 消す
+     */
+
     /* Inspector用 */
     [SerializeField, Header("円環の内径(単位cm)")]
     private float RadiusIn;
@@ -158,5 +180,8 @@ public class variablesC : MonoBehaviour {
         material_SystemText = Material_SystemText;
         //テキストのフォントサイズ
         systemTextFontSize = (int)( SystemTextFontSize * 100 );
+
+        //stage初期化
+        stage = 0;
     }
 }
