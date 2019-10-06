@@ -24,11 +24,43 @@ public class ObjTransRota : MonoBehaviour {
     //ピンチで操作する対象オブジェクト
     public GameObject targetObject;
 
+    //左手がピンチ中
+    private bool isLPinch = false;
+    //右手がピンチ中
+    private bool isRPinch = false;
+
     void Start() {
 
     }
 
     void Update() {
+        //右手でピンチ中はそもそも考えない
+        if (!isRPinch) {
+            if (!LThumb.activeInHierarchy) {
+                isLPinch = false;
+            } else if (Vector3.Distance(LThumb.transform.position, LIndex.transform.position) <= pinchDistance) {
+                isLPinch = true;
+            } else {
+                isLPinch = false;
+            }
+        }
+        //左手でピンチ中はそもそも考えない
+        if (!isLPinch) {
+            if (!RThumb.activeInHierarchy) {
+                isRPinch = false;
+            } else if (Vector3.Distance(RThumb.transform.position, RIndex.transform.position) <= pinchDistance) {
+                isRPinch = true;
+            } else {
+                isRPinch = false;
+            }
+        }
+
+        if (isLPinch) {
+            //L人差し指位置にシステムを配置
+            //R人差し指の座標を保存
+            //キューブ表示
+            //方向を記録し、回転
+        }
     }
 
     public void SetThumbAndIndex(GameObject LThumbObj, GameObject RThumbObj, GameObject LIndexObj, GameObject RIndexObj) {
