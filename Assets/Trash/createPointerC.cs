@@ -73,6 +73,8 @@ public class createPointerC : MonoBehaviour {
                     rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                     //今の目的部分を次の親にする
                     fingerParent = target;
+                    //配列に保存
+                    fingers[LR, Name, Joint] = target;
                 }
             }
         }

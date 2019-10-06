@@ -5,7 +5,7 @@ using UnityEngine;
 /*
  * それぞれの指にポインタ―を付与する
  */
-
+ 
 public class createPointer : MonoBehaviour {
 
     //private GameObject[,,] fingers;
@@ -73,9 +73,18 @@ public class createPointer : MonoBehaviour {
                     rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                     //今の目的部分を次の親にする
                     fingerParent = target;
+                    //配列に保存
+                    fingers[LR, Name, Joint] = target;
                 }
             }
         }
+
+        //ピンチ用スクリプトの初期化
+        GetComponent<ObjTransRota>().SetThumbAndIndex(fingers[0, 2, 4],
+                                                      fingers[1, 2, 4],
+                                                      fingers[0, 1, 4],
+                                                      fingers[1, 2, 4]);
+
     }
 
     void Update() {
