@@ -80,10 +80,10 @@ public class createPointer : MonoBehaviour {
         }
 
         //ピンチ用スクリプトの初期化
-        GetComponent<ObjTransRota>().SetThumbAndIndex(fingers[0, 2, 4],
-                                                      fingers[1, 2, 4],
+        GetComponent<ObjTransRota>().SetThumbAndIndex(fingers[0, 5, 4],
+                                                      fingers[1, 5, 4],
                                                       fingers[0, 1, 4],
-                                                      fingers[1, 2, 4]);
+                                                      fingers[1, 1, 4]);
 
     }
 

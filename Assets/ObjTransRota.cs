@@ -29,6 +29,13 @@ public class ObjTransRota : MonoBehaviour {
     //右手がピンチ中
     private bool isRPinch = false;
 
+    //ピンチ時の他方の人差し指オブジェクト
+    private GameObject indexBaseObject = null;
+    //ピンチ時の他方の人差し指の初期座標
+    private Vector3 indexBaseVector;
+    //ピンチ時の他方の人差し指を中心に表れるキューブ群
+    private GameObject[] controlCubes = new GameObject[6];
+
     void Start() {
 
     }
@@ -57,10 +64,44 @@ public class ObjTransRota : MonoBehaviour {
 
         if (isLPinch) {
             //L人差し指位置にシステムを配置
+            targetObject.transform.position = LIndex.transform.position;
+            /*
             //R人差し指の座標を保存
-            //キューブ表示
+            if (indexBaseObject == null) {
+                indexBaseObject = RIndex;
+                indexBaseVector = indexBaseObject.transform.position;
+                //キューブ表示
+                genereteSixCubes();
+            }
             //方向を記録し、回転
+            objectRotation();
+            */
+        } else if (isRPinch) {
+            //R人差し指位置にシステムを配置
+            targetObject.transform.position = RIndex.transform.position;
+            /*
+            //L人差し指の座標を保存
+            if (indexBaseObject == null) {
+                indexBaseObject = LIndex;
+                indexBaseVector = indexBaseObject.transform.position;
+                //キューブ表示
+                genereteSixCubes();
+            }
+            //方向を記録し、回転
+            objectRotation();
+            */
+        } else {
+            /*
+            if (indexBaseObject != null)
+                indexBaseObject = null;
+            for (int i = 0; i < 6; i++) {
+                if (controlCubes[i]) {
+                    Destroy(controlCubes[i].gameObject);
+                }
+            }
+            */
         }
+
     }
 
     public void SetThumbAndIndex(GameObject LThumbObj, GameObject RThumbObj, GameObject LIndexObj, GameObject RIndexObj) {
@@ -68,5 +109,45 @@ public class ObjTransRota : MonoBehaviour {
         RThumb = RThumbObj;
         LIndex = LIndexObj;
         RIndex = RIndexObj;
+    }
+
+    private void genereteSixCubes() {
+        string[] cubesName = new string[6] { "Up", "Forward", "Right", "Back", "Left", "Down" };
+        Vector3[] cubesVector = new Vector3[6] { Vector3.up, Vector3.forward, Vector3.right, Vector3.back, Vector3.left, Vector3.down };
+        for (int i = 0; i < 6; i++) {
+            controlCubes[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            controlCubes[i].transform.name = "cube" + cubesName[i];
+            controlCubes[i].transform.position = indexBaseVector + cubesVector[i] * 0.1f;
+            controlCubes[i].transform.eulerAngles = Vector3.zero;
+            controlCubes[i].transform.localScale = Vector3.one * 0.05f;
+
+        }
+    }
+
+    private void objectRotation() {
+        Vector3 directionVector = indexBaseObject.transform.position - indexBaseVector;
+        if (Vector3.Distance(directionVector, Vector3.zero) >= 0.05f) {
+            // x < y
+            if (Mathf.Abs(directionVector.x) < Mathf.Abs(directionVector.y)) {
+                if (Mathf.Abs(directionVector.y) < Mathf.Abs(directionVector.z)) {
+                    // x < y < z  z最大
+                    //zが+なら+1に-なら-1に
+                    //directionVector = new Vector3(0, 0, directionVector.z > 0 ? 1 : -1);
+                } else {
+                    // x < y > z  y最大
+                    directionVector = new Vector3(0, directionVector.z > 0 ? 1 : -1, 0);
+                }
+            } else {
+                // x > y
+                if (Mathf.Abs(directionVector.x) < Mathf.Abs(directionVector.z)) {
+                    // z > x > y  z最大
+                    //directionVector = new Vector3(0, 0, directionVector.z > 0 ? 1 : -1);
+                } else {
+                    // z < x > y  x最大
+                   // directionVector = new Vector3(directionVector.z > 0 ? 1 : -1, 0, 0);
+                }
+            }
+        }
+        targetObject.transform.localEulerAngles+=directionVector;
     }
 }

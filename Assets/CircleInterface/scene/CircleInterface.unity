@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 72408994}
   - component: {fileID: 72408996}
   - component: {fileID: 72408995}
+  - component: {fileID: 72408997}
   m_Layer: 0
   m_Name: central
   m_TagString: Untagged
@@ -242,6 +243,20 @@ MonoBehaviour:
   leapPosition: {x: 0, y: 0.75, z: 0.646}
   leapRotation: {x: 0, y: 180, z: 0}
   centralPosition: {x: 0, y: 0.75, z: 0}
+--- !u!114 &72408997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72408990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80adf72586af0c4daebeb0bc6b1c4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pinchDistance: 0.04
+  targetObject: {fileID: 72408990}
 --- !u!1 &376788274
 GameObject:
   m_ObjectHideFlags: 0
