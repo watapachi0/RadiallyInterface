@@ -291,8 +291,8 @@ public class centralSystemC : MonoBehaviour {
             /* ここで副輪を呼ぶ */
             GameObject subCircle = new GameObject("subCircle");
             variablesC.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
-                    //subCircle.transform.position = keyObjects[churingNumber].transform.Find("text").transform.position;
-            subCircle.AddComponent<createTrapezoidPoleC>();
+            createTrapezoidPoleC subTrapezoid = subCircle.AddComponent<createTrapezoidPoleC>();
+            subTrapezoid.SetCreateSorce(this.gameObject);
             //if (isGetKeyObjects)
             //    SetKeytext();
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {

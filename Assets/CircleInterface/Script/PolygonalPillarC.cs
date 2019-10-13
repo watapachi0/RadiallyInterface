@@ -73,6 +73,9 @@ public class PolygonalPillarC : MonoBehaviour {
 
         //クリエイト元を親にする
         transform.parent = createSorce.gameObject.transform;
+        //親の余計なスクリプトの削除フラグを立てる
+        createSorce.IsReadyToDestroy(true);
+
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか

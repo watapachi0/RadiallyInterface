@@ -7,6 +7,13 @@ public class createTrapezoidPoleC : MonoBehaviour {
     private Vector3[] vertex;           //各台形柱が計算した頂点情報
     private bool[] isCalledBackVertex;  //頂点座標が返されているか確認
 
+    //スクリプト消去フラグ
+    private bool isReadyToDestroy = false;
+
+    private GameObject createSorceObj = null;
+    //中心の多角柱用のインスタンス
+    private PolygonalPillarC polygonalPillar = null;
+
     void Start() {
         //頂点情報の初期化
         vertex = new Vector3[variablesC.poleSum * variablesC.trapezoidDivisionNum * 10];
@@ -30,19 +37,26 @@ public class createTrapezoidPoleC : MonoBehaviour {
     }
 
     void Update() {
+        if (isReadyToDestroy) {
+            //親がいるならそいつの子供になる
+            if (createSorceObj != null)
+                this.gameObject.transform.parent = createSorceObj.transform;
+
+            //コンポーネント削除
+            Destroy(this);
+        }
+
         for (int i = 0; ( i < variablesC.poleSum ) && isCalledBackVertex[i]; i++) {
-            if (i + 1 == variablesC.poleSum) {
+            if (i + 1 == variablesC.poleSum && polygonalPillar == null) {
                 //多角形用の頂点群の準備
                 variablesC.polygonalPillarVertex = new Vector3[variablesC.poleSum * 10];
                 variablesC.polygonalPillarVertex = vertex;
 
                 //中心の多角柱を描画する
                 GameObject obj = new GameObject(0.ToString());
-                PolygonalPillarC polygonalPillar = obj.AddComponent<PolygonalPillarC>();
+                polygonalPillar = obj.AddComponent<PolygonalPillarC>();
                 polygonalPillar.setMyParent(this.gameObject);
 
-                //コンポーネント削除
-                Destroy(this);
             }
         }
     }
@@ -54,5 +68,13 @@ public class createTrapezoidPoleC : MonoBehaviour {
 
         vertex[8 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = variablesC.createSourcePosition;
         vertex[9 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = new Vector3(variablesC.createSourcePosition.x, variablesC.createSourcePosition.y, variablesC.createSourcePosition.z + variablesC.poleHeight);
+    }
+
+    public void IsReadyToDestroy(bool ready) {
+        isReadyToDestroy = ready;
+    }
+
+    public void SetCreateSorce(GameObject sorceObject) {
+        createSorceObj = sorceObject;
     }
 }
