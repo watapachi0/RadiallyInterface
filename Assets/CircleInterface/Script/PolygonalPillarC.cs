@@ -13,7 +13,9 @@ using UnityEngine.EventSystems;
 
 public class PolygonalPillarC : MonoBehaviour {
 
+    private createTrapezoidPoleC createSorce;
     private centralSystemC systemScript;
+    private GameObject myParent = null;
 
     //面情報
     int[] face;
@@ -23,6 +25,12 @@ public class PolygonalPillarC : MonoBehaviour {
     }
 
     void Start() {
+
+        if (myParent == null)
+            createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
+        else
+            createSorce = myParent.GetComponent<createTrapezoidPoleC>();
+
         //メッシュ作成
         Mesh mesh = new Mesh();
         //メッシュリセット
@@ -64,7 +72,7 @@ public class PolygonalPillarC : MonoBehaviour {
         }
 
         //クリエイト元を親にする
-        transform.parent = systemScript.gameObject.transform;
+        transform.parent = createSorce.gameObject.transform;
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか
@@ -95,5 +103,9 @@ public class PolygonalPillarC : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.name.Substring(2) == "index_endPointer")
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+    }
+
+    public void setMyParent(GameObject parent) {
+        myParent = parent;
     }
 }

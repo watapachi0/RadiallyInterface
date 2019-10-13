@@ -94,6 +94,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         for (DivisionNum = 0; DivisionNum < variablesC.trapezoidDivisionNum; DivisionNum++) {
             //頂点計算
             CalcVertices();
+            /////////////////////////////////////////////////////////////////////////////////////
 
             if (DivisionNum == 0) {
                 //最初の一枚だけ別計算
@@ -223,22 +224,22 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         Vector3 vertex1 = new Vector3(variablesC.radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + /*variablesC.createSourcePosition*/transform.position;
+                                      + variablesC.createSourcePosition;
         //台形の外側の頂点座標その2 
         Vector3 vertex2 = new Vector3(variablesC.radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + /*variablesC.createSourcePosition*/transform.position;
+                                      + variablesC.createSourcePosition;
         //台形の内側の頂点座標その1
         Vector3 vertex3 = new Vector3(variablesC.radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + /*variablesC.createSourcePosition*/transform.position;
+                                      + variablesC.createSourcePosition;
         //台形の内側の頂点座標その2
         Vector3 vertex4 = new Vector3(variablesC.radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       variablesC.radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
-                                      + /*variablesC.createSourcePosition*/transform.position;
+                                      + variablesC.createSourcePosition;
         //全頂点数8にそれぞれ座標が2つずつある
         for (int i = 0; i < 8 * 2; i++) {
             if (i % 8 == 0) {
@@ -375,6 +376,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //子オブジェクトに設定
         textCentor.transform.parent = this.transform;
     }
+
     public void setMyParent(GameObject parent) {
         myParent = parent;
     }

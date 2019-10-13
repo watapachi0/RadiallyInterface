@@ -39,6 +39,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
                 //中心の多角柱を描画する
                 GameObject obj = new GameObject(0.ToString());
                 PolygonalPillarC polygonalPillar = obj.AddComponent<PolygonalPillarC>();
+                polygonalPillar.setMyParent(this.gameObject);
 
                 //コンポーネント削除
                 Destroy(this);
@@ -51,7 +52,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
         for (int i = 0; i < 8; i++)
             vertex[( poleNum - 0 ) * 8 + i] = vertexies[i % 4];
 
-        vertex[8 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = transform.position;
-        vertex[9 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = new Vector3(transform.position.x, transform.position.y, transform.position.z + variablesC.poleHeight);
+        vertex[8 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = variablesC.createSourcePosition;
+        vertex[9 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = new Vector3(variablesC.createSourcePosition.x, variablesC.createSourcePosition.y, variablesC.createSourcePosition.z + variablesC.poleHeight);
     }
 }
