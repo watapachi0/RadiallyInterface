@@ -231,6 +231,10 @@ public class centralSystemC : MonoBehaviour {
 
     void Start() {
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
+        //XR用設定
+        if (variablesC.isOnXR) {
+            GameObject.Find("Main CameraNonVR").SetActive(false);
+        }
     }
 
     void Update() {
@@ -295,6 +299,12 @@ public class centralSystemC : MonoBehaviour {
             subTrapezoid.SetCreateSorce(this.gameObject);
             //if (isGetKeyObjects)
             //    SetKeytext();
+
+            //主輪を接触不可にする
+            //主輪の色を変える
+            //副輪のキーのオブジェクトを取得
+            //母音からそれぞれのキー値を決定し、反映
+
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
             //まず、特殊なコマンドは実行する
