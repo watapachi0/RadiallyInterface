@@ -94,7 +94,6 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         for (DivisionNum = 0; DivisionNum < variablesC.trapezoidDivisionNum; DivisionNum++) {
             //頂点計算
             CalcVertices();
-            /////////////////////////////////////////////////////////////////////////////////////
 
             if (DivisionNum == 0) {
                 //最初の一枚だけ別計算

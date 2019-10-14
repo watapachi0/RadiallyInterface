@@ -25,10 +25,15 @@ public class centralSystemC : MonoBehaviour {
     private bool isGetKeyObjects = false;
     /* キーオブジェクト */                          //中身はキーを再表示する度に再設定
     private GameObject[] keyObjects;
+    private GameObject[] keySubObjects;
 
     /*[親のpointNum,set]*/
     protected string[,] textSet;
 
+    //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
+    private bool doLateUpdat = false;
+
+    //Radially用textSet
     /* か行見出し　か行あ段　か行い段  …
      * あ
      * さ行見出し　さ行あ段　さ行い段  …
@@ -135,6 +140,99 @@ public class centralSystemC : MonoBehaviour {
                                                                        { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
                                                                        { "0"     , "0" , "かな", "BS", "英"   , "カナ" , "Error"} };
 
+    //Circle用textset
+    //デバッグ用
+    protected readonly string[,] textSetDebugCircle = new string[10, 6] {    { "ka"   , "ki", "ku"  , "ke"   , "ko"   , "Error"},
+                                                                             { "sa"   , "si", "su"  , "se"   , "so"   , "Error"},
+                                                                             { "ta"   , "ti", "tu"  , "te"   , "to"   , "Error"},
+                                                                             { "na"   , "ni", "nu"  , "ne"   , "no"   , "Error"},
+                                                                             { "ha"   , "hi", "hu"  , "he"   , "ho"   , "Error"},
+                                                                             { "ma"   , "mi", "mu"  , "me"   , "mo"   , "Error"},
+                                                                             { "ya"   , "゛", "yu"  , "゜"   , "yo"   , "Error"},
+                                                                             { "ra"   , "ri", "ru"  , "re"   , "ro"   , "Error"},
+                                                                             { "wa"   , "wo", "nn"  , "改/確", "空/変", "Error"},
+                                                                             { "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
+    //ひらがな
+    protected readonly string[,] textSetHiraganaCircle = new string[15, 7] { { "か", "か"   , "き", "く", "け"   , "こ"   , "Error"},
+                                                                       { "あ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "Error"},
+                                                                       { "た", "た"   , "ち", "つ", "て"   , "と"   , "Error"},
+                                                                       { "い", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error"},
+                                                                       { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "Error"},
+                                                                       { "う", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error"},
+                                                                       { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "Error"},
+                                                                       { "え", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error"},
+                                                                       { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error"},
+                                                                       { "お", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "--", "記/数", "BS", "英", "カナ" , "小"   , "Error"} };
+    //カタカナ
+    protected readonly string[,] textSetKatakanaCircle = new string[15, 7] { { "カ", "カ"   , "キ", "ク", "ケ"   , "コ"   , "Error"},
+                                                                       { "ア", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "サ", "サ"   , "シ", "ス", "セ"   , "ソ"   , "Error"},
+                                                                       { "タ", "タ"   , "チ", "ツ", "テ"   , "ト"   , "Error"},
+                                                                       { "イ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ナ", "ナ"   , "ニ", "ヌ", "ネ"   , "ノ"   , "Error"},
+                                                                       { "ハ", "ハ"   , "ヒ", "フ", "ヘ"   , "ホ"   , "Error"},
+                                                                       { "ウ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "マ", "マ"   , "ミ", "ム", "メ"   , "モ"   , "Error"},
+                                                                       { "ヤ", "ヤ"   , "゛", "ユ", "゜"   , "ヨ"   , "Error"},
+                                                                       { "エ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "ラ", "ラ"   , "リ", "ル", "レ"   , "ロ"   , "Error"},
+                                                                       { "ワ", "ワ"   , "ヲ", "ン", "改/確", "空/変", "Error"},
+                                                                       { "オ", "--"   , "--", "--", "--"   , "--"   , "Error"},
+                                                                       { "--", "記/数", "BS", "英", "かな" , "小"   , "Error"} };
+    //小文字アルファベット
+    protected readonly string[,] textSetAlphabetCircle = new string[15, 7] { { "abc" , "a"    , "b" , "c"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "def" , "d"    , "e" , "f"   , "--"   , "--"   , "Error"},
+                                                                       { "ghi" , "g"    , "h" , "i"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "jkl" , "j"    , "k" , "l"   , "--"   , "--"   , "Error"},
+                                                                       { "mno" , "m"    , "n" , "o"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "pqrs", "p"    , "q" , "r"   , "s"    , "--"   , "Error"},
+                                                                       { "tuv" , "t"    , "u" , "v"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "wxyz", "w"    , "x" , "y"   , "z"    , "--"   , "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "改/確", "空/変", "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "--"  , "記/数", "BS", "かな", "カナ" , "Ａ"   , "Error"} };
+    //大文字アルファベット
+    protected readonly string[,] textSetALPHABETCircle = new string[15, 7] { { "ABC" , "A"    , "B" , "C"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "DEF" , "D"    , "E" , "F"   , "--"   , "--"   , "Error"},
+                                                                       { "GHI" , "G"    , "H" , "I"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "JKL" , "J"    , "K" , "L"   , "--"   , "--"   , "Error"},
+                                                                       { "MNO" , "M"    , "N" , "O"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "PQRS", "P"    , "Q" , "R"   , "S"    , "--"   , "Error"},
+                                                                       { "TUV" , "T"    , "U" , "V"   , "--"   , "--"   , "Error"},
+                                                                       { ""    , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "WXYZ", "W"    , "X" , "Y"   , "Z"    , "--"   , "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "改/確", "空/変", "Error"},
+                                                                       { "--"  , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "--"  , "記/数", "BS", "かな", "カナ" , "ａ"   , "Error"} };
+    //数字と記号
+    protected readonly string[,] textSetSignNumCircle = new string[15, 7] {  { "1-/:;" , "1" , "-"   , "/" , ":"    , ";"    , "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "2()\\&", "2" , "("   , ")" , "\\"   , "&"    , "Error"},
+                                                                       { "3@\".,", "3" , "@"   , "\"", "."    , ","    , "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "4?!'"  , "4" , "?"   , "!" , "'"    , "--"   , "Error"},
+                                                                       { "5[]{}" , "5" , "["   , "]" , "{"    , "}"    , "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "6#%^*" , "6" , "#"   , "%" , "^"    , "*"    , "Error"},
+                                                                       { "7+=_|" , "7" , "+"   , "=" , "_"    , "|"    , "Error"},
+                                                                       { ""      , ""  , "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "8~<>$" , "8" , "~"   , "<" , ">"    , "$"    , "Error"},
+                                                                       { "9"     , "9" , "--"  , "--", "改/確", "空/変", "Error"},
+                                                                       { ""      , "--", "--"  , "--", "--"   , "--"   , "Error"},
+                                                                       { "0"     , "0" , "かな", "BS", "英"   , "カナ" , "Error"} };
+
     //濁点、半濁点、小文字対応
     /* あ行の検索index   あ   い   う   …
      * あ行の濁点文字    あ゛ い゛ う゛ …
@@ -223,7 +321,7 @@ public class centralSystemC : MonoBehaviour {
         variablesC.displaySystemCommand = this.dispSystemCommand;
         //variablesC.SystemCommandVector = this.SystemCommandVector;
         //文字セット初期化
-        textSet = textSetHiragana;
+        textSet = textSetHiraganaCircle;
         //XRであるかどうか
         variablesC.isOnXR = XRSettings.enabled;
         variablesC.createSourcePosition = transform.position;
@@ -300,10 +398,31 @@ public class centralSystemC : MonoBehaviour {
             //if (isGetKeyObjects)
             //    SetKeytext();
 
-            //主輪を接触不可にする
-            //主輪の色を変える
-            //副輪のキーのオブジェクトを取得
+            //主輪を接触不可にし、色を変える
+            for (int i = 1; i < keyObjects.Length; i++) {
+                //当たり判定を消す
+                keyObjects[i].GetComponent<MeshCollider>().enabled = false;
+                //色を薄くする
+                MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
+//                Material material = meshrenderer.material;
+                meshrenderer.material = variablesC.material_LineRenderer;
+//                material.color = new Color(material.color.r, material.color.g, material.color.b, 0.3f);
+
+                //LineRendererの表示を消す
+                LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
+                Color lineMaterial = lineRenderer.material.color;
+                lineMaterial = new Color(lineMaterial.r, lineMaterial.g, lineMaterial.b, lineMaterial.a / 2f);
+                //                keyObjects[i].GetComponent<LineRenderer>().enabled = false;
+            }
+
+            /*
+             * 以下で実行したいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
+             * そのため、コルーチンで処理を行う
+             */
+            //副輪のキーのオブジェクトを取得し、
             //母音からそれぞれのキー値を決定し、反映
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys();
+            StartCoroutine(waitGenereteSubKeys);
 
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
@@ -327,6 +446,27 @@ public class centralSystemC : MonoBehaviour {
             Debug.LogWarning("Error. stage = " + stage + " ." +
                              " churingNumber = " + churingNumber + " ." +
                              " baseNumber = " + baseNumber);
+        }
+    }
+
+    IEnumerator WaitGenereteSubKeys() {
+        //副輪のキーのオブジェクトを取得し、
+        //母音からそれぞれのキー値を決定し、反映
+        int subObjectsNum = 5;//textSet.GetLength(1);
+        keySubObjects = new GameObject[subObjectsNum];
+        for (int i = 0; i < keySubObjects.Length; i++) {
+            //取得したいオブジェクトやその親がジェネレートされるまで処理しない
+            if (transform.Find("subCircle") == null || transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject == null) {
+                Debug.LogWarning("例外処理発生");
+                //for文が進まないようにロールバックする
+                i--;
+                yield return null;
+            } else {
+                //問題なければ取得する
+                Debug.Log("取得中 " + i + " 番目");
+                keySubObjects[i] = transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject;
+                keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[baseNumber, i];
+            }
         }
     }
 
