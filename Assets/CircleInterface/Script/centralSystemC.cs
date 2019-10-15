@@ -401,26 +401,20 @@ public class centralSystemC : MonoBehaviour {
             //主輪を接触不可にし、色を変える
             for (int i = 1; i < keyObjects.Length; i++) {
                 //当たり判定を消す
-                keyObjects[i].GetComponent<MeshCollider>().enabled = false;
+                keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = false;
                 //色を薄くする
                 MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
-//                Material material = meshrenderer.material;
-                meshrenderer.material = variablesC.material_LineRenderer;
-//                material.color = new Color(material.color.r, material.color.g, material.color.b, 0.3f);
+                meshrenderer.material = variablesC.material_TrapezoidPole_Normal_Nonactive;
 
                 //LineRendererの表示を消す
                 LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
-                Color lineMaterial = lineRenderer.material.color;
-                lineMaterial = new Color(lineMaterial.r, lineMaterial.g, lineMaterial.b, lineMaterial.a / 2f);
-                //                keyObjects[i].GetComponent<LineRenderer>().enabled = false;
+                lineRenderer.material = variablesC.material_LineRenderer_Nonactive;
             }
 
             /*
-             * 以下で実行したいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
+             * 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
              */
-            //副輪のキーのオブジェクトを取得し、
-            //母音からそれぞれのキー値を決定し、反映
             IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys();
             StartCoroutine(waitGenereteSubKeys);
 
@@ -457,13 +451,13 @@ public class centralSystemC : MonoBehaviour {
         for (int i = 0; i < keySubObjects.Length; i++) {
             //取得したいオブジェクトやその親がジェネレートされるまで処理しない
             if (transform.Find("subCircle") == null || transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject == null) {
-                Debug.LogWarning("例外処理発生");
+                //Debug.LogWarning("例外処理発生：コルーチンを続行します");
                 //for文が進まないようにロールバックする
                 i--;
                 yield return null;
             } else {
                 //問題なければ取得する
-                Debug.Log("取得中 " + i + " 番目");
+                //Debug.Log("取得中 " + i + " 番目");
                 keySubObjects[i] = transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject;
                 keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[baseNumber, i];
             }

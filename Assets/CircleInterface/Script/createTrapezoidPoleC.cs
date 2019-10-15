@@ -22,10 +22,15 @@ public class createTrapezoidPoleC : MonoBehaviour {
         isCalledBackVertex = new bool[variablesC.poleSum * variablesC.trapezoidDivisionNum];
         for (int i = 0; i < variablesC.poleSum; i++) {
             obj = new GameObject(( i + 1 ).ToString());
+            obj.transform.position = transform.position;
             //TrapezoidPole trianglePoleC = obj.AddComponent<TrapezoidPoleC>();
             MultipleTrapezoidPoleC trianglePole = obj.AddComponent<MultipleTrapezoidPoleC>();
-            obj.transform.position = transform.position;
             trianglePole.setMyParent(this.gameObject);
+            if (createSorceObj != null) {
+                trianglePole.isSubRingPole = true;
+            } else {
+                trianglePole.isSubRingPole = false;
+            }
             isCalledBackVertex[i] = false;
         }
         //システムキーの生成

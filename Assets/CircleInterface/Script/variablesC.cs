@@ -20,6 +20,12 @@ public class variablesC : MonoBehaviour {
     //円環の外側の半径
     public static float radiusOut { get; set; }
 
+    //多角形部分の半径・円環の内側の半径(Circle用副輪)
+    public static float radiusIn_subCircle { get; set; }
+
+    //円環の外側の半径(Circle用副輪)
+    public static float radiusOut_subCircle { get; set; }
+
     //システムの厚さ
     public static float poleHeight { get; set; }
 
@@ -38,8 +44,17 @@ public class variablesC : MonoBehaviour {
     //台形用接触時マテリアル
     public static Material material_TrapezoidPole_Touch { get; set; }
 
+    //台形用通常マテリアル(Circleでの非アクティブ時)
+    public static Material material_TrapezoidPole_Normal_Nonactive { get; set; }
+
+    //台形用接触時マテリアル(Circleでの非アクティブ時)
+    public static Material material_TrapezoidPole_Touch_Nonactive { get; set; }
+
     //台形の強調ライン用マテリアル
     public static Material material_LineRenderer { get; set; }
+
+    //台形の強調ライン用マテリアル(Circleでの非アクティブ時)
+    public static Material material_LineRenderer_Nonactive { get; set; }
 
     //台形部分の分割数
     public static int trapezoidDivisionNum { get; set; }
@@ -109,6 +124,12 @@ public class variablesC : MonoBehaviour {
     [SerializeField, Header("円環の外径(単位cm)")]
     private float RadiusOut;
 
+    [SerializeField, Header("円環の内径(単位cm)(Circle用副輪)")]
+    private float RadiusIn_subCircle;
+
+    [SerializeField, Header("円環の外径(単位cm)(Circle用副輪)")]
+    private float RadiusOut_subCircle;
+
     [SerializeField, Header("円環の厚さ(単位cm)")]
     private float PoleHeight;
 
@@ -130,8 +151,17 @@ public class variablesC : MonoBehaviour {
     [SerializeField, Header("キーの接触時のマテリアル")]
     private Material Material_TrapezoidPole_Touch;
 
+    [SerializeField, Header("キーの常態のマテリアル(Circleでの非アクティブ時)")]
+    private Material Material_TrapezoidPole_Normal_Nonactive;
+
+    [SerializeField, Header("キーの接触時のマテリアル(Circleでの非アクティブ時)")]
+    private Material Material_TrapezoidPole_Touch_Nonactive;
+
     [SerializeField, Header("キーの輪郭線のマテリアル")]
     private Material Material_LineRenderer;
+
+    [SerializeField, Header("キーの輪郭線のマテリアル(Circleでの非アクティブ時)")]
+    private Material Material_LineRenderer_Nonactive;
 
     [SerializeField, Header("円環外側のシステムキーのマテリアル")]
     private Material Material_SystemText;
@@ -153,6 +183,10 @@ public class variablesC : MonoBehaviour {
         radiusIn = RadiusIn / 100;
         //外形
         radiusOut = RadiusOut / 100;
+        //内径(Circle用副輪)
+        radiusIn_subCircle = RadiusIn_subCircle / 100;
+        //外形(Circle用副輪)
+        radiusOut_subCircle = RadiusOut_subCircle / 100;
         //厚さ
         poleHeight = PoleHeight / 100;
         //キー数
@@ -168,8 +202,14 @@ public class variablesC : MonoBehaviour {
         material_TrapezoidPole_Normal = Material_TrapezoidPole_Normal;
         //台形柱接触
         material_TrapezoidPole_Touch = Material_TrapezoidPole_Touch;
+        //台形柱通常(Circleでの非アクティブ時)
+        material_TrapezoidPole_Normal_Nonactive = Material_TrapezoidPole_Normal_Nonactive;
+        //台形柱接触(Circleでの非アクティブ時)
+        material_TrapezoidPole_Touch_Nonactive = Material_TrapezoidPole_Touch_Nonactive;
         //台形の強調ライン
         material_LineRenderer = Material_LineRenderer;
+        //台形の強調ライン(Circleでの非アクティブ時)
+        material_LineRenderer_Nonactive = Material_LineRenderer_Nonactive;
 
         //台形の分割回数
         trapezoidDivisionNum = TrapezoidDivisionNum + 1;

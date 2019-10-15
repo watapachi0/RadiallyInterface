@@ -35,8 +35,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     //stage情報保存
     int stage;
-    //ring1であるか
-    public bool isRing1Pole = false;
+    //副輪であるか
+    public bool isSubRingPole = false;
 
     //面情報
     int[] EndFace = new int[6]  { 1,      0,      3,
@@ -65,6 +65,9 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     //Text情報
     public string MyText { get; set; } = "";
+
+    //Circle用自身がアクティブかどうか
+    public bool isActiveObj { get; set; } = true;
 
     private void Awake() {
     }
@@ -219,24 +222,34 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     }
 
     private void CalcVertices() {
+        //Circle用副輪の半径対応
+        float radiusOut;
+        float radiusIn;
+        if (isSubRingPole) {
+            radiusOut = variablesC.radiusOut_subCircle;
+            radiusIn = variablesC.radiusIn_subCircle;
+        } else {
+            radiusOut = variablesC.radiusOut;
+            radiusIn = variablesC.radiusIn;
+        }
         //台形の外側の頂点座標その1
-        Vector3 vertex1 = new Vector3(variablesC.radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      variablesC.radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の外側の頂点座標その2 
-        Vector3 vertex2 = new Vector3(variablesC.radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      variablesC.radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の内側の頂点座標その1
-        Vector3 vertex3 = new Vector3(variablesC.radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      variablesC.radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の内側の頂点座標その2
-        Vector3 vertex4 = new Vector3(variablesC.radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      variablesC.radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+                                      radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //全頂点数8にそれぞれ座標が2つずつある
@@ -332,24 +345,32 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     }
 
     private void OnMouseEnter() {
-        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-        meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
-    }
-
-    private void OnMouseExit() {
-        meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
-    }
-
-    public void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name.Substring(2) == "index_endPointer") {
+        if (isActiveObj) {
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
             meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
         }
     }
 
-    public void OnTriggerExit(Collider other) {
-        if (other.gameObject.name.Substring(2) == "index_endPointer")
+    private void OnMouseExit() {
+        if (isActiveObj) {
             meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
+        }
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        if (isActiveObj) {
+            if (other.gameObject.name.Substring(2) == "index_endPointer") {
+                systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+                meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
+            }
+        }
+    }
+
+    public void OnTriggerExit(Collider other) {
+        if (isActiveObj) {
+            if (other.gameObject.name.Substring(2) == "index_endPointer")
+                meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
+        }
     }
 
     private void make3Dtext() {

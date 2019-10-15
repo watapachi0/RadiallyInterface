@@ -156,6 +156,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RadiusIn: 10
   RadiusOut: 20
+  RadiusIn_subCircle: 5
+  RadiusOut_subCircle: 10
   PoleHeight: 10
   LineRendererWidth: 0.5
   LineShiftSlightly: 0.1
@@ -166,7 +168,13 @@ MonoBehaviour:
     type: 2}
   Material_TrapezoidPole_Touch: {fileID: 2100000, guid: 3d14b6416ac245f469763fd4da7aee51,
     type: 2}
+  Material_TrapezoidPole_Normal_Nonactive: {fileID: 2100000, guid: 7a04c7c8b94f9d44eb5486508dbcc1f7,
+    type: 2}
+  Material_TrapezoidPole_Touch_Nonactive: {fileID: 2100000, guid: dc4a889cab03c964db752ee439e21f75,
+    type: 2}
   Material_LineRenderer: {fileID: 2100000, guid: 70e279ecf72f91d4191dd1cf20133d5f,
+    type: 2}
+  Material_LineRenderer_Nonactive: {fileID: 2100000, guid: 39ef95f0a54fff34596f665a8ddf4e1b,
     type: 2}
   Material_SystemText: {fileID: 2100000, guid: 8f9a2cd7ed47af94c9ec1ce7e40f7da6, type: 2}
   SystemCommandRadius: 30
