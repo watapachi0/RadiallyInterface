@@ -212,7 +212,7 @@ public class variablesC : MonoBehaviour {
         material_LineRenderer_Nonactive = Material_LineRenderer_Nonactive;
 
         //台形の分割回数
-        trapezoidDivisionNum = TrapezoidDivisionNum + 1;
+        trapezoidDivisionNum = TrapezoidDivisionNum + 1 - 1;
 
         //システムキーの半径
         systemCommandRadius = SystemCommandRadius / 100;

@@ -16,10 +16,10 @@ public class createTrapezoidPoleC : MonoBehaviour {
 
     void Start() {
         //頂点情報の初期化
-        vertex = new Vector3[variablesC.poleSum * variablesC.trapezoidDivisionNum * 10];
+        vertex = new Vector3[variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) * 10];
         //台形柱の生成
         GameObject obj;
-        isCalledBackVertex = new bool[variablesC.poleSum * variablesC.trapezoidDivisionNum];
+        isCalledBackVertex = new bool[variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 )];
         for (int i = 0; i < variablesC.poleSum; i++) {
             obj = new GameObject(( i + 1 ).ToString());
             obj.transform.position = transform.position;
@@ -71,8 +71,8 @@ public class createTrapezoidPoleC : MonoBehaviour {
         for (int i = 0; i < 8; i++)
             vertex[( poleNum - 0 ) * 8 + i] = vertexies[i % 4];
 
-        vertex[8 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = variablesC.createSourcePosition;
-        vertex[9 * variablesC.poleSum * variablesC.trapezoidDivisionNum + poleNum - 0] = new Vector3(variablesC.createSourcePosition.x, variablesC.createSourcePosition.y, variablesC.createSourcePosition.z + variablesC.poleHeight);
+        vertex[8 * variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) + poleNum - 0] = variablesC.createSourcePosition;
+        vertex[9 * variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) + poleNum - 0] = new Vector3(variablesC.createSourcePosition.x, variablesC.createSourcePosition.y, variablesC.createSourcePosition.z + variablesC.poleHeight);
     }
 
     public void IsReadyToDestroy(bool ready) {

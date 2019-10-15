@@ -86,15 +86,15 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         poleNum = int.Parse(transform.name) - 1;
 
         //LineVertex初期化  最初の面4頂点+中間面4頂点+最後の面4頂点
-        LineVertex = new Vector3[4 + ( variablesC.trapezoidDivisionNum - 1 ) * 4 + 4];
+        LineVertex = new Vector3[4 + ( variablesC.trapezoidDivisionNum + 1 - 1 ) * 4 + 4];
         //格納先も初期化
-        lineVertecies = new Vector3[8 + 4 * ( variablesC.trapezoidDivisionNum - 1 ) + 8];
+        lineVertecies = new Vector3[8 + 4 * ( variablesC.trapezoidDivisionNum + 1 - 1 ) + 8];
 
         // CombineMeshes()する時に使う配列   始端と終端も含めるので+2
-        CombineInstance[] combineInstanceAry = new CombineInstance[variablesC.trapezoidDivisionNum + 2];
+        CombineInstance[] combineInstanceAry = new CombineInstance[variablesC.trapezoidDivisionNum + 1 + 2];
 
         //メッシュ作成
-        for (DivisionNum = 0; DivisionNum < variablesC.trapezoidDivisionNum; DivisionNum++) {
+        for (DivisionNum = 0; DivisionNum < variablesC.trapezoidDivisionNum + 1; DivisionNum++) {
             //頂点計算
             CalcVertices();
 
@@ -125,7 +125,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             combineInstanceAry[DivisionNum + 1].mesh = mesh;
             combineInstanceAry[DivisionNum + 1].transform = Matrix4x4.Translate(transform.position);
 
-            if (DivisionNum + 1 == variablesC.trapezoidDivisionNum) {
+            if (DivisionNum + 1 == variablesC.trapezoidDivisionNum + 1) {
                 //最後の一枚だけ別計算
                 //メッシュ作成
                 Mesh meshLast = new Mesh();
@@ -233,23 +233,23 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             radiusIn = variablesC.radiusIn;
         }
         //台形の外側の頂点座標その1
-        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の外側の頂点座標その2 
-        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      radiusOut * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の内側の頂点座標その1
-        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 0 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の内側の頂点座標その2
-        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
-                                      radiusIn * Mathf.Cos(( (float)poleNum * variablesC.trapezoidDivisionNum + DivisionNum + 1 ) / (float)( variablesC.poleSum * variablesC.trapezoidDivisionNum ) * Mathf.PI * 2),
+        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //全頂点数8にそれぞれ座標が2つずつある
@@ -280,7 +280,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         for (int i = 0; i < 4; i++) {
             LineVertex[DivisionNum * 4 + i] = SideVertex[i];
         }
-        if (DivisionNum + 1 == variablesC.trapezoidDivisionNum) {
+        if (DivisionNum + 1 == variablesC.trapezoidDivisionNum + 1) {
             LineVertex[DivisionNum * 4 + 0 + 4] = SideVertex[6];
             LineVertex[DivisionNum * 4 + 1 + 4] = SideVertex[7];
             LineVertex[DivisionNum * 4 + 2 + 4] = SideVertex[4];
@@ -294,18 +294,18 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             EndVertex[1] = new Vector3(vertex1.x, vertex1.y, vertex1.z + variablesC.poleHeight);
             EndVertex[2] = vertex3;
             EndVertex[3] = new Vector3(vertex3.x, vertex3.y, vertex3.z + variablesC.poleHeight);
-        } else if (DivisionNum + 1 == variablesC.trapezoidDivisionNum) {
+        } else if (DivisionNum + 1 == variablesC.trapezoidDivisionNum + 1) {
             //最後の端面
             EndVertex[0] = new Vector3(vertex2.x, vertex2.y, vertex2.z + variablesC.poleHeight);
             EndVertex[1] = vertex2;
             EndVertex[2] = new Vector3(vertex4.x, vertex4.y, vertex4.z + variablesC.poleHeight);
             EndVertex[3] = vertex4;
         }
-        createSorce.callBackVertex(new Vector3[4] { SideVertex[0], SideVertex[6], SideVertex[1], SideVertex[7] }, ( int.Parse(gameObject.name) - 1 ) * variablesC.trapezoidDivisionNum + DivisionNum + 0);
+        createSorce.callBackVertex(new Vector3[4] { SideVertex[0], SideVertex[6], SideVertex[1], SideVertex[7] }, ( int.Parse(gameObject.name) - 1 ) * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0);
 
         //Textの座標を計算する
-        if (DivisionNum == variablesC.trapezoidDivisionNum / 2) {
-            if (variablesC.trapezoidDivisionNum % 2 == 0) {
+        if (DivisionNum == ( variablesC.trapezoidDivisionNum + 1 ) / 2) {
+            if (( variablesC.trapezoidDivisionNum + 1 ) % 2 == 0) {
                 //分割数が偶数回の時は
                 textPosition = ( SideVertex[0] + SideVertex[2] ) / 2f;
             } else {
@@ -322,25 +322,25 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
         lineVertecies[0] = LineVertex[0] + zMinus;
         lineVertecies[1] = LineVertex[1] + zPlus;
-        lineVertecies[1 + variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 1] + zPlus;
-        lineVertecies[2 + variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 0] + zMinus;
-        lineVertecies[2 + 2 * variablesC.trapezoidDivisionNum] = LineVertex[0] + zMinus;
-        lineVertecies[3 + 2 * variablesC.trapezoidDivisionNum] = LineVertex[2] + zMinus;
-        lineVertecies[4 + 2 * variablesC.trapezoidDivisionNum] = LineVertex[3] + zPlus;
-        lineVertecies[5 + 2 * variablesC.trapezoidDivisionNum] = LineVertex[1] + zPlus;
-        lineVertecies[6 + 2 * variablesC.trapezoidDivisionNum] = LineVertex[3] + zPlus;
-        lineVertecies[6 + 3 * variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 3] + zPlus;
-        lineVertecies[7 + 3 * variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 1] + zPlus;
-        lineVertecies[8 + 3 * variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 3] + zPlus;
-        lineVertecies[9 + 3 * variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 2] + zMinus;
-        lineVertecies[10 + 3 * variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 0] + zMinus;
-        lineVertecies[11 + 3 * variablesC.trapezoidDivisionNum] = LineVertex[4 * variablesC.trapezoidDivisionNum + 2] + zMinus;
-        lineVertecies[11 + 4 * variablesC.trapezoidDivisionNum] = LineVertex[2] + zMinus;
-        for (int i = 1; i < variablesC.trapezoidDivisionNum; i++) {
+        lineVertecies[1 + variablesC.trapezoidDivisionNum + 1] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 1] + zPlus;
+        lineVertecies[2 + variablesC.trapezoidDivisionNum + 1] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 0] + zMinus;
+        lineVertecies[2 + 2 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[0] + zMinus;
+        lineVertecies[3 + 2 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[2] + zMinus;
+        lineVertecies[4 + 2 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[3] + zPlus;
+        lineVertecies[5 + 2 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[1] + zPlus;
+        lineVertecies[6 + 2 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[3] + zPlus;
+        lineVertecies[6 + 3 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 3] + zPlus;
+        lineVertecies[7 + 3 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 1] + zPlus;
+        lineVertecies[8 + 3 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 3] + zPlus;
+        lineVertecies[9 + 3 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 2] + zMinus;
+        lineVertecies[10 + 3 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 0] + zMinus;
+        lineVertecies[11 + 3 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 ) + 2] + zMinus;
+        lineVertecies[11 + 4 * ( variablesC.trapezoidDivisionNum + 1 )] = LineVertex[2] + zMinus;
+        for (int i = 1; i < variablesC.trapezoidDivisionNum + 1; i++) {
             lineVertecies[1 + i] = LineVertex[4 * i + 1] + zPlus;
-            lineVertecies[2 + variablesC.trapezoidDivisionNum + i] = LineVertex[4 * ( variablesC.trapezoidDivisionNum - i ) + 0] + zMinus;
-            lineVertecies[6 + 2 * variablesC.trapezoidDivisionNum + i] = LineVertex[4 * i + 3] + zPlus;
-            lineVertecies[11 + 3 * variablesC.trapezoidDivisionNum + i] = LineVertex[4 * ( variablesC.trapezoidDivisionNum - i ) + 2] + zMinus;
+            lineVertecies[2 + variablesC.trapezoidDivisionNum + 1 + i] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 - i ) + 0] + zMinus;
+            lineVertecies[6 + 2 * ( variablesC.trapezoidDivisionNum + 1 ) + i] = LineVertex[4 * i + 3] + zPlus;
+            lineVertecies[11 + 3 * ( variablesC.trapezoidDivisionNum + 1 ) + i] = LineVertex[4 * ( variablesC.trapezoidDivisionNum + 1 - i ) + 2] + zMinus;
         }
 
     }
