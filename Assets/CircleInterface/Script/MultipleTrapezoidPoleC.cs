@@ -306,6 +306,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //Textの座標を計算する
         if (DivisionNum == variablesC.trapezoidDivisionNum / 2) {
             if (variablesC.trapezoidDivisionNum % 2 == 0) {
+                //分割数が偶数回の時は
                 textPosition = ( SideVertex[0] + SideVertex[2] ) / 2f;
             } else {
                 textPosition = ( SideVertex[0] + SideVertex[2] + SideVertex[4] + SideVertex[6] ) / 4f;
