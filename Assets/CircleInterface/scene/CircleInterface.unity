@@ -160,7 +160,7 @@ MonoBehaviour:
   RadiusOut_subCircle: 10
   PoleHeight: 10
   LineRendererWidth: 0.5
-  LineShiftSlightly: 0.1
+  LineShiftSlightly: 0.2
   PoleSum: 5
   Material_PolygonalPillar: {fileID: 2100000, guid: b2e764a0577f9074a8ea73c77d5d6a61,
     type: 2}
