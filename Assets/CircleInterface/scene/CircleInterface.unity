@@ -155,9 +155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RadiusIn: 10
-  RadiusOut: 20
-  RadiusIn_subCircle: 5
-  RadiusOut_subCircle: 10
+  RadiusOut: 40
+  RadiusIn_subCircle: 8
+  RadiusOut_subCircle: 15
   PoleHeight: 10
   LineRendererWidth: 0.5
   LineShiftSlightly: 0.2

@@ -157,8 +157,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //コライダーアタッチ
         MeshCollider meshCollider = this.gameObject.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh_filter.mesh;
-        meshCollider.convex = true;
-        meshCollider.isTrigger = true;
+        meshCollider.convex = false;
+        //meshCollider.isTrigger = true;
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
@@ -358,21 +358,26 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         }
     }
 
-    public void OnTriggerEnter(Collider other) {
+    /* 以下2つはもともとトリガーイベントだったが、
+     * Convexを使えない問題が発生したため、
+     * 独自メソッドとして再開発
+     */
+    public void OnTriggerEnterOwnMade(GameObject other) {
         if (isActiveObj) {
-            if (other.gameObject.name.Substring(2) == "index_endPointer") {
+            if (other.name.Substring(2) == "index_endPointer") {
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name));
                 meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
             }
         }
     }
 
-    public void OnTriggerExit(Collider other) {
+    public void OnTriggerExitOwnMade(GameObject other) {
         if (isActiveObj) {
-            if (other.gameObject.name.Substring(2) == "index_endPointer")
+            if (other.name.Substring(2) == "index_endPointer")
                 meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
         }
     }
+    /* 独自メソッド　終 */
 
     private void make3Dtext() {
         //中心のUI表示

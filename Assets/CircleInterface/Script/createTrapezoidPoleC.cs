@@ -9,7 +9,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
 
     //スクリプト消去フラグ
     private bool isReadyToDestroy = false;
-
+    //呼び出し元保存　nullなら主輪
     private GameObject createSorceObj = null;
     //中心の多角柱用のインスタンス
     private PolygonalPillarC polygonalPillar = null;
@@ -33,6 +33,8 @@ public class createTrapezoidPoleC : MonoBehaviour {
             }
             isCalledBackVertex[i] = false;
         }
+        Debug.Log("主輪外径(" + variablesC.radiusOut * 100 + "cm) 主輪内径(" + variablesC.radiusIn * 100 + "cm) 副輪外径　　　(" + variablesC.radiusOut_subCircle * 100 + "cm)副輪内径(" + variablesC.radiusIn_subCircle * 100 + "cm)\n"
+                 + "\t\t            副輪外径理論値(" + calcTheoreticalRadiusout() * 100 + "cm)");
         //システムキーの生成
         /*for (int i = 0; i < variablesC.systemCommandNum; i++) {
             GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -81,5 +83,9 @@ public class createTrapezoidPoleC : MonoBehaviour {
 
     public void SetCreateSorce(GameObject sorceObject) {
         createSorceObj = sorceObject;
+    }
+
+    private float calcTheoreticalRadiusout() {
+        return ( variablesC.radiusOut - variablesC.radiusIn ) / 2f;
     }
 }

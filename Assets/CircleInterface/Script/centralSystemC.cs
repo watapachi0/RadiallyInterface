@@ -411,8 +411,7 @@ public class centralSystemC : MonoBehaviour {
                 lineRenderer.material = variablesC.material_LineRenderer_Nonactive;
             }
 
-            /*
-             * 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
+            /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
              */
             IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys();

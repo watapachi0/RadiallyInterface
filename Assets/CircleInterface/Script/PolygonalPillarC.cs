@@ -103,10 +103,15 @@ public class PolygonalPillarC : MonoBehaviour {
         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.name.Substring(2) == "index_endPointer")
+    /* 以下はもともとトリガーイベントだったが、
+     * Convexを使えない問題が発生したため、
+     * 独自メソッドとして再開発
+     */
+    public void OnTriggerEnterOwnMade(GameObject other) {
+        if (other.name.Substring(2) == "index_endPointer")
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
     }
+    /* 独自メソッド　終 */
 
     public void setMyParent(GameObject parent) {
         myParent = parent;
