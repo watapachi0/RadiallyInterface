@@ -353,6 +353,8 @@ public class centralSystemC : MonoBehaviour {
         Debug.Log("stage = " + stage + " . " +
                          "churingNumber = " + churingNumber + " . " +
                          "baseNumber = " + baseNumber + " .");
+        if (churingNumber >= 10)
+            churingNumber -= 10;
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             //数値を反転し、システムキーの名前を参照する
