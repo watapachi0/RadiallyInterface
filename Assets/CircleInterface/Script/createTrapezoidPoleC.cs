@@ -44,27 +44,32 @@ public class createTrapezoidPoleC : MonoBehaviour {
     }
 
     void Update() {
+        //削除準備が整ったら削除
         if (isReadyToDestroy) {
-            //親がいるならそいつの子供になる
-            if (createSorceObj != null)
-                this.gameObject.transform.parent = createSorceObj.transform;
-
             //コンポーネント削除
             Destroy(this);
         }
 
-        for (int i = 0; ( i < variablesC.poleSum ) && isCalledBackVertex[i]; i++) {
-            if (i + 1 == variablesC.poleSum && polygonalPillar == null) {
-                //多角形用の頂点群の準備
-                variablesC.polygonalPillarVertex = new Vector3[variablesC.poleSum * 10];
-                variablesC.polygonalPillarVertex = vertex;
+        //親オブジェクトがいないとき（主輪である）ときのみ中心オブジェクトを作る
+        if (createSorceObj == null) {
+            for (int i = 0; ( i < variablesC.poleSum ) && isCalledBackVertex[i]; i++) {
+                if (i + 1 == variablesC.poleSum && polygonalPillar == null) {
+                    //多角形用の頂点群の準備
+                    variablesC.polygonalPillarVertex = new Vector3[variablesC.poleSum * 10];
+                    variablesC.polygonalPillarVertex = vertex;
 
-                //中心の多角柱を描画する
-                GameObject obj = new GameObject(0.ToString());
-                polygonalPillar = obj.AddComponent<PolygonalPillarC>();
-                polygonalPillar.setMyParent(this.gameObject);
+                    //中心の多角柱を描画する
+                    GameObject obj = new GameObject(0.ToString());
+                    polygonalPillar = obj.AddComponent<PolygonalPillarC>();
+                    polygonalPillar.setMyParent(this.gameObject);
 
+                }
             }
+        } else {
+            //親がいるならそいつの子供になる
+            this.gameObject.transform.parent = createSorceObj.transform;
+            //削除準備OK
+            IsReadyToDestroy(true);
         }
     }
 

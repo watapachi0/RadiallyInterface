@@ -20,6 +20,7 @@ public class fingerFeelColider : MonoBehaviour {
     public void OnTriggerEnter(Collider other) {
         try {
             other.gameObject.GetComponent<MultipleTrapezoidPoleC>().OnTriggerEnterOwnMade(this.gameObject);
+            Debug.Log("run");
         } catch {
             Debug.Log("指がキーではないオブジェクトに接触しました");
         }
