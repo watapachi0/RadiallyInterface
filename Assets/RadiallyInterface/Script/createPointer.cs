@@ -77,6 +77,12 @@ public class createPointer : MonoBehaviour {
                     fingers[LR, Name, Joint] = target;
                 }
             }
+            //指先に当たり判定スクリプトをアタッチ
+
+            //人差指先にアタッチ
+            GameObject indexPointer = fingers[LR, 1, 4].transform.Find(fingers[LR, 1, 4].name + "Pointer").gameObject;
+            indexPointer.AddComponent<fingerFeelColider>();
+            indexPointer.GetComponent<SphereCollider>().isTrigger = true;
         }
 
         //ピンチ用スクリプトの初期化
@@ -84,6 +90,11 @@ public class createPointer : MonoBehaviour {
                                                       fingers[1, 5, 4],
                                                       fingers[0, 1, 4],
                                                       fingers[1, 1, 4]);
+        /* 左手親指先
+         * 右手親指先
+         * 左手人差指先
+         * 右手人差指先
+         */
 
     }
 

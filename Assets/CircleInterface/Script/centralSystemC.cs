@@ -353,6 +353,8 @@ public class centralSystemC : MonoBehaviour {
         Debug.Log("stage = " + stage + " . " +
                          "churingNumber = " + churingNumber + " . " +
                          "baseNumber = " + baseNumber + " .");
+        if (churingNumber >= 10)
+            churingNumber -= 10;
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             //数値を反転し、システムキーの名前を参照する
@@ -390,39 +392,12 @@ public class centralSystemC : MonoBehaviour {
             setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
             //次の状態へ
             stage = 1;
+
             /* ここで副輪を呼ぶ */
-            GameObject subCircle = new GameObject("subCircle");
-            variablesC.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
-            createTrapezoidPoleC subTrapezoid = subCircle.AddComponent<createTrapezoidPoleC>();
-            subTrapezoid.SetCreateSorce(this.gameObject);
-            //if (isGetKeyObjects)
-            //    SetKeytext();
+            subCircleGenerete(true);
 
             //主輪を接触不可にし、色を変える
-            for (int i = 1; i < keyObjects.Length; i++) {
-                //当たり判定を消す
-                keyObjects[i].GetComponent<MeshCollider>().enabled = false;
-                //色を薄くする
-                MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
-//                Material material = meshrenderer.material;
-                meshrenderer.material = variablesC.material_LineRenderer;
-//                material.color = new Color(material.color.r, material.color.g, material.color.b, 0.3f);
-
-                //LineRendererの表示を消す
-                LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
-                Color lineMaterial = lineRenderer.material.color;
-                lineMaterial = new Color(lineMaterial.r, lineMaterial.g, lineMaterial.b, lineMaterial.a / 2f);
-                //                keyObjects[i].GetComponent<LineRenderer>().enabled = false;
-            }
-
-            /*
-             * 以下で実行したいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
-             * そのため、コルーチンで処理を行う
-             */
-            //副輪のキーのオブジェクトを取得し、
-            //母音からそれぞれのキー値を決定し、反映
-            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys();
-            StartCoroutine(waitGenereteSubKeys);
+            enableMainCircle(false);
 
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
@@ -439,6 +414,13 @@ public class centralSystemC : MonoBehaviour {
             //各テキストの初期化
             if (isGetKeyObjects)
                 SetKeytext();
+
+            //副輪を消す
+            subCircleGenerete(false);
+
+            //主輪を戻す
+            enableMainCircle(true);
+
         } else if (stage == 3) {
             //stage3で、システムキー以外の接触のとき
             //なにもしない
@@ -449,23 +431,79 @@ public class centralSystemC : MonoBehaviour {
         }
     }
 
+    //副輪の呼び出しと削除
+    private void subCircleGenerete(bool doIt) {
+        //呼び出すか
+        if (doIt) {
+            //副輪のジェネレート
+            GameObject subCircle = new GameObject("subCircle");
+            variablesC.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
+            createTrapezoidPoleC subTrapezoid = subCircle.AddComponent<createTrapezoidPoleC>();
+            subTrapezoid.SetCreateSorce(this.gameObject);
+
+            /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
+             * そのため、コルーチンで処理を行う
+             */
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys();
+            StartCoroutine(waitGenereteSubKeys);
+
+        } else {
+            //削除する
+            GameObject subCircle = transform.Find("subCircle").gameObject;
+            Destroy(subCircle);
+        }
+    }
+
     IEnumerator WaitGenereteSubKeys() {
         //副輪のキーのオブジェクトを取得し、
         //母音からそれぞれのキー値を決定し、反映
         int subObjectsNum = 5;//textSet.GetLength(1);
         keySubObjects = new GameObject[subObjectsNum];
+
         for (int i = 0; i < keySubObjects.Length; i++) {
             //取得したいオブジェクトやその親がジェネレートされるまで処理しない
             if (transform.Find("subCircle") == null || transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject == null) {
-                Debug.LogWarning("例外処理発生");
+                //Debug.LogWarning("例外処理発生：コルーチンを続行します");
                 //for文が進まないようにロールバックする
                 i--;
                 yield return null;
             } else {
                 //問題なければ取得する
-                Debug.Log("取得中 " + i + " 番目");
+                //Debug.Log("取得中 " + i + " 番目");
                 keySubObjects[i] = transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject;
                 keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[baseNumber, i];
+            }
+        }
+    }
+
+    //主輪のキー有効化と無効化
+    private void enableMainCircle(bool doIt) {
+        //有効にするか
+        if (doIt) {
+            //主輪を接触可能にし、色を通常に戻す
+            for (int i = 1; i < keyObjects.Length; i++) {
+                //当たり判定を戻す
+                keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = true;
+                //色を濃くする
+                MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
+                meshrenderer.material = variablesC.material_TrapezoidPole_Normal;
+
+                //LineRendererの表示を消す
+                LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
+                lineRenderer.material = variablesC.material_LineRenderer;
+            }
+        } else {
+            //主輪を接触不可にし、色を変える
+            for (int i = 1; i < keyObjects.Length; i++) {
+                //当たり判定を消す
+                keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = false;
+                //色を薄くする
+                MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
+                meshrenderer.material = variablesC.material_TrapezoidPole_Normal_Nonactive;
+
+                //LineRendererの表示を消す
+                LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
+                lineRenderer.material = variablesC.material_LineRenderer_Nonactive;
             }
         }
     }
