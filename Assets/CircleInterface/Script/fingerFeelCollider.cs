@@ -7,7 +7,7 @@ using UnityEngine;
  * スクリプトを指先に配置する
  */
 
-public class fingerFeelColider : MonoBehaviour {
+public class fingerFeelCollider : MonoBehaviour {
 
     void Start() {
 

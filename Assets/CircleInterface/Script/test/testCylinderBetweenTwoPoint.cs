@@ -57,7 +57,7 @@ public class testCylinderBetweenTwoPoint : MonoBehaviour {
     private void InstantiateCylinder(Transform cylinderPrefab, Vector3 beginPoint, Vector3 endPoint) {
         cylinder = Instantiate<GameObject>(cylinderPrefab.gameObject, Vector3.zero, Quaternion.identity);
         //Destroy(cylinder.GetComponent<MeshRenderer>());
-        cylinder.AddComponent<fingerFeelColider>();
+        cylinder.AddComponent<fingerFeelCollider>();
         MeshCollider mc= cylinder.AddComponent<MeshCollider>();
         mc.convex = true;
         mc.isTrigger = true;
