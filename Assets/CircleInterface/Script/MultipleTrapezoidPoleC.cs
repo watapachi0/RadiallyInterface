@@ -157,8 +157,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //コライダーアタッチ
         MeshCollider meshCollider = this.gameObject.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh_filter.mesh;
-        meshCollider.convex = false;
-        //meshCollider.isTrigger = true;
+        meshCollider.convex = true;
+        meshCollider.isTrigger = true;
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
@@ -174,16 +174,16 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             //侵入イベント用
             //侵入時に色を変える
             //イベントトリガーのトリガーイベント作成
-            EventTrigger.Entry entry2 = new EventTrigger.Entry();
-            entry2.eventID = EventTriggerType.PointerEnter;
-            entry2.callback.AddListener((x) => OnMouseEnterOwnMade());  //ラムダ式の右側は追加するメソッド
+            EventTrigger.Entry entry1 = new EventTrigger.Entry();
+            entry1.eventID = EventTriggerType.PointerEnter;
+            entry1.callback.AddListener((x) => OnMouseEnterOwnMade());  //ラムダ式の右側は追加するメソッド
             //トリガーイベントのアタッチ
-            currentTrigger.triggers.Add(entry2);
+            currentTrigger.triggers.Add(entry1);
             //侵入終了時に色を戻す
-            EventTrigger.Entry entry3 = new EventTrigger.Entry();
-            entry3.eventID = EventTriggerType.PointerExit;
-            entry3.callback.AddListener((x) => OnMouseExitOwnMade());
-            currentTrigger.triggers.Add(entry3);
+            EventTrigger.Entry entry2 = new EventTrigger.Entry();
+            entry2.eventID = EventTriggerType.PointerExit;
+            entry2.callback.AddListener((x) => OnMouseExitOwnMade());
+            currentTrigger.triggers.Add(entry2);
         }
 
         //テキスト表示
@@ -364,6 +364,14 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         }*/
     }
 
+    public void OnTriggerEnter(Collider other) {
+        OnTriggerEnterOwnMade(other.gameObject);
+    }
+
+    public void OnTriggerExit(Collider other) {
+        OnTriggerExitOwnMade(other.gameObject);
+    }
+
     /* 以下2つはもともとトリガーイベントだったが、
      * Convexを使えない問題が発生したため、
      * 独自メソッドとして再開発
@@ -376,8 +384,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
                     Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
-                    systemScript.UpdateChuringNum(int.Parse(gameObject.name)      );
-                    Debug.Log("i am " + ( int.Parse(gameObject.name)       ).ToString());
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
                 }
                 meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
             }
@@ -386,9 +394,17 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     public void OnTriggerExitOwnMade(GameObject other) {
         if (isActiveObj && meshRenderer.material != variablesC.material_TrapezoidPole_Normal) {
-            if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" ))
+            if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
+                if (isSubRingPole) {
+                    //副輪のときは+100した名前を送る
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
+                } else {
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
+                }
                 meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
-            Debug.Log("i am " + this.gameObject.name);
+            }
         }
     }
     /* 独自メソッド　終 */

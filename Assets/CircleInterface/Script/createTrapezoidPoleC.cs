@@ -62,9 +62,9 @@ public class createTrapezoidPoleC : MonoBehaviour {
                     GameObject obj = new GameObject(0.ToString());
                     polygonalPillar = obj.AddComponent<PolygonalPillarC>();
                     polygonalPillar.setMyParent(this.gameObject);
-                    //親がいるときは伝える
-                    polygonalPillar.isSubRingPillar = true;
                     if(createSorceObj != null) {
+                        //親がいるときは伝える
+                        polygonalPillar.isSubRingPillar = true;
                         //親がいるならそいつの子供になる
                         this.gameObject.transform.parent = createSorceObj.transform;
                     }

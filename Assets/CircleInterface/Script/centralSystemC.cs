@@ -26,12 +26,18 @@ public class centralSystemC : MonoBehaviour {
     /* キーオブジェクト */                          //中身はキーを再表示する度に再設定
     private GameObject[] keyObjects;
     private GameObject[] keySubObjects;
+    //副輪オブジェクト
+    private GameObject subCircle;
+    //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
+    private bool doLateUpdat = false;
+
+    //主輪の中心に触れているか
+    private bool isTouchMainPillar = false;
+    //副輪の中心に触れているか
+    private bool isTouchSubPillar = false;
 
     /*[親のpointNum,set]*/
     protected string[,] textSet;
-
-    //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
-    private bool doLateUpdat = false;
 
     //Radially用textSet
     /* か行見出し　か行あ段　か行い段  …
@@ -353,8 +359,60 @@ public class centralSystemC : MonoBehaviour {
         Debug.Log("stage = " + stage + " . " +
                          "churingNumber = " + churingNumber + " . " +
                          "baseNumber = " + baseNumber + " .");
-        if (churingNumber >= 100)
+
+        /* Exitイベント、副輪イベント処理 */
+        /* churingNumber    意味
+         * ***0             主輪の中心
+         * ***1~**99        主輪のキー
+         * *100             副輪の中心
+         * *101~*199        副輪のキー
+         * 1000~1199        各キーのExitイベント(解釈せずにreturnする)
+         * -1               システムコマンド
+         */
+        if (churingNumber == 0) {
+            //主輪の中心に触れた
+            isTouchMainPillar = true;
+        } else if (churingNumber == 1000) {
+            //主輪の中心から離れた
+            isTouchMainPillar = false;
+        } else if (churingNumber == 100) {
+            //副輪の中心に触れた
+            isTouchSubPillar = true;
+        } else if (churingNumber == 1100) {
+            //副輪の中心から離れた
+            isTouchSubPillar = false;
+        }
+
+        //主輪の中心を触れながら主輪のキー入力はできない
+        if (isTouchMainPillar) {
+            if (1 <= churingNumber && churingNumber <= 99) {
+                //return;
+            }
+        }
+        //副輪の中心を触れながら副輪のキー入力はできない
+        if (isTouchSubPillar) {
+            if (101 <= churingNumber && churingNumber <= 199) {
+                return;
+            }
+        }
+
+        //副輪の中心は解釈に使われない
+        if (churingNumber == 100) {
+            return;
+        }
+
+        //Exitイベントは解釈せずに終了
+        if (churingNumber >= 1000) {
+            return;
+        }
+
+        //副輪は戻す
+        if (churingNumber >= 100) {
             churingNumber -= 100;
+        }
+
+        /* Exitイベント、副輪イベント処理  終 */
+        Debug.Log("run");
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             //数値を反転し、システムキーの名前を参照する
@@ -385,6 +443,7 @@ public class centralSystemC : MonoBehaviour {
             if (isGetKeyObjects)
                 SetKeytext();
         } else if (stage == 0 && 0 < churingNumber && churingNumber <= poleSum + 1) {
+            Debug.Log("run churing");
             //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
             //最初のキー値を決定
             baseNumber = churingNumber;
@@ -398,7 +457,7 @@ public class centralSystemC : MonoBehaviour {
 
             //主輪を接触不可にし、色を変える
             enableMainCircle(false);
-
+            Debug.Log("run churing end");
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
             //まず、特殊なコマンドは実行する
@@ -440,6 +499,7 @@ public class centralSystemC : MonoBehaviour {
             variablesC.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
             createTrapezoidPoleC subTrapezoid = subCircle.AddComponent<createTrapezoidPoleC>();
             subTrapezoid.SetCreateSorce(this.gameObject);
+            this.subCircle = subCircle;
 
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
@@ -449,7 +509,7 @@ public class centralSystemC : MonoBehaviour {
 
         } else {
             //削除する
-            GameObject subCircle = transform.Find("subCircle").gameObject;
+            //GameObject subCircle = transform.Find("subCircle").gameObject;
             Destroy(subCircle);
         }
     }
@@ -474,6 +534,7 @@ public class centralSystemC : MonoBehaviour {
                 keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[baseNumber, i];
             }
         }
+        Debug.Log("コルーチン終了");
     }
 
     //主輪のキー有効化と無効化

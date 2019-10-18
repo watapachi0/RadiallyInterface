@@ -66,12 +66,17 @@ public class PolygonalPillarC : MonoBehaviour {
             //イベントトリガーのアタッチと初期化
             EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
             currentTrigger.triggers = new List<EventTrigger.Entry>();
+
             //イベントトリガーのトリガーイベント作成
-            EventTrigger.Entry entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerEnter;
-            entry.callback.AddListener((x) => OnTouchPointer());  //ラムダ式の右側は追加するメソッド
-                                                                  //トリガーイベントのアタッチ
-            currentTrigger.triggers.Add(entry);
+            EventTrigger.Entry entry1 = new EventTrigger.Entry();
+            entry1.eventID = EventTriggerType.PointerEnter;
+            entry1.callback.AddListener((x) => OnMouseEnterOwnMade());  //ラムダ式の右側は追加するメソッド
+            currentTrigger.triggers.Add(entry1);
+            //イベントトリガーのトリガーイベント作成
+            EventTrigger.Entry entry2 = new EventTrigger.Entry();
+            entry2.eventID = EventTriggerType.PointerExit;
+            entry2.callback.AddListener((x) => OnMouseExitOwnMade());
+            currentTrigger.triggers.Add(entry2);
         }
 
         //クリエイト元を親にする
@@ -102,8 +107,20 @@ public class PolygonalPillarC : MonoBehaviour {
         }
     }
 
-    private void OnTouchPointer() {
+    private void OnMouseEnterOwnMade() {
         OnTriggerEnterOwnMade(null);
+    }
+
+    private void OnMouseExitOwnMade() {
+        OnTriggerExitOwnMade(null);
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        OnTriggerEnterOwnMade(other.gameObject);
+    }
+
+    public void OnTriggerExit(Collider other) {
+        OnTriggerExitOwnMade(other.gameObject);
     }
 
     /* 以下はもともとトリガーイベントだったが、
@@ -116,8 +133,20 @@ public class PolygonalPillarC : MonoBehaviour {
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
                 Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
             } else {
-                systemScript.UpdateChuringNum(int.Parse(gameObject.name)      );
-                Debug.Log("i am " + ( int.Parse(gameObject.name)       ).ToString());
+                systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+                Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
+            }
+        }
+    }
+
+    public void OnTriggerExitOwnMade(GameObject other) {
+        if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
+            if (isSubRingPillar) {
+                systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
+                Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
+            } else {
+                systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
+                Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
             }
         }
     }
