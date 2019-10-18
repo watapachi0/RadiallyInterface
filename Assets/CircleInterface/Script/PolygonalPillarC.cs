@@ -17,6 +17,9 @@ public class PolygonalPillarC : MonoBehaviour {
     private centralSystemC systemScript;
     private GameObject myParent = null;
 
+    //副輪の中心である
+    public bool isSubRingPillar { get; set; } = false;
+
     //面情報
     int[] face;
 
@@ -109,8 +112,13 @@ public class PolygonalPillarC : MonoBehaviour {
      */
     public void OnTriggerEnterOwnMade(GameObject other) {
         if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
-            systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-            Debug.Log("i am " + this.gameObject.name);
+            if (isSubRingPillar) {
+                systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
+                Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
+            } else {
+                systemScript.UpdateChuringNum(int.Parse(gameObject.name)      );
+                Debug.Log("i am " + ( int.Parse(gameObject.name)       ).ToString());
+            }
         }
     }
     /* 独自メソッド　終 */

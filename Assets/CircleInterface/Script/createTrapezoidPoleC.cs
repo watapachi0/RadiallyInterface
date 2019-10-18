@@ -50,8 +50,8 @@ public class createTrapezoidPoleC : MonoBehaviour {
             Destroy(this);
         }
 
-        //親オブジェクトがいないとき（主輪である）ときのみ中心オブジェクトを作る
-        if (createSorceObj == null) {
+        ///親オブジェクトがいないとき（主輪である）ときのみ中心オブジェクトを作る
+        if (/*createSorceObj == null*/true) {
             for (int i = 0; ( i < variablesC.poleSum ) && isCalledBackVertex[i]; i++) {
                 if (i + 1 == variablesC.poleSum && polygonalPillar == null) {
                     //多角形用の頂点群の準備
@@ -62,15 +62,20 @@ public class createTrapezoidPoleC : MonoBehaviour {
                     GameObject obj = new GameObject(0.ToString());
                     polygonalPillar = obj.AddComponent<PolygonalPillarC>();
                     polygonalPillar.setMyParent(this.gameObject);
-
+                    //親がいるときは伝える
+                    polygonalPillar.isSubRingPillar = true;
+                    if(createSorceObj != null) {
+                        //親がいるならそいつの子供になる
+                        this.gameObject.transform.parent = createSorceObj.transform;
+                    }
                 }
             }
         } else {
             //親がいるならそいつの子供になる
             this.gameObject.transform.parent = createSorceObj.transform;
-            //削除準備OK
-            IsReadyToDestroy(true);
         }
+        //削除準備OK
+        IsReadyToDestroy(true);
     }
 
     public void callBackVertex(Vector3[] vertexies, int poleNum) {

@@ -36,7 +36,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     //stage情報保存
     int stage;
     //副輪であるか
-    public bool isSubRingPole = false;
+    public bool isSubRingPole { get; set; } = false;
 
     //面情報
     int[] EndFace = new int[6]  { 1,      0,      3,
@@ -371,12 +371,15 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     public void OnTriggerEnterOwnMade(GameObject other) {
         if (isActiveObj && meshRenderer.material != variablesC.material_TrapezoidPole_Touch) {
             if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
-                if (isSubRingPole)
-                    systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 10);
-                else
-                    systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+                if (isSubRingPole) {
+                    //副輪のときは+100した名前を送る
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
+                } else {
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name)      );
+                    Debug.Log("i am " + ( int.Parse(gameObject.name)       ).ToString());
+                }
                 meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
-                Debug.Log("i am " + this.gameObject.name);
             }
         }
     }
