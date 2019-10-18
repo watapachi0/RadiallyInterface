@@ -100,7 +100,7 @@ public class PolygonalPillarC : MonoBehaviour {
     }
 
     private void OnTouchPointer() {
-        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+        OnTriggerEnterOwnMade(null);
     }
 
     /* 以下はもともとトリガーイベントだったが、
@@ -108,8 +108,10 @@ public class PolygonalPillarC : MonoBehaviour {
      * 独自メソッドとして再開発
      */
     public void OnTriggerEnterOwnMade(GameObject other) {
-        if (other.name.Substring(2) == "index_endPointer")
+        if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+            Debug.Log("i am " + this.gameObject.name);
+        }
     }
     /* 独自メソッド　終 */
 

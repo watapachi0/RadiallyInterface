@@ -162,8 +162,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
-        
-        /*
+
+
         //XRじゃないなら
         if (!variablesC.isOnXR) {
             //暫定当たり判定用Event Trigger
@@ -176,16 +176,15 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             //イベントトリガーのトリガーイベント作成
             EventTrigger.Entry entry2 = new EventTrigger.Entry();
             entry2.eventID = EventTriggerType.PointerEnter;
-            entry2.callback.AddListener((x) => OnMouseEnter());  //ラムダ式の右側は追加するメソッド
+            entry2.callback.AddListener((x) => OnMouseEnterOwnMade());  //ラムダ式の右側は追加するメソッド
             //トリガーイベントのアタッチ
             currentTrigger.triggers.Add(entry2);
             //侵入終了時に色を戻す
             EventTrigger.Entry entry3 = new EventTrigger.Entry();
             entry3.eventID = EventTriggerType.PointerExit;
-            entry3.callback.AddListener((x) => OnMouseExit());
+            entry3.callback.AddListener((x) => OnMouseExitOwnMade());
             currentTrigger.triggers.Add(entry3);
         }
-        */
 
         //テキスト表示
         make3Dtext();
@@ -346,22 +345,24 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         }
 
     }
-    /*
-    private void OnMouseEnter() {
-        if (isActiveObj && meshRenderer.material != variablesC.material_TrapezoidPole_Touch) {
+
+    private void OnMouseEnterOwnMade() {
+        OnTriggerEnterOwnMade(null);
+        /*if (isActiveObj && meshRenderer.material != variablesC.material_TrapezoidPole_Touch) {
             if (isSubRingPole)
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 10);
             else
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name));
             meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
-        }
+        }*/
     }
 
-    private void OnMouseExit() {
-        if (isActiveObj) {
+    private void OnMouseExitOwnMade() {
+        OnTriggerExitOwnMade(null);
+        /*if (isActiveObj) {
             meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
-        }
-    }*/
+        }*/
+    }
 
     /* 以下2つはもともとトリガーイベントだったが、
      * Convexを使えない問題が発生したため、
@@ -369,20 +370,22 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
      */
     public void OnTriggerEnterOwnMade(GameObject other) {
         if (isActiveObj && meshRenderer.material != variablesC.material_TrapezoidPole_Touch) {
-            if (other.name.Substring(2) == "index_endPointer") {
+            if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
                 if (isSubRingPole)
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 10);
                 else
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name));
                 meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
+                Debug.Log("i am " + this.gameObject.name);
             }
         }
     }
 
     public void OnTriggerExitOwnMade(GameObject other) {
-        if (isActiveObj) {
-            if (other.name.Substring(2) == "index_endPointer")
+        if (isActiveObj && meshRenderer.material != variablesC.material_TrapezoidPole_Normal) {
+            if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" ))
                 meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
+            Debug.Log("i am " + this.gameObject.name);
         }
     }
     /* 独自メソッド　終 */
