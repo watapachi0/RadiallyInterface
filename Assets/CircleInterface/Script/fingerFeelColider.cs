@@ -14,7 +14,16 @@ public class fingerFeelColider : MonoBehaviour {
     }
 
     void Update() {
-
+        Collider[] cols = Physics.OverlapSphere(transform.position, transform.localScale.x / 2f);
+        Vector3 myPosition = transform.position; // for example
+        string a = "";
+        foreach (Collider col in cols) {
+            Vector3 closestPoint = col.ClosestPoint(myPosition);
+            Vector3 positionDifference = ( closestPoint - myPosition );
+            Vector3 overlapDirection = positionDifference.normalized;
+            a += col.gameObject.name+" ";
+        }
+        Debug.Log(a);
     }
 
     public void OnTriggerEnter(Collider other) {
@@ -42,6 +51,6 @@ public class fingerFeelColider : MonoBehaviour {
         } catch {
             Debug.Log("指が多角柱ではないオブジェクトに接触しました");
         }
-
+        
     }
 }
