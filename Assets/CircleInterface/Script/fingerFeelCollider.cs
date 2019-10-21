@@ -49,7 +49,7 @@ public class fingerFeelCollider : MonoBehaviour {
         try {
             other.gameObject.GetComponent<PolygonalPillarC>().OnTriggerEnterOwnMade(this.gameObject);
         } catch {
-            Debug.Log("指が多角柱ではないオブジェクトに接触しました");
+            Debug.Log("指が多角柱ではないオブジェクトに接触を終えました");
         }
         
     }

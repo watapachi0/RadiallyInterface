@@ -498,6 +498,7 @@ public class centralSystemC : MonoBehaviour {
             //削除する
             //GameObject subCircle = transform.Find("subCircle").gameObject;
             Destroy(subCircle);
+            subCircle = null;
         }
     }
 
@@ -664,9 +665,18 @@ public class centralSystemC : MonoBehaviour {
 
     //キーに文字を割り当てる
     private void SetKeytext() {
+        if (!isCircleInterface) {
+            SetKeyRadially();
+        } else {
+            SetKeyCircle();
+        }
+    }
+
+    //RadiallyUI用文字割り当て
+    private void SetKeyRadially() {
+        MultipleTrapezoidPoleC keyObjectITrapezoid;
         for (int i = 1; i <= poleSum; i++) {
-            //TrapezoidPoleC keyObjectITrapezoid = keyObjects[i].GetComponent<TrapezoidPoleC>();
-            MultipleTrapezoidPoleC keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
+            keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
             if (stage == 0) {
                 keyObjectITrapezoid.MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
             } else if (stage == 1) {
@@ -693,4 +703,36 @@ public class centralSystemC : MonoBehaviour {
             }
         }
     }
+
+    //CircleUI用文字割り当て
+    private void SetKeyCircle() {
+
+        bool isMainCircle;
+        if (subCircle == null)
+            isMainCircle = true;
+        else
+            isMainCircle = false;
+
+        int keySum;
+        if (isMainCircle)
+            keySum = keyObjects.Length;
+        else
+            keySum = keySubObjects.Length;
+
+        MultipleTrapezoidPoleC keyObjectITrapezoid;
+        for (int i = 1; i < keySum; i++) {
+
+            if (isMainCircle)
+                keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
+            else
+                keyObjectITrapezoid = keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>();
+
+            if (isMainCircle) {
+                keyObjectITrapezoid.MyText = textSet[i-1, 0];
+            } else {
+                keyObjectITrapezoid.MyText = textSet[( consonant ), i+2];
+            }
+        }
+    }
+
 }
