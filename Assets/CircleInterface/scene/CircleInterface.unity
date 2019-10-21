@@ -231,6 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 639b8331b9f2acd4ea6efcf785c2a190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCircleInterface: 1
 --- !u!114 &72408996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e80adf72586af0c4daebeb0bc6b1c4f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pinchDistance: 0.04
+  pinchDistance: 0.01
   targetObject: {fileID: 72408990}
 --- !u!114 &72408998
 MonoBehaviour:
