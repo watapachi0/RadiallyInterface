@@ -395,20 +395,20 @@ public class centralSystemC : MonoBehaviour {
 
         //副輪は戻す
         if (churingNumber >= 100) {
-            churingNumber -= 100;
+            churingNumber %= 100;
         }
 
         /* Exitイベント、副輪イベント処理  終 */
-        Debug.Log("run");
+        //Debug.Log("run");
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             //数値を反転し、システムキーの名前を参照する
             setText = SystemCommandName[-churingNumber];
             stage = 3;
-        } else if (stage == 1 && baseNumber != churingNumber && churingNumber != 0) {
-            //主輪選択後で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合
+        } else if (stage == 1 && /*baseNumber != churingNumber &&*/ churingNumber != 0) {
+            //主輪選択後で、中心に戻ったわけではない場合
             //子音が決定するので計算
-            if (baseNumber == poleSum && churingNumber == 1) {
+            /*if (baseNumber == poleSum && churingNumber == 1) {
                 //最後のキーから1キーへの入力の際
                 consonant = textSet.GetLength(0) - 1;
             } else if (baseNumber == 1 && churingNumber == poleSum) {
@@ -417,7 +417,8 @@ public class centralSystemC : MonoBehaviour {
             } else {
                 //それ以外の隣り合うキー値が同じ場合の計算
                 consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
-            }
+            }*/
+            consonant = baseNumber;
             //子音と母音から再計算
             setText = textSet[consonant, churingNumber - 1 + 1];
             //次の状態へ
@@ -430,7 +431,7 @@ public class centralSystemC : MonoBehaviour {
             if (isGetKeyObjects)
                 SetKeytext();
         } else if (stage == 0 && 0 < churingNumber && churingNumber <= poleSum + 1) {
-            Debug.Log("run churing");
+            //Debug.Log("run churing");
             //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
             //最初のキー値を決定
             baseNumber = churingNumber;
@@ -444,7 +445,7 @@ public class centralSystemC : MonoBehaviour {
 
             //主輪を接触不可にし、色を変える
             enableMainCircle(false);
-            Debug.Log("run churing end");
+            //Debug.Log("run churing end");
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
             //入力状態で、中心へ戻った場合
             //まず、特殊なコマンドは実行する
