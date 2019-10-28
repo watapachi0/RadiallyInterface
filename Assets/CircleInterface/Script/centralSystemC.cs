@@ -389,65 +389,71 @@ public class centralSystemC : MonoBehaviour {
         }
 
         //Exitイベントは解釈せずに終了
-        if (churingNumber >= 1000) {
+        if (1000 <= churingNumber) {
             return;
         }
 
         //副輪は戻す
-        if (churingNumber >= 100) {
+        if (100 <= churingNumber) {
             churingNumber %= 100;
         }
-
         /* Exitイベント、副輪イベント処理  終 */
-        //Debug.Log("run");
+
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             //数値を反転し、システムキーの名前を参照する
             setText = SystemCommandName[-churingNumber];
             stage = 3;
-        } else if (stage == 1 && /*baseNumber != churingNumber &&*/ churingNumber != 0) {
-            //主輪選択後で、中心に戻ったわけではない場合
-            //子音が決定するので計算
-            /*if (baseNumber == poleSum && churingNumber == 1) {
-                //最後のキーから1キーへの入力の際
-                consonant = textSet.GetLength(0) - 1;
-            } else if (baseNumber == 1 && churingNumber == poleSum) {
-                //１キーから最後のキーへの入力の際
-                consonant = 0;
+        } else {
+            if (stage == 0) {
+                //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
+                if (0 < churingNumber && churingNumber <= poleSum + 1) {
+                    //最初のキー値を決定
+                    baseNumber = churingNumber;
+                    consonant = baseNumber - 1;
+                    //とりあえず母音を保存
+                    setText = textSet[consonant, 0];
+                    //次の状態へ
+                    stage = 1;
+
+                    /* ここで副輪を呼ぶ */
+                    subCircleGenerete(true);
+
+                    //主輪を接触不可にし、色を変える
+                    enableMainCircle(false);
+                }
+                //0の時は解釈終了判定にいきたくない
+                return;
+            } else if (stage == 1) {
+                //主輪選択後で、中心に戻ったわけではない場合
+                if (0 < churingNumber && churingNumber <= poleSum + 1) {
+                    //子音が決定するので計算
+                    consonant = baseNumber - 1;
+                    //子音と母音から再計算
+                    setText = textSet[consonant, churingNumber - 1 + 1];
+                    //次の状態へ
+                    stage = 2;
+                    if (isGetKeyObjects)
+                        SetKeytext();
+                }
+            } else if (stage == 2) {
+                //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
+                if (0 < churingNumber && churingNumber <= poleSum + 1) {
+                    setText = textSet[consonant, churingNumber - 1 + 1];
+                    if (isGetKeyObjects)
+                        SetKeytext();
+                }
+            } else if (stage == 3) {
+                //stage3で、システムキー以外の接触のとき
+                //なにもしない
             } else {
-                //それ以外の隣り合うキー値が同じ場合の計算
-                consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
-            }*/
-            consonant = baseNumber;
-            //子音と母音から再計算
-            setText = textSet[consonant, churingNumber - 1 + 1];
-            //次の状態へ
-            stage = 2;
-            if (isGetKeyObjects)
-                SetKeytext();
-        } else if (stage == 2 && 1 <= churingNumber && churingNumber <= poleSum + 1) {
-            //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
-            setText = textSet[consonant, churingNumber - 1 + 1];
-            if (isGetKeyObjects)
-                SetKeytext();
-        } else if (stage == 0 && 0 < churingNumber && churingNumber <= poleSum + 1) {
-            //Debug.Log("run churing");
-            //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
-            //最初のキー値を決定
-            baseNumber = churingNumber;
-            //とりあえず母音を保存
-            setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
-            //次の状態へ
-            stage = 1;
-
-            /* ここで副輪を呼ぶ */
-            subCircleGenerete(true);
-
-            //主輪を接触不可にし、色を変える
-            enableMainCircle(false);
-            //Debug.Log("run churing end");
-        } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
-            //入力状態で、中心へ戻った場合
+                Debug.LogWarning("Error. stage = " + stage + " ." +
+                                 " churingNumber = " + churingNumber + " ." +
+                                 " baseNumber = " + baseNumber);
+            }
+        }
+        //もともと中心にいたわけではなく、中心へ戻った場合
+        if (churingNumber == 0) {
             //まず、特殊なコマンドは実行する
             SystemCommandChuring();
             //表示用にわかりやすい名前に書き換える
@@ -467,14 +473,6 @@ public class centralSystemC : MonoBehaviour {
 
             //主輪を戻す
             enableMainCircle(true);
-
-        } else if (stage == 3) {
-            //stage3で、システムキー以外の接触のとき
-            //なにもしない
-        } else {
-            Debug.LogWarning("Error. stage = " + stage + " ." +
-                             " churingNumber = " + churingNumber + " ." +
-                             " baseNumber = " + baseNumber);
         }
     }
 
@@ -483,47 +481,99 @@ public class centralSystemC : MonoBehaviour {
         //呼び出すか
         if (doIt) {
             //副輪のジェネレート
-            GameObject subCircle = new GameObject("subCircle");
+            GameObject SubCircle = new GameObject("subCircle");
             variablesC.createSourcePosition = keyObjects[churingNumber].transform.Find("text").transform.position;
-            createTrapezoidPoleC subTrapezoid = subCircle.AddComponent<createTrapezoidPoleC>();
+            createTrapezoidPoleC subTrapezoid = SubCircle.AddComponent<createTrapezoidPoleC>();
             subTrapezoid.SetCreateSorce(this.gameObject);
-            this.subCircle = subCircle;
+            Destroy(this.subCircle);//一応初期化
+            this.subCircle = SubCircle;
 
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
              */
-            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys();
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(true);
             StartCoroutine(waitGenereteSubKeys);
 
         } else {
             //削除する
             //GameObject subCircle = transform.Find("subCircle").gameObject;
-            Destroy(subCircle);
-            subCircle = null;
+            //            Destroy(subCircle);
+            //DestroyAllSubCircle();
+            //subCircle = null;
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(false);
+            StartCoroutine(waitGenereteSubKeys);
         }
     }
 
-    IEnumerator WaitGenereteSubKeys() {
+    IEnumerator WaitGenereteSubKeys(bool generete) {
         //副輪のキーのオブジェクトを取得し、
         //母音からそれぞれのキー値を決定し、反映
         int subObjectsNum = 5;//textSet.GetLength(1);
-        keySubObjects = new GameObject[subObjectsNum];
+        keySubObjects = new GameObject[subObjectsNum + 1];
 
-        for (int i = 0; i < keySubObjects.Length; i++) {
-            //取得したいオブジェクトやその親がジェネレートされるまで処理しない
-            if (transform.Find("subCircle") == null || transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject == null) {
-                //Debug.LogWarning("例外処理発生：コルーチンを続行します");
-                //for文が進まないようにロールバックする
-                i--;
-                yield return null;
-            } else {
-                //問題なければ取得する
-                //Debug.Log("取得中 " + i + " 番目");
-                keySubObjects[i] = transform.Find("subCircle").transform.Find(( i + 1 ).ToString()).gameObject;
-                keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[baseNumber, i];
+        if (generete) {
+            for (int i = 1; i < subObjectsNum + 1; i++) {
+                //取得したいオブジェクトやその親がジェネレートされるまで処理しない
+                if (transform.Find("subCircle") == null || transform.Find("subCircle").transform.Find(( i ).ToString()).gameObject == null) {
+                    //Debug.LogWarning("例外処理発生：コルーチンを続行します");
+                    //for文が進まないようにロールバックする
+                    i--;
+                    yield return null;
+                } else {
+                    //問題なければ取得する
+                    //Debug.Log("取得中 " + i + " 番目");
+                    keySubObjects[i] = transform.Find("subCircle").transform.Find(( i ).ToString()).gameObject;
+                    //keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[consonant, i];
+                }
             }
+            Debug.Log("run in the method");
+            SetKeyCircle();
+            Debug.Log("召喚コルーチン終了");
+        } else {
+            Debug.Log("削除なう");
+            GameObject trash = subCircle;
+            subCircle = null;
+            for(int i = 0; i < subObjectsNum + 1; i++) {
+                Destroy(trash.transform.Find(i.ToString()).gameObject);
+            }
+            for(int i = 0; i < subObjectsNum + 1; i++) {
+                if (trash.transform.Find(i.ToString()) != null) {
+                    i--;
+                    yield return null;
+                }
+            }
+            Destroy(trash);
+            for(int i = 0; i < 1; i++) {
+                if (trash != null) {
+                    i--;
+                    yield return null;
+                }
+
+            }
+            Debug.Log("削除コルーチン終了");
         }
-        Debug.Log("コルーチン終了");
+    }
+
+    private void DestroyAllSubCircle() {
+        //while (true) {
+        if (subCircle != null) {
+            GameObject subCircleGove =subCircle;
+            subCircle = null;
+            for (int i = 0; i < 6; i++) {
+                if (subCircleGove.transform.Find(i.ToString()).gameObject)
+                    Destroy(subCircleGove.transform.Find(i.ToString()).gameObject);
+            }
+            Destroy(subCircleGove.gameObject);
+
+        }
+
+        // else {
+        //    break;
+        //}
+        //            else
+        //                subCircle = null;
+
+        //}
     }
 
     //主輪のキー有効化と無効化
@@ -729,9 +779,9 @@ public class centralSystemC : MonoBehaviour {
                 keyObjectITrapezoid = keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>();
 
             if (isMainCircle) {
-                keyObjectITrapezoid.MyText = textSet[i-1, 0];
+                keyObjectITrapezoid.MyText = textSet[i - 1, 0];
             } else {
-                keyObjectITrapezoid.MyText = textSet[( consonant ), i+2];
+                keyObjectITrapezoid.MyText = textSet[consonant, i];
             }
         }
     }
