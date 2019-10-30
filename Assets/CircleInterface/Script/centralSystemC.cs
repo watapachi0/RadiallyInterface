@@ -35,6 +35,8 @@ public class centralSystemC : MonoBehaviour {
     private bool isTouchMainPillar = false;
     //副輪の中心に触れているか
     private bool isTouchSubPillar = false;
+    //副輪が存在するか
+    private bool hasSubCircle = false;
 
     //テスト中
     public bool isCircleInterface;
@@ -491,7 +493,7 @@ public class centralSystemC : MonoBehaviour {
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
              */
-            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(true);
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(true,SubCircle);
             StartCoroutine(waitGenereteSubKeys);
 
         } else {
@@ -500,12 +502,12 @@ public class centralSystemC : MonoBehaviour {
             //            Destroy(subCircle);
             //DestroyAllSubCircle();
             //subCircle = null;
-            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(false);
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(false,subCircle);
             StartCoroutine(waitGenereteSubKeys);
         }
     }
 
-    IEnumerator WaitGenereteSubKeys(bool generete) {
+    IEnumerator WaitGenereteSubKeys(bool generete,GameObject SubCircle) {
         //副輪のキーのオブジェクトを取得し、
         //母音からそれぞれのキー値を決定し、反映
         int subObjectsNum = 5;//textSet.GetLength(1);
@@ -514,7 +516,7 @@ public class centralSystemC : MonoBehaviour {
         if (generete) {
             for (int i = 1; i < subObjectsNum + 1; i++) {
                 //取得したいオブジェクトやその親がジェネレートされるまで処理しない
-                if (transform.Find("subCircle") == null || transform.Find("subCircle").transform.Find(( i ).ToString()).gameObject == null) {
+                if (/*GameObject.Find("subCircle") == null || GameObject.Find("subCircle")*/SubCircle.transform.Find(( i ).ToString()).gameObject == null) {
                     //Debug.LogWarning("例外処理発生：コルーチンを続行します");
                     //for文が進まないようにロールバックする
                     i--;
@@ -522,34 +524,37 @@ public class centralSystemC : MonoBehaviour {
                 } else {
                     //問題なければ取得する
                     //Debug.Log("取得中 " + i + " 番目");
-                    keySubObjects[i] = transform.Find("subCircle").transform.Find(( i ).ToString()).gameObject;
+                    keySubObjects[i] = /*transform.Find("subCircle")*/SubCircle.transform.Find(( i ).ToString()).gameObject;
                     //keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[consonant, i];
                 }
             }
+            hasSubCircle = true;
             Debug.Log("run in the method");
             SetKeyCircle();
             Debug.Log("召喚コルーチン終了");
         } else {
             Debug.Log("削除なう");
-            GameObject trash = subCircle;
+            GameObject trash = /*subCircle*/SubCircle;
             subCircle = null;
-            for(int i = 0; i < subObjectsNum + 1; i++) {
+            trash.name = "subCircleGobe";
+            for (int i = 0; i < subObjectsNum + 1; i++) {
                 Destroy(trash.transform.Find(i.ToString()).gameObject);
             }
-            for(int i = 0; i < subObjectsNum + 1; i++) {
+            for (int i = 0; i < subObjectsNum + 1; i++) {
                 if (trash.transform.Find(i.ToString()) != null) {
                     i--;
                     yield return null;
                 }
             }
             Destroy(trash);
-            for(int i = 0; i < 1; i++) {
+            for (int i = 0; i < 1; i++) {
                 if (trash != null) {
                     i--;
                     yield return null;
                 }
 
             }
+            hasSubCircle = false;
             Debug.Log("削除コルーチン終了");
         }
     }
@@ -557,7 +562,7 @@ public class centralSystemC : MonoBehaviour {
     private void DestroyAllSubCircle() {
         //while (true) {
         if (subCircle != null) {
-            GameObject subCircleGove =subCircle;
+            GameObject subCircleGove = subCircle;
             subCircle = null;
             for (int i = 0; i < 6; i++) {
                 if (subCircleGove.transform.Find(i.ToString()).gameObject)
@@ -757,15 +762,15 @@ public class centralSystemC : MonoBehaviour {
 
     //CircleUI用文字割り当て
     private void SetKeyCircle() {
-
+        /*
         bool isMainCircle;
         if (subCircle == null)
             isMainCircle = true;
         else
             isMainCircle = false;
-
+            */
         int keySum;
-        if (isMainCircle)
+        if (/*isMainCircle*/!hasSubCircle)
             keySum = keyObjects.Length;
         else
             keySum = keySubObjects.Length;
@@ -773,12 +778,12 @@ public class centralSystemC : MonoBehaviour {
         MultipleTrapezoidPoleC keyObjectITrapezoid;
         for (int i = 1; i < keySum; i++) {
 
-            if (isMainCircle)
+            if (/*isMainCircle*/!hasSubCircle)
                 keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
             else
                 keyObjectITrapezoid = keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>();
 
-            if (isMainCircle) {
+            if (/*isMainCircle*/!hasSubCircle) {
                 keyObjectITrapezoid.MyText = textSet[i - 1, 0];
             } else {
                 keyObjectITrapezoid.MyText = textSet[consonant, i];
