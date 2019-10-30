@@ -419,8 +419,7 @@ public class centralSystemC : MonoBehaviour {
                     stage = 1;
 
                     /* ここで副輪を呼ぶ */
-                    IEnumerator SCGen = subCircleGenerete(true);
-                    StartCoroutine(SCGen);
+                    subCircleGenerete(true);
 
                     //主輪を接触不可にし、色を変える
                     enableMainCircle(false);
@@ -472,8 +471,7 @@ public class centralSystemC : MonoBehaviour {
                 SetKeytext();
 
             //副輪を消す
-            IEnumerator SCGen = subCircleGenerete(false);
-            StartCoroutine(SCGen);
+            subCircleGenerete(false);
 
             //主輪を戻す
             enableMainCircle(true);
@@ -481,7 +479,7 @@ public class centralSystemC : MonoBehaviour {
     }
 
     //副輪の呼び出しと削除
-    IEnumerator subCircleGenerete(bool doIt) {
+    private void subCircleGenerete(bool doIt) {
         //呼び出すか
         if (doIt) {
             //副輪のジェネレート
@@ -491,25 +489,6 @@ public class centralSystemC : MonoBehaviour {
             subTrapezoid.SetCreateSorce(this.gameObject);
             Destroy(this.subCircle);//一応初期化
             this.subCircle = SubCircle;
-
-            for (int i = 1; i < 5 + 1; i++) {
-                try {
-                    if (SubCircle.transform.Find(( i ).ToString()).gameObject != null) {
-                        keySubObjects[i] = SubCircle.transform.Find(( i ).ToString()).gameObject;
-                    }
-                    goto go;
-                } catch {
-                    //Debug.LogWarning("例外処理発生：コルーチンを続行します");
-                    //for文が進まないようにロールバックする
-                    i--;
-                    goto loop;
-                }
-loop:
-                yield return null;
-
-go:
-                ;
-            }
 
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
@@ -535,86 +514,86 @@ go:
         keySubObjects = new GameObject[subObjectsNum + 1];
 
         if (generete) {
-            for (int i = 1; i < subObjectsNum + 1; i++) {
-                //取得したいオブジェクトやその親がジェネレートされるまで処理しない
-                if (SubCircle.transform.Find(( i ).ToString()).gameObject == null) {
+            for (int i = 1; i < 5 + 1; i++) {
+                try {
+                    //取得したいオブジェクトやその親がジェネレートされるまで処理しない
+                    if (SubCircle.transform.Find(( i ).ToString()).gameObject != null) {
+                        //問題なければ取得する
+                        //Debug.Log("取得中 " + i + " 番目");
+                        keySubObjects[i] = SubCircle.transform.Find(( i ).ToString()).gameObject;
+                        //keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[consonant, i];
+                    }
+                    goto go;
+                } catch {
                     //Debug.LogWarning("例外処理発生：コルーチンを続行します");
                     //for文が進まないようにロールバックする
                     i--;
-                    yield return null;
-                } else {
-                    //問題なければ取得する
-                    //Debug.Log("取得中 " + i + " 番目");
-                    keySubObjects[i] = /*transform.Find("subCircle")*/SubCircle.transform.Find(( i ).ToString()).gameObject;
-                    //keySubObjects[i].GetComponent<MultipleTrapezoidPoleC>().MyText = textSet[consonant, i];
                 }
+                yield return null;
+
+go:
+                ;
             }
             hasSubCircle = true;
             Debug.Log("run in the method");
             SetKeyCircle();
             Debug.Log("召喚コルーチン終了");
         } else {
+            //副輪の削除開始
             Debug.Log("削除なう");
-            GameObject trash = /*subCircle*/SubCircle;
+            //削除対象を避難させる（直後に召喚コルーチンが走ってもいいように）
+            GameObject trash = SubCircle;
+            //GameObjectを空にする
             subCircle = null;
-            trash.name = "subCircleGobe";
+            //名前が被らないようにリネーム
+            trash.name = "subCircleTrash";
+            //副輪所持フラグを折る
+            hasSubCircle = false;
+            //一個ずつまとめて削除フラグを立てる
             for (int i = 0; i < subObjectsNum + 1; i++) {
                 try {
                     Destroy(trash.transform.Find(i.ToString()).gameObject);
-                    goto go;
+                    goto destroy;
                 } catch {
-                    //Debug.LogWarning("例外処理発生：コルーチンを続行します");
-                    //for文が進まないようにロールバックする
                     i--;
-                    goto loop;
                 }
-loop:
                 yield return null;
-
-go:
+destroy:
                 ;
             }
-
+            //削除されているか確認する
             for (int i = 0; i < subObjectsNum + 1; i++) {
-                if (trash.transform.Find(i.ToString()) != null) {
+                try {
+                    Debug.Log("削除できていません : " + trash.transform.Find(i.ToString()).gameObject);
+                    Debug.Log("run "+ i);
+                    //取得成功した場合は削除できていないのでロールバック
                     i--;
-                    yield return null;
+                } catch {
+                    //エラーが出れば、削除されているので次に進む
+                    goto next;
                 }
+                yield return null;
+next:
+                ;
             }
+            //子オブジェクトの削除後に親を削除する
             Destroy(trash);
-            for (int i = 0; i < 1; i++) {
-                if (trash != null) {
-                    i--;
-                    yield return null;
-                }
-
+roleback:
+            try {
+                Debug.Log("削除できていません : " + trash.name);
+                //取得成功した場合は削除できていないのでロールバック
+            } catch {
+                //エラーが出れば、削除されているので次に進む
+                goto end;
             }
-            hasSubCircle = false;
-            Debug.Log("削除コルーチン終了");
+            yield return null;
+            goto roleback;
+end:
+            ;
         }
+        Debug.Log("削除コルーチン終了");
     }
 
-    private void DestroyAllSubCircle() {
-        //while (true) {
-        if (subCircle != null) {
-            GameObject subCircleGove = subCircle;
-            subCircle = null;
-            for (int i = 0; i < 6; i++) {
-                if (subCircleGove.transform.Find(i.ToString()).gameObject)
-                    Destroy(subCircleGove.transform.Find(i.ToString()).gameObject);
-            }
-            Destroy(subCircleGove.gameObject);
-
-        }
-
-        // else {
-        //    break;
-        //}
-        //            else
-        //                subCircle = null;
-
-        //}
-    }
 
     //主輪のキー有効化と無効化
     private void enableMainCircle(bool doIt) {
