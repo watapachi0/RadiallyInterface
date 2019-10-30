@@ -419,7 +419,8 @@ public class centralSystemC : MonoBehaviour {
                     stage = 1;
 
                     /* ここで副輪を呼ぶ */
-                    subCircleGenerete(true);
+                    IEnumerator SCGen = subCircleGenerete(true);
+                    StartCoroutine(SCGen);
 
                     //主輪を接触不可にし、色を変える
                     enableMainCircle(false);
@@ -471,7 +472,8 @@ public class centralSystemC : MonoBehaviour {
                 SetKeytext();
 
             //副輪を消す
-            subCircleGenerete(false);
+            IEnumerator SCGen = subCircleGenerete(false);
+            StartCoroutine(SCGen);
 
             //主輪を戻す
             enableMainCircle(true);
@@ -479,7 +481,7 @@ public class centralSystemC : MonoBehaviour {
     }
 
     //副輪の呼び出しと削除
-    private void subCircleGenerete(bool doIt) {
+    IEnumerator subCircleGenerete(bool doIt) {
         //呼び出すか
         if (doIt) {
             //副輪のジェネレート
@@ -490,10 +492,29 @@ public class centralSystemC : MonoBehaviour {
             Destroy(this.subCircle);//一応初期化
             this.subCircle = SubCircle;
 
+            for (int i = 1; i < 5 + 1; i++) {
+                try {
+                    if (SubCircle.transform.Find(( i ).ToString()).gameObject != null) {
+                        keySubObjects[i] = SubCircle.transform.Find(( i ).ToString()).gameObject;
+                    }
+                    goto go;
+                } catch {
+                    //Debug.LogWarning("例外処理発生：コルーチンを続行します");
+                    //for文が進まないようにロールバックする
+                    i--;
+                    goto loop;
+                }
+loop:
+                yield return null;
+
+go:
+                ;
+            }
+
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
              */
-            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(true,SubCircle);
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(true, SubCircle);
             StartCoroutine(waitGenereteSubKeys);
 
         } else {
@@ -502,12 +523,12 @@ public class centralSystemC : MonoBehaviour {
             //            Destroy(subCircle);
             //DestroyAllSubCircle();
             //subCircle = null;
-            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(false,subCircle);
+            IEnumerator waitGenereteSubKeys = WaitGenereteSubKeys(false, subCircle);
             StartCoroutine(waitGenereteSubKeys);
         }
     }
 
-    IEnumerator WaitGenereteSubKeys(bool generete,GameObject SubCircle) {
+    IEnumerator WaitGenereteSubKeys(bool generete, GameObject SubCircle) {
         //副輪のキーのオブジェクトを取得し、
         //母音からそれぞれのキー値を決定し、反映
         int subObjectsNum = 5;//textSet.GetLength(1);
@@ -516,7 +537,7 @@ public class centralSystemC : MonoBehaviour {
         if (generete) {
             for (int i = 1; i < subObjectsNum + 1; i++) {
                 //取得したいオブジェクトやその親がジェネレートされるまで処理しない
-                if (/*GameObject.Find("subCircle") == null || GameObject.Find("subCircle")*/SubCircle.transform.Find(( i ).ToString()).gameObject == null) {
+                if (SubCircle.transform.Find(( i ).ToString()).gameObject == null) {
                     //Debug.LogWarning("例外処理発生：コルーチンを続行します");
                     //for文が進まないようにロールバックする
                     i--;
@@ -538,8 +559,22 @@ public class centralSystemC : MonoBehaviour {
             subCircle = null;
             trash.name = "subCircleGobe";
             for (int i = 0; i < subObjectsNum + 1; i++) {
-                Destroy(trash.transform.Find(i.ToString()).gameObject);
+                try {
+                    Destroy(trash.transform.Find(i.ToString()).gameObject);
+                    goto go;
+                } catch {
+                    //Debug.LogWarning("例外処理発生：コルーチンを続行します");
+                    //for文が進まないようにロールバックする
+                    i--;
+                    goto loop;
+                }
+loop:
+                yield return null;
+
+go:
+                ;
             }
+
             for (int i = 0; i < subObjectsNum + 1; i++) {
                 if (trash.transform.Find(i.ToString()) != null) {
                     i--;
