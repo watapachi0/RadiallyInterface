@@ -59,7 +59,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     };
 
     //文字のゲームオブジェクト
-    TextMesh TmeshC;
+    public TextMesh TmeshC;
 
     //分割体の何体目か
     private int DivisionNum;
@@ -445,6 +445,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     //非アクティブ化用
     public void Enable(bool enable) {
+       // Debug.Log("run");
         meshCollider.enabled = enable;
         meshRenderer.enabled = enable;
         lineRenderer.enabled = enable;

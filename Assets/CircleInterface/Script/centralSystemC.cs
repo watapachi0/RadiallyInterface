@@ -3,6 +3,8 @@ using System.Collections.Generic;
 //using System.Windows.Forms;
 using UnityEngine;
 using UnityEngine.XR;
+//try catch用 System.Exception
+using System;
 
 public class centralSystemC : MonoBehaviour {
 
@@ -322,20 +324,14 @@ public class centralSystemC : MonoBehaviour {
         //XRであるかどうか
         variablesC.isOnXR = XRSettings.enabled;
         variablesC.createSourcePosition = transform.position;
+
+        subCircles = new GameObject[variablesC.poleSum + 1, 7];
     }
 
     void Start() {
         //主輪の取得と副輪の一斉表示
         IEnumerator getkey = GetKeyObjects();
         StartCoroutine(getkey);
-
-        //副輪のキーをまとめて非アクティブ化
-        for(int i = 0; i < subCircles.GetLength(0); i++) {
-            for(int j = 0; j < subCircles.GetLength(1); j++) {
-                subCircles[i, j].GetComponent<MultipleTrapezoidPoleC>().Enable(false);
-            }
-
-        }
 
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         //XR用設定
@@ -434,6 +430,7 @@ public class centralSystemC : MonoBehaviour {
 
                     /* ここで副輪を呼ぶ */
                     //subCircleGenerete(true);
+                    DisplaySubCircle(baseNumber, true);
 
                     //主輪を接触不可にし、色を変える
                     enableMainCircle(false);
@@ -486,22 +483,43 @@ public class centralSystemC : MonoBehaviour {
 
             //副輪を消す
             //subCircleGenerete(false);
+            DisplaySubCircle(baseNumber, false);
 
             //主輪を戻す
             enableMainCircle(true);
         }
     }
 
+    //キーオブジェクトの取得
+    IEnumerator GetKeyObjects() {
+        keyObjects = new GameObject[poleSum + 1];
+        for (int i = 0; i <= poleSum; i++) {
+            if (keyObjects[i] == null) {
+                if (GameObject.Find(i.ToString())) {
+                    keyObjects[i] = GameObject.Find(i.ToString());
+                } else {
+                    i--;
+                    yield return null;
+                }
+            }
+            if (i == poleSum) {
+                isGetKeyObjects = true;
+            }
+        }
+        //副輪の一斉表示
+        subCircleGenerete();
+
+    }
+
     //副輪の呼び出しと削除
     private void subCircleGenerete() {
-        subCircles = new GameObject[variablesC.poleSum+1, 6];
         //主輪の各キーに属する副輪を生成する
         for (int i = 1; i <= variablesC.poleSum; i++) {
             //副輪のジェネレート
             GameObject SubCircle = new GameObject("subCircle" + i.ToString());
             //variablesC.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
             createTrapezoidPoleC subTrapezoid = SubCircle.AddComponent<createTrapezoidPoleC>();
-            subTrapezoid.PositionObj= keyObjects[i].transform.Find("text").gameObject;
+            subTrapezoid.PositionObj = keyObjects[i].transform.Find("text").gameObject;
             subTrapezoid.SetCreateSorce(this.gameObject);
             subCircles[i, 0] = SubCircle;
             //Debug.LogError("");
@@ -519,27 +537,71 @@ public class centralSystemC : MonoBehaviour {
         int subObjectsNum = 5;//textSet.GetLength(1);
         //keySubObjects = new GameObject[subObjectsNum + 1];
 
-        for (int i = 1; i <= subObjectsNum; i++) {
+        for (int i = 0; i <= subObjectsNum; i++) {
             try {
                 //取得したいオブジェクトやその親がジェネレートされるまで処理しない
                 if (subCircles[poleNum, 0].transform.Find(( i ).ToString()).gameObject != null) {
                     //問題なければ取得する
                     //Debug.Log("取得中 " + i + " 番目");
-                    subCircles[poleNum, i] = subCircles[poleNum, 0].transform.Find(( i ).ToString()).gameObject;
+                    subCircles[poleNum, i + 1] = subCircles[poleNum, 0].transform.Find(( i ).ToString()).gameObject;
+                    //Debug.Log("run");
                     //文字セット用
                     //keySubObjects[i] = subCircles[poleSum, i];
                 }
                 goto go;
-            } catch {
+            } catch (Exception e){
                 //Debug.LogWarning("例外処理発生：コルーチンを続行します");
                 //for文が進まないようにロールバックする
                 i--;
+                Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
             }
             yield return null;
 
 go:
             ;
+            //Debug.Log("i = " + i);
         }
+
+        //副輪のキーをまとめて非アクティブ化
+        //Debug.Log("run = " + subCircles.GetLength(1));
+        for (int i = 1; i < subCircles.GetLength(0); i++) {
+            /*back:
+                        ;
+                        try {
+                            SetKeyCircle(i);
+                            goto ok;
+                        } catch {
+                            i--;
+                        }
+                        yield return null;
+                        goto back;
+            ok:
+                        ;*/
+            for (int j = 1; j < subCircles.GetLength(1); j++) {
+                try {
+                    Debug.Log(subCircles[i, j].name);
+                    if (subCircles[i, j].name == "0") {
+                        subCircles[i, j].GetComponent<PolygonalPillarC>().Enable(false);
+                    } else {
+                       // Debug.Log("check");
+                        SetKeyCircle(i);
+                        subCircles[i, j].GetComponent<MultipleTrapezoidPoleC>().Enable(false);
+
+                        Debug.Log("run");
+                    }
+
+                    goto next;
+                } catch(Exception e) {
+                    j--;
+                    Debug.LogWarning("try failed : ///\n" + e.Message +"///\n"+ e.TargetSite +"///\n"+ e.StackTrace);
+                }
+                yield return null;
+next:
+                ;
+            }
+
+        }
+
         //hasSubCircle = true;
         Debug.Log("run in the method");
         //SetKeytext();
@@ -669,28 +731,6 @@ go:
             setText = "ＡＢＣ";
         }
     }
-
-    //キーオブジェクトの取得
-    IEnumerator GetKeyObjects() {
-        keyObjects = new GameObject[poleSum + 1];
-        for (int i = 0; i <= poleSum; i++) {
-            if (keyObjects[i] == null) {
-                if (GameObject.Find(i.ToString())) {
-                    keyObjects[i] = GameObject.Find(i.ToString());
-                } else {
-                    i--;
-                    yield return null;
-                }
-            }
-            if (i == poleSum) {
-                isGetKeyObjects = true;
-                Debug.Log("run");
-            }
-        }
-        //副輪の一斉表示
-        subCircleGenerete();
-
-    }
     /*
     //キーに文字を割り当てる
     private void SetKeytext() {
@@ -738,7 +778,7 @@ go:
 
         MultipleTrapezoidPoleC keyObjectITrapezoid;
         int keySum;
-        try {
+        /*try {
             //副輪のキーのオブジェクトを取得済みかどうか
             if (subCircles[poleNum, subCircles.GetLength(1)].gameObject) {
 
@@ -748,7 +788,7 @@ go:
                     keyObjectITrapezoid = subCircles[poleNum, i].GetComponent<MultipleTrapezoidPoleC>();
 
                     keyObjectITrapezoid.MyText = textSet[poleNum, i];
-
+                    Debug.Log("run ok");
                 }
             }
         } catch {
@@ -761,7 +801,50 @@ go:
 
                 keyObjectITrapezoid.MyText = textSet[i - 1, 0];
             }
+        }*/
+        //主輪の話かどうか
+        if (poleNum == 0) {
+            keySum = keyObjects.Length;
+
+            for (int i = 1; i < keySum; i++) {
+
+                keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
+
+                keyObjectITrapezoid.MyText = textSet[i - 1, 0];
+            }
+        } else {
+            keySum = subCircles.GetLength(1);
+            try {
+
+                for (int i = 1; i < keySum; i++) {
+                    keyObjectITrapezoid = subCircles[poleNum, i].GetComponent<MultipleTrapezoidPoleC>();
+                    Debug.Log("run instance : " + keyObjectITrapezoid.transform.position);
+                    //keyObjectITrapezoid.MyText = textSet[poleNum, i];
+                    Debug.Log("run ok");
+                }
+            }catch(Exception e) {
+                Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
+
+            }
         }
+
     }
 
+    //副輪を表示する
+    private void DisplaySubCircle(int CircleNum, bool disp) {
+        for (int i = 1; i < subCircles.GetLength(1); i++) {
+            try {
+                //Debug.Log(subCircles[CircleNum, i].name);
+                if (subCircles[CircleNum, i].name == "0") {
+                    subCircles[CircleNum, i].GetComponent<PolygonalPillarC>().Enable(disp);
+                } else {
+                    subCircles[CircleNum, i].GetComponent<MultipleTrapezoidPoleC>().Enable(disp);
+                }
+            } catch (Exception e){
+                i--;
+                Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
+            }
+        }
+
+    }
 }

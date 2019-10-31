@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//try catch用 System.Exception
+using System;
 
 public class createTrapezoidPoleC : MonoBehaviour {
 
@@ -51,9 +53,10 @@ public class createTrapezoidPoleC : MonoBehaviour {
             try {
                 if (createSorceObj != null || 0.01f <= Vector3.Distance(PositionObj.transform.position, transform.position))
                     transform.position = PositionObj.transform.position;
-                Debug.Log("副輪のcreateスクリプトを削除します");
-            } catch {
-                Debug.Log("主輪のcreateスクリプトを削除します");
+                //Debug.Log("副輪のcreateスクリプトを削除します");
+            } catch (Exception e){
+                //Debug.Log("主輪のcreateスクリプトを削除します");
+                Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
             } finally {
                 //コンポーネント削除
                 Destroy(this);

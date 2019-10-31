@@ -23,6 +23,10 @@ public class PolygonalPillarC : MonoBehaviour {
     //面情報
     int[] face;
 
+    //
+    MeshRenderer meshRenderer;
+    MeshCollider meshCollider;
+
     private void Awake() {
         systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
     }
@@ -50,10 +54,10 @@ public class PolygonalPillarC : MonoBehaviour {
         //メッシュアタッチ
         mesh_filter.mesh = mesh;
         //レンダラー追加 + マテリアルアタッチ
-        MeshRenderer meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
+        meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
         meshRenderer.material = variablesC.material_PolygonalPillar;
         //コライダーアタッチ
-        MeshCollider meshCollider = this.gameObject.AddComponent<MeshCollider>();
+        meshCollider = this.gameObject.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh;
         meshCollider.convex = true;
         meshCollider.isTrigger = true;
@@ -154,5 +158,10 @@ public class PolygonalPillarC : MonoBehaviour {
 
     public void setMyParent(GameObject parent) {
         myParent = parent;
+    }
+
+    public void Enable(bool enable) {
+        meshRenderer.enabled = enable;
+        meshCollider.enabled = enable;
     }
 }
