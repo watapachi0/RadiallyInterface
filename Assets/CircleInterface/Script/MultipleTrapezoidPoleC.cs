@@ -32,6 +32,10 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     Vector3[] lineVertecies;   //lineVertexの配置を格納
     //色の変更など
     MeshRenderer meshRenderer;
+    //当たり判定
+    MeshCollider meshCollider;
+    //縁取り用
+    LineRenderer lineRenderer;
 
     //stage情報保存
     int stage;
@@ -155,7 +159,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
         meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
         //コライダーアタッチ
-        MeshCollider meshCollider = this.gameObject.AddComponent<MeshCollider>();
+        meshCollider = this.gameObject.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh_filter.mesh;
         meshCollider.convex = true;
         meshCollider.isTrigger = true;
@@ -190,7 +194,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         make3Dtext();
 
         //縁取り
-        LineRenderer lineRenderer = this.gameObject.AddComponent<LineRenderer>();
+        lineRenderer = this.gameObject.AddComponent<LineRenderer>();
         //ローカルで描画
         lineRenderer.useWorldSpace = false;
         //頂点数
@@ -437,5 +441,12 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     public void setMyParent(GameObject parent) {
         myParent = parent;
+    }
+
+    //非アクティブ化用
+    public void Enable(bool enable) {
+        meshCollider.enabled = enable;
+        meshRenderer.enabled = enable;
+        lineRenderer.enabled = enable;
     }
 }

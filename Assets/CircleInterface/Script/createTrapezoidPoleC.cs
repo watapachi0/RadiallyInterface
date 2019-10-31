@@ -11,6 +11,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
     private bool isReadyToDestroy = false;
     //呼び出し元保存　nullなら主輪
     private GameObject createSorceObj = null;
+    public GameObject PositionObj { get; set; }
     //中心の多角柱用のインスタンス
     private PolygonalPillarC polygonalPillar = null;
 
@@ -46,8 +47,17 @@ public class createTrapezoidPoleC : MonoBehaviour {
     void Update() {
         //削除準備が整ったら削除
         if (isReadyToDestroy) {
-            //コンポーネント削除
-            Destroy(this);
+            //ずれていたら座標を合わせる(許容誤差1cm)
+            try {
+                if (createSorceObj != null || 0.01f <= Vector3.Distance(PositionObj.transform.position, transform.position))
+                    transform.position = PositionObj.transform.position;
+                Debug.Log("副輪のcreateスクリプトを削除します");
+            } catch {
+                Debug.Log("主輪のcreateスクリプトを削除します");
+            } finally {
+                //コンポーネント削除
+                Destroy(this);
+            }
         }
 
         ///親オブジェクトがいないとき（主輪である）ときのみ中心オブジェクトを作る

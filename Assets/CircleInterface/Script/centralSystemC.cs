@@ -329,6 +329,14 @@ public class centralSystemC : MonoBehaviour {
         IEnumerator getkey = GetKeyObjects();
         StartCoroutine(getkey);
 
+        //副輪のキーをまとめて非アクティブ化
+        for(int i = 0; i < subCircles.GetLength(0); i++) {
+            for(int j = 0; j < subCircles.GetLength(1); j++) {
+                subCircles[i, j].GetComponent<MultipleTrapezoidPoleC>().Enable(false);
+            }
+
+        }
+
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         //XR用設定
         if (variablesC.isOnXR) {
@@ -491,11 +499,12 @@ public class centralSystemC : MonoBehaviour {
         for (int i = 1; i <= variablesC.poleSum; i++) {
             //副輪のジェネレート
             GameObject SubCircle = new GameObject("subCircle" + i.ToString());
-            variablesC.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
+            //variablesC.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
             createTrapezoidPoleC subTrapezoid = SubCircle.AddComponent<createTrapezoidPoleC>();
+            subTrapezoid.PositionObj= keyObjects[i].transform.Find("text").gameObject;
             subTrapezoid.SetCreateSorce(this.gameObject);
             subCircles[i, 0] = SubCircle;
-            Debug.LogError("");
+            //Debug.LogError("");
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
              */
