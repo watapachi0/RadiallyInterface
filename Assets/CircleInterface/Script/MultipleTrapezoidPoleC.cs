@@ -36,6 +36,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     MeshCollider meshCollider;
     //縁取り用
     LineRenderer lineRenderer;
+    //文字のレンダラー
+    MeshRenderer textMeshRender;
 
     //stage情報保存
     int stage;
@@ -68,9 +70,10 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     private Vector3 textPosition;
 
     //Text情報
+    [SerializeField]
     public string MyText { get; set; } = "";
 
-    //Circle用自身がアクティブかどうか
+    //Circle用 自身がアクティブかどうか
     public bool isActiveObj { get; set; } = true;
 
     private void Awake() {
@@ -220,6 +223,10 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     }
 
     void Update() {
+        if (/*CircleUIなら*/true && MyText == "") {
+            askMyText();
+        }
+
         //stage情報取得
         stage = variablesC.stage;
         //テキストの更新
@@ -418,7 +425,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         GameObject textCentor = new GameObject("text");
         //接触判定のないレイヤーに変更
         textCentor.layer = 8;
-        MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
+        textMeshRender = textCentor.AddComponent<MeshRenderer>();
         TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
         TmeshC.fontSize = variablesC.systemTextFontSize;
@@ -445,9 +452,23 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     //非アクティブ化用
     public void Enable(bool enable) {
-       // Debug.Log("run");
+        // Debug.Log("run");
         meshCollider.enabled = enable;
         meshRenderer.enabled = enable;
         lineRenderer.enabled = enable;
+        textMeshRender.enabled = enable;
+    }
+
+    //自分の数字をシステムに問い合わせる
+    private void askMyText() {
+        int myNum = int.Parse(transform.gameObject.name);
+        if (!isSubRingPole) {
+            myNum = int.Parse(transform.gameObject.name);
+        } else {
+            string myParentNum = myParent.name.Substring(myParent.name.Length - 1);
+            myNum = int.Parse(transform.gameObject.name) + int.Parse(myParentNum) * 100;
+        }
+        MyText = systemScript.tellKeyText(myNum);
+
     }
 }
