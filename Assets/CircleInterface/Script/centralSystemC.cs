@@ -44,6 +44,11 @@ public class centralSystemC : MonoBehaviour {
     //テスト中
     public bool isCircleInterface;
 
+    //中心の多角柱を使用可にしていいか
+    private bool canEnterPolygonalPiller = true;
+    //それぞれの意見
+    private bool[] couldEnterPP;
+
     /*[親のpointNum,set]*/
     protected string[,] textSet;
 
@@ -832,5 +837,20 @@ next:
         } else {
             return textSet[(int)( keyNumber / 100 ) - 1, keyNumber % 100];
         }
+    }
+
+    //各キーから多角柱のEnterイベントを起こしていいか意見をもらう
+    public void PolygonalPillerEnterEvent(bool opinion) {
+        if (opinion == false) {
+            //意見「ダメ」が出た時点で、ダメな状態にする
+            canEnterPolygonalPiller = false;
+        } else {
+            if (canEnterPolygonalPiller == false) {
+                //意見「良い」で、もともと「ダメ」な状態なら全員の意見を待つ
+            } else {
+                //意見「良い」で、もともと「良い」な状態なら何もしない
+            }
+        }
+
     }
 }
