@@ -155,10 +155,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc27fc1c749858e4d85f94a8b6d21a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RadiusIn: 10
+  RadiusIn: 20
   RadiusOut: 40
-  RadiusIn_subCircle: 8
-  RadiusOut_subCircle: 15
+  RadiusIn_subCircle: 20
+  RadiusOut_subCircle: 40
   PoleHeight: 10
   LineRendererWidth: 0.5
   LineShiftSlightly: 0.2
