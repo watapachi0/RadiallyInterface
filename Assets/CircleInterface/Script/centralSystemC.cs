@@ -33,6 +33,8 @@ public class centralSystemC : MonoBehaviour {
     //private GameObject subCircle;
     //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
     private bool doLateUpdat = false;
+    //主輪の中心キーのスクリプトのインスタンス
+    private PolygonalPillarC polygonalPillar;
 
     //主輪の中心に触れているか
     private bool isTouchMainPillar = false;
@@ -402,11 +404,18 @@ public class centralSystemC : MonoBehaviour {
 
         //副輪の中心は解釈に使われない
         if (churingNumber == 100) {
+            //ただし、主輪の0キーを無効にだけする
+            //システムの大きさや円環の大きさ次第で主輪0キーと副輪0キーが重なるため
+            polygonalPillar.Enable(false);
             return;
         }
 
         //Exitイベントは解釈せずに終了
         if (1000 <= churingNumber) {
+            //ただし、副輪の文字キーのExitだけは、主輪の0キー有効化のために使う
+            if (1101 <= churingNumber && churingNumber <= 1199) {
+                polygonalPillar.Enable(true);
+            }
             return;
         }
 
@@ -445,6 +454,8 @@ public class centralSystemC : MonoBehaviour {
             } else if (stage == 1) {
                 //主輪選択後で、中心に戻ったわけではない場合
                 if (0 < churingNumber && churingNumber <= poleSum + 1) {
+                    //主輪の0キーを無効化
+                    polygonalPillar.Enable(false);
                     //子音が決定するので計算
                     consonant = baseNumber - 1;
                     //子音と母音から再計算
@@ -511,6 +522,8 @@ public class centralSystemC : MonoBehaviour {
                 isGetKeyObjects = true;
             }
         }
+        //インスタンスの取得
+        polygonalPillar = keyObjects[0].GetComponent<PolygonalPillarC>();
         //副輪の一斉表示
         subCircleGenerete();
 
