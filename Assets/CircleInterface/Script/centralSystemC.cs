@@ -324,10 +324,13 @@ public class centralSystemC : MonoBehaviour {
         variablesC.displaySystemCommand = this.dispSystemCommand;
         //variablesC.SystemCommandVector = this.SystemCommandVector;
         //文字セット初期化
-        if (isCircleInterface)
+        if (isCircleInterface) {
             textSet = textSetHiraganaCircle;
-        else
+        } else {
             textSet = textSetHiragana;
+        }
+        variablesC.poleSum = textSet.GetLength(0);
+
         //XRであるかどうか
         variablesC.isOnXR = XRSettings.enabled;
         variablesC.createSourcePosition = transform.position;
@@ -514,8 +517,8 @@ public class centralSystemC : MonoBehaviour {
 
     //キーオブジェクトの取得
     IEnumerator GetKeyObjects() {
-        keyObjects = new GameObject[poleSum + 1];
-        for (int i = 0; i <= poleSum; i++) {
+        keyObjects = new GameObject[/*poleSum*/textSet.GetLength(0) + 1];
+        for (int i = 0; i <= /*poleSum*/textSet.GetLength(0); i++) {
             if (keyObjects[i] == null) {
                 if (GameObject.Find(i.ToString())) {
                     keyObjects[i] = GameObject.Find(i.ToString());
@@ -538,7 +541,7 @@ public class centralSystemC : MonoBehaviour {
     //副輪の呼び出しと削除
     private void subCircleGenerete() {
         //主輪の各キーに属する副輪を生成する
-        for (int i = 1; i <= variablesC.poleSum; i++) {
+        for (int i = 1; i <= /*variablesC.poleSum*/textSet.GetLength(0); i++) {
             //副輪のジェネレート
             GameObject SubCircle = new GameObject("subCircle" + i.ToString());
             //variablesC.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
@@ -558,7 +561,7 @@ public class centralSystemC : MonoBehaviour {
     IEnumerator WaitGenereteSubKeys(int poleNum) {
         //副輪のキーのオブジェクトを取得し、
         //母音からそれぞれのキー値を決定し、反映
-        int subObjectsNum = 5;//textSet.GetLength(1);
+        int subObjectsNum = GetTextSetItemNum(poleNum);//textSet.GetLength(1);
         //keySubObjects = new GameObject[subObjectsNum + 1];
 
         for (int i = 0; i <= subObjectsNum; i++) {
@@ -603,7 +606,7 @@ go:
                         ;*/
             for (int j = 1; j < subCircles.GetLength(1); j++) {
                 try {
-                    Debug.Log(subCircles[i, j].name);
+                    //Debug.Log(subCircles[i, j].name);
                     if (subCircles[i, j].name == "0") {
                         subCircles[i, j].GetComponent<PolygonalPillarC>().Enable(false);
                     } else {
@@ -611,7 +614,7 @@ go:
                         //SetKeyCircle(i);
                         subCircles[i, j].GetComponent<MultipleTrapezoidPoleC>().Enable(false);
 
-                        Debug.Log("run");
+                     //   Debug.Log("run");
                     }
 
                     goto next;
@@ -670,30 +673,41 @@ next:
     //他文字セットなどのキーの解釈
     private void SystemCommandChuring() {
         if (setText == "英" || setText == "ａ") {
-            if (isCircleInterface)
+            if (isCircleInterface) {
                 textSet = textSetAlphabetCircle;
-            else
+                variablesC.poleSum = textSet.GetLength(0);
+            } else {
                 textSet = textSetAlphabet;
+                variablesC.poleSum = textSet.GetLength(0);
+            }
         } else if (setText == "Ａ") {
-            if (isCircleInterface)
+            if (isCircleInterface) {
                 textSet = textSetALPHABETCircle;
-            else
+            } else {
                 textSet = textSetALPHABET;
+                variablesC.poleSum = textSet.GetLength(0);
+            }
         } else if (setText == "かな") {
-            if (isCircleInterface)
+            if (isCircleInterface) {
                 textSet = textSetHiraganaCircle;
-            else
+            } else {
                 textSet = textSetHiragana;
+                variablesC.poleSum = textSet.GetLength(0);
+            }
         } else if (setText == "カナ") {
-            if (isCircleInterface)
+            if (isCircleInterface) {
                 textSet = textSetKatakanaCircle;
-            else
+            } else {
                 textSet = textSetKatakana;
+                variablesC.poleSum = textSet.GetLength(0);
+            }
         } else if (setText == "記/数") {
-            if (isCircleInterface)
+            if (isCircleInterface) {
                 textSet = textSetSignNumCircle;
-            else
+            } else {
                 textSet = textSetSignNum;
+                variablesC.poleSum = textSet.GetLength(0);
+            }
         } else if (setText == "゛") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
@@ -871,5 +885,17 @@ next:
             }
         }
 
+    }
+
+    //現在のtextSetの任意の行の"Error"が出るまでのアイテム数を数える
+    public int GetTextSetItemNum(int dan) {
+        int length = 0;
+        for (; length < textSet.GetLength(1); length++) {
+            if (textSet[dan - 1, length] == "Error") {
+                return length - 1;
+            }
+        }
+        Debug.LogWarning("textSetにErrorアイテムが見つかりません");
+        return length;
     }
 }

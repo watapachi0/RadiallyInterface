@@ -23,6 +23,8 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     private createTrapezoidPoleC createSorce;
     private centralSystemC systemScript;
     private GameObject myParent = null;
+    private int subCircleNum;
+    private int poleSum;
 
     //頂点座標
     Vector3[] EndVertex = new Vector3[4];
@@ -83,10 +85,17 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //stage情報初期化
         stage = variablesC.stage;
 
-        if (myParent == null)
+        if (myParent == null) {
             createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
-        else
+            //現在のTextSetの段数を取得
+            poleSum = variablesC.poleSum;
+        } else {
             createSorce = myParent.GetComponent<createTrapezoidPoleC>();
+            //自分の親の名前から該当TextSetの行からアイテム数を取得
+            Debug.Log(myParent.name.Substring(9));
+            poleSum = GameObject.Find("central").GetComponent<centralSystemC>().GetTextSetItemNum(int.Parse(myParent.name.Substring(9)));
+        }
+
         systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
 
         //自分の番号を名前から取得し初期化
