@@ -414,7 +414,13 @@ public class centralSystemC : MonoBehaviour {
         if (1000 <= churingNumber) {
             //ただし、副輪の文字キーのExitだけは、主輪の0キー有効化のために使う
             if (1101 <= churingNumber && churingNumber <= 1199) {
-                polygonalPillar.Enable(true);
+                //副輪の0キーに触れているか
+                if (isTouchSubPillar) {
+                    //なにもしない
+                } else {
+                    //触れていないなら（中心へ戻ったわけではない）主輪0キーを有効化
+                    polygonalPillar.Enable(true);
+                }
             }
             return;
         }
