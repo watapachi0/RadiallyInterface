@@ -14,8 +14,8 @@ public class TrapezoidPole : MonoBehaviour {
 
     private int poleNum;
 
-    private createTrapezoidPole createSorce;
-    private centralSystem systemScript;
+    private createTrapezoidPoleC createSorce;
+    private centralSystemC systemScript;
 
     //頂点座標
     Vector3[] vertex = new Vector3[24];
@@ -49,8 +49,8 @@ public class TrapezoidPole : MonoBehaviour {
     public string MyText { get; set; } = "";
 
     private void Awake() {
-        createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
-        systemScript = GameObject.Find("central").GetComponent<centralSystem>();
+        createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
+        systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
     }
 
     void Start() {
