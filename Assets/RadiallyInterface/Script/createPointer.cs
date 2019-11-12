@@ -4,9 +4,18 @@ using UnityEngine;
 
 /*
  * それぞれの指にポインタ―を付与する
+ * LeapMotionの描画など
  */
- 
+
 public class createPointer : MonoBehaviour {
+
+    //球体を描画する
+    [SerializeField]
+    private bool doRenderSphere = true;
+    //LeapMotionの手を描画する
+    [SerializeField]
+    private bool doRenderLeapHands = true;
+    private SkinnedMeshRenderer[] handRenderer = new SkinnedMeshRenderer[2];
 
     //private GameObject[,,] fingers;
     //2cm角の球体
@@ -18,8 +27,14 @@ public class createPointer : MonoBehaviour {
     private string[] fingerJoint = new string[5] { "meta", "a", "b", "c", "end" };
     /* LoPoly Rigged Hand 用 終 */
 
+    private GameObject[,,] fingers;
+    private MeshRenderer[,,] fingersRenderer;
+    //再計算が必要
+    private bool needReCulc = false;
+
     void Start() {
-        GameObject[,,] fingers = new GameObject[LandR.Length, fingerName.Length, fingerJoint.Length];
+        fingers = new GameObject[LandR.Length, fingerName.Length, fingerJoint.Length];
+        fingersRenderer = new MeshRenderer[LandR.Length, fingerName.Length, fingerJoint.Length];
         for (int LR = 0; LR < LandR.Length; LR++) {
             GameObject hand;
             //リグを取得
@@ -28,8 +43,14 @@ public class createPointer : MonoBehaviour {
             hand = hand.transform.Find("Hand Models").gameObject;
             if (LR == 0) {
                 hand = hand.transform.Find("LoPoly Rigged Hand Left").gameObject;
+                //手の描画の可否
+                handRenderer[LR] = hand.transform.Find("LoPoly_Hand_Mesh_Left").GetComponent<SkinnedMeshRenderer>();
+                handRenderer[LR].enabled = doRenderLeapHands;
             } else {
                 hand = hand.transform.Find("LoPoly Rigged Hand Right").gameObject;
+                //手の描画の可否
+                handRenderer[LR] = hand.transform.Find("LoPoly_Hand_Mesh_Right").GetComponent<SkinnedMeshRenderer>();
+                handRenderer[LR].enabled = doRenderLeapHands;
             }
             //ローポリハンドのの下の腕を取得
             hand = hand.transform.Find(LandR[LR] + "_Wrist").gameObject;
@@ -75,6 +96,8 @@ public class createPointer : MonoBehaviour {
                     fingerParent = target;
                     //配列に保存
                     fingers[LR, Name, Joint] = target;
+                    fingersRenderer[LR, Name, Joint] = sphere.GetComponent<MeshRenderer>();
+                    fingersRenderer[LR, Name, Joint].enabled = doRenderSphere;
                 }
             }
             //指先に当たり判定スクリプトをアタッチ
@@ -100,6 +123,36 @@ public class createPointer : MonoBehaviour {
 
     void Update() {
         //１フレーム目で本スクリプトを削除
-        Destroy(this);
+        //Destroy(this);
+        //再計算をする必要があるか
+        if (needReCulc)
+            RenderReCulc();
+    }
+
+    //値変更時に中身を再度計算
+    private void OnValidate() {
+        needReCulc = true;
+    }
+
+    private void RenderReCulc() {
+        //エラー対策
+        if (fingers == null)
+            return;
+
+        for (int LR = 0; LR < LandR.Length; LR++) {
+            handRenderer[LR].enabled = doRenderLeapHands;
+            for (int Name = 1; Name < fingerName.Length; Name++) {
+                for (int Joint = 0; Joint < fingerJoint.Length; Joint++) {
+                    //エラー対策
+                    try {
+                        fingersRenderer[LR, Name, Joint].enabled = doRenderSphere;
+                    } catch {
+                        //エラーが出たらなにもしない
+                    }
+                }
+            }
+        }
+        //再計算の必要性なし
+        needReCulc = false;
     }
 }

@@ -16,7 +16,7 @@ public class centralSystemC : MonoBehaviour {
     private int consonant;  //子音
 
     /* システムの形決定 */
-    protected int poleSum = 5;            //キーの数
+    //protected int poleSum;            //キーの数
     private int trapezoidDivisionNum = 5;     //キー当たりのメッシュ数　1以上
     protected float radiusOut = 1f;       //システムの外縁の半径
     protected float radiusIn = 0.7f;        //ニュートラルエリアの半径
@@ -54,6 +54,8 @@ public class centralSystemC : MonoBehaviour {
     /*[親のpointNum,set]*/
     protected string[,] textSet;
 
+    //実験用のタイピングスクリプト
+    public TypingSystem typingSystem;
 
     //Radially用textSet
     /* か行見出し　か行あ段　か行い段  …
@@ -326,8 +328,10 @@ public class centralSystemC : MonoBehaviour {
         //文字セット初期化
         if (isCircleInterface) {
             textSet = textSetHiraganaCircle;
+            variables.poleSum = textSet.GetLength(0);
         } else {
             textSet = textSetHiragana;
+            variables.poleSum = textSet.GetLength(0);
         }
         variablesC.poleSum = textSet.GetLength(0);
 
@@ -441,8 +445,9 @@ public class centralSystemC : MonoBehaviour {
             stage = 3;
         } else {
             if (stage == 0) {
+                Debug.Log("run churing:" + churingNumber + " pole:" + variables.poleSum);
                 //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
-                if (0 < churingNumber && churingNumber <= poleSum + 1) {
+                if (0 < churingNumber && churingNumber <= variables.poleSum + 1) {
                     //最初のキー値を決定
                     baseNumber = churingNumber;
                     consonant = baseNumber - 1;
@@ -457,14 +462,14 @@ public class centralSystemC : MonoBehaviour {
 
                     //主輪を接触不可にし、色を変える
                     enableMainCircle(false);
+                    //主輪の0キーを無効化
+                    polygonalPillar.Enable(false);
                 }
                 //0の時は解釈終了判定にいきたくない
                 return;
             } else if (stage == 1) {
                 //主輪選択後で、中心に戻ったわけではない場合
-                if (0 < churingNumber && churingNumber <= poleSum + 1) {
-                    //主輪の0キーを無効化
-                    polygonalPillar.Enable(false);
+                if (0 < churingNumber && churingNumber <= variables.poleSum + 1) {
                     //子音が決定するので計算
                     consonant = baseNumber - 1;
                     //子音と母音から再計算
@@ -476,7 +481,7 @@ public class centralSystemC : MonoBehaviour {
                 }
             } else if (stage == 2) {
                 //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
-                if (0 < churingNumber && churingNumber <= poleSum + 1) {
+                if (0 < churingNumber && churingNumber <= variables.poleSum + 1) {
                     setText = textSet[consonant, churingNumber - 1 + 1];
                     //if (isGetKeyObjects)
                     //SetKeytext();
@@ -495,9 +500,10 @@ public class centralSystemC : MonoBehaviour {
             //まず、特殊なコマンドは実行する
             SystemCommandChuring();
             //表示用にわかりやすい名前に書き換える
-            ConvertToSystemCommand();
+            //ConvertToSystemCommand();
             //表示
-            InputText = setText;
+            InputText += setText;
+            SendText(InputText);
             //準備用の変数を初期化
             setText = "";
             //中心へ戻った
@@ -527,7 +533,7 @@ public class centralSystemC : MonoBehaviour {
                     yield return null;
                 }
             }
-            if (i == poleSum) {
+            if (i == variables.poleSum) {
                 isGetKeyObjects = true;
             }
         }
@@ -614,7 +620,7 @@ go:
                         //SetKeyCircle(i);
                         subCircles[i, j].GetComponent<MultipleTrapezoidPoleC>().Enable(false);
 
-                     //   Debug.Log("run");
+                        //   Debug.Log("run");
                     }
 
                     goto next;
@@ -680,49 +686,70 @@ next:
                 textSet = textSetAlphabet;
                 variablesC.poleSum = textSet.GetLength(0);
             }
+            setText = "";
         } else if (setText == "Ａ") {
             if (isCircleInterface) {
                 textSet = textSetALPHABETCircle;
+                variablesC.poleSum = textSet.GetLength(0);
             } else {
                 textSet = textSetALPHABET;
                 variablesC.poleSum = textSet.GetLength(0);
             }
+            setText = "";
         } else if (setText == "かな") {
             if (isCircleInterface) {
                 textSet = textSetHiraganaCircle;
+                variablesC.poleSum = textSet.GetLength(0);
             } else {
                 textSet = textSetHiragana;
                 variablesC.poleSum = textSet.GetLength(0);
             }
+            setText = "";
         } else if (setText == "カナ") {
             if (isCircleInterface) {
                 textSet = textSetKatakanaCircle;
+                variablesC.poleSum = textSet.GetLength(0);
             } else {
                 textSet = textSetKatakana;
                 variablesC.poleSum = textSet.GetLength(0);
             }
+            setText = "";
         } else if (setText == "記/数") {
             if (isCircleInterface) {
                 textSet = textSetSignNumCircle;
+                variablesC.poleSum = textSet.GetLength(0);
             } else {
                 textSet = textSetSignNum;
                 variablesC.poleSum = textSet.GetLength(0);
             }
+            setText = "";
+        } else if (setText == "改/確") {
+            //
+            setText = "";
+        } else if (setText == "空/変") {
+            //
+            setText = "";
         } else if (setText == "゛") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
+                DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 1, j];
             }
         } else if (setText == "゜") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
+                DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 2, j];
             }
         } else if (setText == "小") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
+                DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 3, j];
             }
+        } else if (setText == "BS") {
+            DeleteInputText(1);
+            setText = "";
         }
     }
 
@@ -730,13 +757,20 @@ next:
     private bool HaveRetranslationText(ref int i, ref int j) {
         for (i = 0; i < RetranslationSet.GetLength(0) / 4; i++) {
             for (j = 0; j < RetranslationSet.GetLength(1) - 1; j++) {
-                if (InputText == RetranslationSet[i * 4, j]) {
+                if (InputText.Substring(InputText.Length - 1) == RetranslationSet[i * 4, j]) {
                     return true;
                 }
 
             }
         }
         return false;
+    }
+
+    //InputTextの先頭n文字を削除
+    private void DeleteInputText(int n) {
+        if (n <= InputText.Length) {
+            InputText = InputText.Substring(0, InputText.Length - n);
+        }
     }
 
     //入力された内容をシステムコマンドに変換する(setText内で完結させる)
@@ -782,7 +816,7 @@ next:
     //RadiallyUI用文字割り当て
     private void SetKeyRadially() {
         MultipleTrapezoidPoleC keyObjectITrapezoid;
-        for (int i = 1; i <= poleSum; i++) {
+        for (int i = 1; i <= variables.poleSum; i++) {
             keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
             if (stage == 0) {
                 keyObjectITrapezoid.MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
@@ -796,10 +830,10 @@ next:
                 } else if (churingNumber + 1 == i) {
                     //右隣の値
                     keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
-                } else if (churingNumber - ( poleSum - 1 ) == i) {
+                } else if (churingNumber - ( variables.poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(最大値)の場合の右隣の値
                     keyObjectITrapezoid.MyText = textSet[( churingNumber - 1 ) * 3 + 2, 0];
-                } else if (churingNumber + ( poleSum - 1 ) == i) {
+                } else if (churingNumber + ( variables.poleSum - 1 ) == i) {
                     //現在地(churingNumber)が端(1)の場合の左隣の値
                     keyObjectITrapezoid.MyText = textSet[0, 0];
                 } else {
@@ -854,6 +888,7 @@ next:
                     subCircles[CircleNum, i].GetComponent<PolygonalPillarC>().Enable(disp);
                 } else {
                     subCircles[CircleNum, i].GetComponent<MultipleTrapezoidPoleC>().Enable(disp);
+                    Debug.Log("Disp " + CircleNum);
                 }
             } catch (Exception e) {
                 i--;
@@ -866,8 +901,10 @@ next:
     //CircleUI用
     public string tellKeyText(int keyNumber) {
         if (keyNumber < 100) {
+            //主輪用
             return textSet[keyNumber - 1, 0];
         } else {
+            //副輪用
             return textSet[(int)( keyNumber / 100 ) - 1, keyNumber % 100];
         }
     }
@@ -897,5 +934,22 @@ next:
         }
         Debug.LogWarning("textSetにErrorアイテムが見つかりません");
         return length;
+    }
+
+    //文字出力メソッド
+    private void SendText(string text) {
+        if (typingSystem == null) {
+            //
+        } else {
+            //実験用
+            typingSystem.listenKeyEvent(text);
+        }
+    }
+
+    public void EditInputText(string newText) {
+        //テキストの更新
+        InputText = newText;
+        //表示
+        SendText(InputText);
     }
 }

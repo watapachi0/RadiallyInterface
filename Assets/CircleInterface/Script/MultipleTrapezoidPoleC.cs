@@ -254,23 +254,23 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             radiusIn = variablesC.radiusIn;
         }
         //台形の外側の頂点座標その1
-        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の外側の頂点座標その2 
-        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の内側の頂点座標その1
-        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //台形の内側の頂点座標その2
-        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( variablesC.poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variablesC.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variablesC.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variablesC.createSourcePosition;
         //全頂点数8にそれぞれ座標が2つずつある
@@ -470,13 +470,14 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
 
     //自分の数字をシステムに問い合わせる
     private void askMyText() {
-        int myNum = int.Parse(transform.gameObject.name);
+        int myNum;// = int.Parse(transform.gameObject.name);
         if (!isSubRingPole) {
             myNum = int.Parse(transform.gameObject.name);
         } else {
-            string myParentNum = myParent.name.Substring(myParent.name.Length - 1);
+            string myParentNum = myParent.name.Substring(9);
             myNum = int.Parse(transform.gameObject.name) + int.Parse(myParentNum) * 100;
         }
+        Debug.Log(myNum);
         MyText = systemScript.tellKeyText(myNum);
 
     }
