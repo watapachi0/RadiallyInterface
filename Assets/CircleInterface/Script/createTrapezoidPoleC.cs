@@ -15,7 +15,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
     private GameObject createSorceObj = null;
     public GameObject PositionObj { get; set; }
     //中心の多角柱用のインスタンス
-    private PolygonalPillarC polygonalPillar = null;
+    private PolygonalPillar polygonalPillar = null;
     private int poleSum = 0;
 
     void Start() {
@@ -84,7 +84,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
 
                     //中心の多角柱を描画する
                     GameObject obj = new GameObject(0.ToString());
-                    polygonalPillar = obj.AddComponent<PolygonalPillarC>();
+                    polygonalPillar = obj.AddComponent<PolygonalPillar>();
                     if (createSorceObj != null)
                         polygonalPillar.setMyParent(this.gameObject);
                     if (createSorceObj != null) {

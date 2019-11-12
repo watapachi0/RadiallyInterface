@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
  * 
  */
 
-public class PolygonalPillarC : MonoBehaviour {
+public class PolygonalPillar : MonoBehaviour {
 
     private createTrapezoidPoleC createSorce;
     private centralSystemC systemScript;
@@ -34,7 +34,7 @@ public class PolygonalPillarC : MonoBehaviour {
 
     void Start() {
 
-        if (myParent == null) {
+        if (myParent == null || !variables.isCircleSystem) {
             createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
             //現在のTextSetの段数を取得
             poleSum = variables.poleSum;
@@ -94,7 +94,6 @@ public class PolygonalPillarC : MonoBehaviour {
         transform.parent = createSorce.gameObject.transform;
         //親の余計なスクリプトの削除フラグを立てる
         createSorce.IsReadyToDestroy(true);
-
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか

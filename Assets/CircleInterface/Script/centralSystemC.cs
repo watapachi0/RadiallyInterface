@@ -34,7 +34,7 @@ public class centralSystemC : MonoBehaviour {
     //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
     private bool doLateUpdat = false;
     //主輪の中心キーのスクリプトのインスタンス
-    private PolygonalPillarC polygonalPillar;
+    private PolygonalPillar polygonalPillar;
 
     //主輪の中心に触れているか
     private bool isTouchMainPillar = false;
@@ -549,7 +549,7 @@ public class centralSystemC : MonoBehaviour {
             }
         }
         //インスタンスの取得
-        polygonalPillar = keyObjects[0].GetComponent<PolygonalPillarC>();
+        polygonalPillar = keyObjects[0].GetComponent<PolygonalPillar>();
         //副輪の一斉表示
         subCircleGenerete();
 
@@ -625,7 +625,7 @@ go:
                 try {
                     //Debug.Log(subCircles[i, j].name);
                     if (subCircles[i, j].name == "0") {
-                        subCircles[i, j].GetComponent<PolygonalPillarC>().Enable(false);
+                        subCircles[i, j].GetComponent<PolygonalPillar>().Enable(false);
                     } else {
                         // Debug.Log("check");
                         //SetKeyCircle(i);
@@ -912,7 +912,7 @@ next:
             try {
                 //Debug.Log(subCircles[CircleNum, i].name);
                 if (subCircles[CircleNum, i].name == "0") {
-                    subCircles[CircleNum, i].GetComponent<PolygonalPillarC>().Enable(disp);
+                    subCircles[CircleNum, i].GetComponent<PolygonalPillar>().Enable(disp);
                 } else {
                     subCircles[CircleNum, i].GetComponent<MultipleTrapezoidPoleC>().Enable(disp);
                     //Debug.Log("Disp " + CircleNum);
