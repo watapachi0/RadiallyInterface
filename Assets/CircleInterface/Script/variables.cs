@@ -269,7 +269,8 @@ public class variables : MonoBehaviour {
         stage = 0;
 
         //システムの種別判定
-        if (SceneManager.GetActiveScene().name.ToString().Substring(6) == "Circle") {
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName.Substring(0,6) == "Circle") {
             isCircleSystem = true;
         } else {
             isCircleSystem = false;
