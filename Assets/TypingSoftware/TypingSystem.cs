@@ -8,6 +8,8 @@ public class TypingSystem : MonoBehaviour {
     public TextMesh InputTextObject;//入力を表示する欄
     public TextMesh TaskTextObject;//タスクを表示する欄
     public centralSystemC centralSystemC;
+    public centralSystem centralSystem;
+
     [SerializeField]
     private string[] taskIndex;//txtファイルから取り出したタスク配列
     private int taskNum;//全タスク数
@@ -36,7 +38,11 @@ public class TypingSystem : MonoBehaviour {
         if (currentTaskClear) {
             //inputText = "";
             //編集メソッドから中身をゼロにする
-            this.centralSystemC.EditInputText("");
+            if (variables.isCircleSystem) {
+                this.centralSystemC.EditInputText("");
+            } else {
+                //this.centralSystem.EditInputText("");
+            }
             currentTaskNum++;
             currentTaskClear = false;
         }

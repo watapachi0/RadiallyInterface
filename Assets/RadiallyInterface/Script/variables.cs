@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class variables : MonoBehaviour {
 
@@ -20,6 +21,12 @@ public class variables : MonoBehaviour {
     //円環の外側の半径
     public static float radiusOut { get; set; }
 
+    //多角形部分の半径・円環の内側の半径(Circle用副輪)
+    public static float radiusIn_subCircle { get; set; }
+
+    //円環の外側の半径(Circle用副輪)
+    public static float radiusOut_subCircle { get; set; }
+
     //システムの厚さ
     public static float poleHeight { get; set; }
 
@@ -38,8 +45,32 @@ public class variables : MonoBehaviour {
     //台形用接触時マテリアル
     public static Material material_TrapezoidPole_Touch { get; set; }
 
+    //台形用通常マテリアル(Circleでの非アクティブ時)
+    public static Material material_TrapezoidPole_Normal_Nonactive { get; set; }
+
+    //台形用接触時マテリアル(Circleでの非アクティブ時)
+    public static Material material_TrapezoidPole_Touch_Nonactive { get; set; }
+
     //台形の強調ライン用マテリアル
     public static Material material_LineRenderer { get; set; }
+
+    //台形の強調ライン用マテリアル(Circleでの非アクティブ時)
+    public static Material material_LineRenderer_Nonactive { get; set; }
+
+    //文字の色(Circleでの通常色)
+    public static Material material_Text { get; set; }
+
+    //文字の色(Circleでの非アクティブ時)
+    public static Material material_Text_Nonactive { get; set; }
+
+    //タイピングソフトのクリアー部分の文字の色
+    public static Material material_Typing_Clear { get; set; }
+
+    //タイピングソフトのエラー部分の文字の色
+    public static Material material_Typing_Error { get; set; }
+
+    //タイピングソフトのその他部分の文字の色
+    public static Material material_Typing_Other { get; set; }
 
     //台形部分の分割数
     public static int trapezoidDivisionNum { get; set; }
@@ -71,7 +102,7 @@ public class variables : MonoBehaviour {
     //VRで使用しているか
     public static bool isOnXR { get; set; }
 
-    //xentralSystemのgameObjectの座標
+    //centralSystemのgameObjectの座標
     public static Vector3 createSourcePosition { get; set; }
 
     //キーの縁取りの太さ
@@ -80,12 +111,43 @@ public class variables : MonoBehaviour {
     //キーの縁取りの本体からのずらし加減
     public static float lineShiftSlightly { get; set; }
 
+    //システムがCircleの方であるか
+    public static bool isCircleSystem { get; private set; }
+
+    //システムの状態
+    public static int stage { get; set; }
+    /* ring1 → 主に真ん中にいるリング
+     * ring2 → 途中で出現する2個目のリング
+     *
+     * stage: 0（そのままorポインタ帰還）
+     * ring1 濃く　入力可能
+     * ring2 存在せず
+     * 
+     * stage: 1（ring1に接触～ring2に接触中）
+     * ring1 薄く　入力停止　ring2呼び出す
+     * ring2 濃く　入力可能
+     * 
+     * stage: 2（ring2の外か中に移動～中心部に移動中）
+     * ring1 （更に）薄く　入力停止
+     * ring2 薄く　入力不可
+     * 
+     * stage: 0（ポインタ帰還）
+     * ring1 濃く　入力可能
+     * ring2 消す
+     */
+
     /* Inspector用 */
     [SerializeField, Header("円環の内径(単位cm)")]
     private float RadiusIn;
 
     [SerializeField, Header("円環の外径(単位cm)")]
     private float RadiusOut;
+
+    [SerializeField, Header("円環の内径(単位cm)(Circle用副輪)")]
+    private float RadiusIn_subCircle;
+
+    [SerializeField, Header("円環の外径(単位cm)(Circle用副輪)")]
+    private float RadiusOut_subCircle;
 
     [SerializeField, Header("円環の厚さ(単位cm)")]
     private float PoleHeight;
@@ -108,11 +170,35 @@ public class variables : MonoBehaviour {
     [SerializeField, Header("キーの接触時のマテリアル")]
     private Material Material_TrapezoidPole_Touch;
 
+    [SerializeField, Header("キーの常態のマテリアル(Circleでの非アクティブ時)")]
+    private Material Material_TrapezoidPole_Normal_Nonactive;
+
+    [SerializeField, Header("キーの接触時のマテリアル(Circleでの非アクティブ時)")]
+    private Material Material_TrapezoidPole_Touch_Nonactive;
+
     [SerializeField, Header("キーの輪郭線のマテリアル")]
     private Material Material_LineRenderer;
 
+    [SerializeField, Header("キーの輪郭線のマテリアル(Circleでの非アクティブ時)")]
+    private Material Material_LineRenderer_Nonactive;
+
     [SerializeField, Header("円環外側のシステムキーのマテリアル")]
     private Material Material_SystemText;
+
+    [SerializeField, Header("テキストの色(Circle用)")]
+    private Material Material_Text;
+
+    [SerializeField, Header("テキストの色(Circle用非アクティブ時)")]
+    private Material Material_Text_Nonactive;
+
+    [SerializeField, Header("タイピングソフトのクリアー部分の文字の色")]
+    private Material Material_Typing_Clear;
+
+    [SerializeField, Header("タイピングソフトのエラー部分の文字の色")]
+    private Material Material_Typing_Error;
+
+    [SerializeField, Header("タイピングソフトのその他部分の文字の色")]
+    private Material Material_Typing_Other;
 
     [SerializeField, Header("円環外側のシステムキーの半径(単位cm)")]
     private float SystemCommandRadius;
@@ -131,6 +217,10 @@ public class variables : MonoBehaviour {
         radiusIn = RadiusIn / 100;
         //外形
         radiusOut = RadiusOut / 100;
+        //内径(Circle用副輪)
+        radiusIn_subCircle = RadiusIn_subCircle / 100;
+        //外形(Circle用副輪)
+        radiusOut_subCircle = RadiusOut_subCircle / 100;
         //厚さ
         poleHeight = PoleHeight / 100;
         //キー数
@@ -146,8 +236,24 @@ public class variables : MonoBehaviour {
         material_TrapezoidPole_Normal = Material_TrapezoidPole_Normal;
         //台形柱接触
         material_TrapezoidPole_Touch = Material_TrapezoidPole_Touch;
+        //台形柱通常(Circleでの非アクティブ時)
+        material_TrapezoidPole_Normal_Nonactive = Material_TrapezoidPole_Normal_Nonactive;
+        //台形柱接触(Circleでの非アクティブ時)
+        material_TrapezoidPole_Touch_Nonactive = Material_TrapezoidPole_Touch_Nonactive;
         //台形の強調ライン
         material_LineRenderer = Material_LineRenderer;
+        //台形の強調ライン(Circleでの非アクティブ時)
+        material_LineRenderer_Nonactive = Material_LineRenderer_Nonactive;
+        //テキストの色(Circle用)
+        material_Text = Material_Text;
+        //テキストの色(Circle用非アクティブ時)
+        material_Text_Nonactive = Material_Text_Nonactive;
+        //タイピングソフトのクリアー部分の文字の色
+        material_Typing_Clear = Material_Typing_Clear;
+        //タイピングソフトのエラー部分の文字の色
+        material_Typing_Error = Material_Typing_Error;
+        //タイピングソフトのその他部分の文字の色
+        material_Typing_Other = Material_Typing_Other;
 
         //台形の分割回数
         trapezoidDivisionNum = TrapezoidDivisionNum + 1;
@@ -158,5 +264,15 @@ public class variables : MonoBehaviour {
         material_SystemText = Material_SystemText;
         //テキストのフォントサイズ
         systemTextFontSize = (int)( SystemTextFontSize * 100 );
+
+        //stage初期化
+        stage = 0;
+
+        //システムの種別判定
+        if (SceneManager.GetActiveScene().name.ToString().Substring(6) == "Circle") {
+            isCircleSystem = true;
+        } else {
+            isCircleSystem = false;
+        }
     }
 }

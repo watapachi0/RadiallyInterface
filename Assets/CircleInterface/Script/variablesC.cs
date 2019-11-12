@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class variablesC : MonoBehaviour {
 
@@ -109,6 +110,9 @@ public class variablesC : MonoBehaviour {
 
     //キーの縁取りの本体からのずらし加減
     public static float lineShiftSlightly { get; set; }
+
+    //システムがCircleの方であるか
+    public static bool isCircleSystem { get; private set; }
 
     //システムの状態
     public static int stage { get; set; }
@@ -263,5 +267,12 @@ public class variablesC : MonoBehaviour {
 
         //stage初期化
         stage = 0;
+
+        //システムの種別判定
+        if (SceneManager.GetActiveScene().name.ToString().Substring(6) == "Circle") {
+            isCircleSystem = true;
+        } else {
+            isCircleSystem = false;
+        }
     }
 }

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 72408991}
   - component: {fileID: 72408994}
   - component: {fileID: 72408995}
+  - component: {fileID: 72408996}
   m_Layer: 0
   m_Name: central
   m_TagString: Untagged
@@ -153,11 +154,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af9161ff291c254089511d817c18b51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RadiusIn: 10
-  RadiusOut: 20
-  PoleHeight: 5
+  RadiusIn: 4
+  RadiusOut: 12
+  RadiusIn_subCircle: 0
+  RadiusOut_subCircle: 0
+  PoleHeight: 10
   LineRendererWidth: 0.5
-  LineShiftSlightly: 0.1
+  LineShiftSlightly: 0.2
   PoleSum: 5
   Material_PolygonalPillar: {fileID: 2100000, guid: ed6c6edb633961e4ca284632da3f4ef7,
     type: 2}
@@ -165,10 +168,18 @@ MonoBehaviour:
     type: 2}
   Material_TrapezoidPole_Touch: {fileID: 2100000, guid: 6e12177a9aa49254abb73e99a671114a,
     type: 2}
+  Material_TrapezoidPole_Normal_Nonactive: {fileID: 0}
+  Material_TrapezoidPole_Touch_Nonactive: {fileID: 0}
   Material_LineRenderer: {fileID: 2100000, guid: dc644cad552521a45842bb536ce42064,
     type: 2}
+  Material_LineRenderer_Nonactive: {fileID: 0}
   Material_SystemText: {fileID: 2100000, guid: 7cfe45d44f5f3ae4c91e07f45694d886, type: 2}
-  SystemCommandRadius: 30
+  Material_Text: {fileID: 0}
+  Material_Text_Nonactive: {fileID: 0}
+  Material_Typing_Clear: {fileID: 0}
+  Material_Typing_Error: {fileID: 0}
+  Material_Typing_Other: {fileID: 0}
+  SystemCommandRadius: 18
   SystemTextFontSize: 3
   TrapezoidDivisionNum: 5
 --- !u!4 &72408992
@@ -209,6 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c5c991e008f0c4fa8cebbcc9a5b766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doRenderSphere: 1
+  doRenderLeapHands: 1
 --- !u!114 &72408995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +236,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pinchDistance: 0.04
   targetObject: {fileID: 72408990}
+--- !u!114 &72408996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72408990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 158152f7397fe5a4eb16a2a9b72200d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputTextObject: {fileID: 0}
+  TaskTextObject: {fileID: 0}
+  centralSystemC: {fileID: 0}
+  centralSystem: {fileID: 0}
+  taskIndex: []
+  taskIndexQueue: []
+  currentTaskNum: 0
 --- !u!114 &72408997
 MonoBehaviour:
   m_ObjectHideFlags: 0
