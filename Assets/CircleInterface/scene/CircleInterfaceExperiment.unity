@@ -156,10 +156,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc27fc1c749858e4d85f94a8b6d21a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RadiusIn: 20
-  RadiusOut: 40
-  RadiusIn_subCircle: 20
-  RadiusOut_subCircle: 40
+  RadiusIn: 5
+  RadiusOut: 8
+  RadiusIn_subCircle: 4
+  RadiusOut_subCircle: 6
   PoleHeight: 10
   LineRendererWidth: 0.5
   LineShiftSlightly: 0.2
@@ -179,6 +179,15 @@ MonoBehaviour:
   Material_LineRenderer_Nonactive: {fileID: 2100000, guid: 39ef95f0a54fff34596f665a8ddf4e1b,
     type: 2}
   Material_SystemText: {fileID: 2100000, guid: 8f9a2cd7ed47af94c9ec1ce7e40f7da6, type: 2}
+  Material_Text: {fileID: 2100000, guid: 6f38af8635d956743897f9de98285afc, type: 2}
+  Material_Text_Nonactive: {fileID: 2100000, guid: cf52b25735c0c924fb96dc21bbe1c815,
+    type: 2}
+  Material_Typing_Clear: {fileID: 2100000, guid: 7f93d5d6334ef5e49b8ed3f1052342a8,
+    type: 2}
+  Material_Typing_Error: {fileID: 2100000, guid: 237ea2e3da6f30949a58ddcb088b8e0f,
+    type: 2}
+  Material_Typing_Other: {fileID: 2100000, guid: 68d0eb36a93e76b49a9f50282483cfee,
+    type: 2}
   SystemCommandRadius: 30
   SystemTextFontSize: 3
   TrapezoidDivisionNum: 5
@@ -211,6 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c5c991e008f0c4fa8cebbcc9a5b766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doRenderSphere: 1
+  doRenderLeapHands: 1
 --- !u!114 &72408994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,7 +470,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 649797716}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.157, y: 0.532, z: 0.044}
+  m_LocalPosition: {x: -0.157, y: 0.223, z: 0.044}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 72408992}
@@ -1582,6 +1593,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.0033526346
       objectReference: {fileID: 0}
+    - target: {fileID: 2413695774860994752, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
+        type: 3}
+      propertyPath: ModelPool.Array.data[0].IsEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2348171388818620467, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2348670909120134827, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c32219dd1f4f99f4b83eef4b3aae01ba, type: 3}
 --- !u!1 &698978054
@@ -1769,7 +1795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 867047668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.157, y: 0.456, z: 0.044}
+  m_LocalPosition: {x: -0.157, y: 0.147, z: 0.044}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 72408992}
@@ -2157,7 +2183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2088284368}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.157, y: 0.566, z: 0.044}
+  m_LocalPosition: {x: -0.157, y: 0.257, z: 0.044}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 72408992}

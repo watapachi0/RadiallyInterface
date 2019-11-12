@@ -142,10 +142,10 @@ public class PolygonalPillarC : MonoBehaviour {
         if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
             if (isSubRingPillar) {
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
-                Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
+                //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
             } else {
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-                Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
+                //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
             }
         }
     }
@@ -154,10 +154,10 @@ public class PolygonalPillarC : MonoBehaviour {
         if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
             if (isSubRingPillar) {
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
-                Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
+                //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
             } else {
                 systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
-                Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
+                //Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
             }
         }
     }

@@ -56,6 +56,21 @@ public class variablesC : MonoBehaviour {
     //台形の強調ライン用マテリアル(Circleでの非アクティブ時)
     public static Material material_LineRenderer_Nonactive { get; set; }
 
+    //文字の色(Circleでの通常色)
+    public static Material material_Text { get; set; }
+
+    //文字の色(Circleでの非アクティブ時)
+    public static Material material_Text_Nonactive { get; set; }
+
+    //タイピングソフトのクリアー部分の文字の色
+    public static Material material_Typing_Clear { get; set; }
+    
+    //タイピングソフトのエラー部分の文字の色
+    public static Material material_Typing_Error { get; set; }
+
+    //タイピングソフトのその他部分の文字の色
+    public static Material material_Typing_Other { get; set; }
+
     //台形部分の分割数
     public static int trapezoidDivisionNum { get; set; }
 
@@ -166,6 +181,21 @@ public class variablesC : MonoBehaviour {
     [SerializeField, Header("円環外側のシステムキーのマテリアル")]
     private Material Material_SystemText;
 
+    [SerializeField, Header("テキストの色(Circle用)")]
+    private Material Material_Text;
+
+    [SerializeField, Header("テキストの色(Circle用非アクティブ時)")]
+    private Material Material_Text_Nonactive;
+
+    [SerializeField, Header("タイピングソフトのクリアー部分の文字の色")]
+    private Material Material_Typing_Clear;
+
+    [SerializeField, Header("タイピングソフトのエラー部分の文字の色")]
+    private Material Material_Typing_Error;
+
+    [SerializeField, Header("タイピングソフトのその他部分の文字の色")]
+    private Material Material_Typing_Other;
+
     [SerializeField, Header("円環外側のシステムキーの半径(単位cm)")]
     private float SystemCommandRadius;
 
@@ -210,6 +240,16 @@ public class variablesC : MonoBehaviour {
         material_LineRenderer = Material_LineRenderer;
         //台形の強調ライン(Circleでの非アクティブ時)
         material_LineRenderer_Nonactive = Material_LineRenderer_Nonactive;
+        //テキストの色(Circle用)
+        material_Text = Material_Text;
+        //テキストの色(Circle用非アクティブ時)
+        material_Text_Nonactive = Material_Text_Nonactive;
+        //タイピングソフトのクリアー部分の文字の色
+        material_Typing_Clear = Material_Typing_Clear;
+        //タイピングソフトのエラー部分の文字の色
+        material_Typing_Error = Material_Typing_Error;
+        //タイピングソフトのその他部分の文字の色
+        material_Typing_Other = Material_Typing_Other;
 
         //台形の分割回数
         trapezoidDivisionNum = TrapezoidDivisionNum;

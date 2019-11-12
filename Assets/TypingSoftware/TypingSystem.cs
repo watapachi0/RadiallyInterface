@@ -19,9 +19,17 @@ public class TypingSystem : MonoBehaviour {
     private string inputText = "";
     private bool currentTaskClear = false;  //タスク内容をクリアしたか
 
+    private string clear;
+    private string error;
+    private string other;
+
     void Start() {
         taskReady();
         decideTaskIndexQueue();
+        //カラーコード生成
+        clear = TransMaterialToColorCode(variablesC.material_Typing_Clear);
+        error= TransMaterialToColorCode(variablesC.material_Typing_Error);
+        other= TransMaterialToColorCode(variablesC.material_Typing_Other);
     }
 
     void Update() {
@@ -100,7 +108,8 @@ public class TypingSystem : MonoBehaviour {
     void displayTaskText() {
         //できているところは青く
         //青色
-        TaskTextObject.text = "<color=#0000ff>";
+        //TaskTextObject.text = "<color=#0000ff>";
+        TaskTextObject.text = clear;
         string TextClear = "";
         //キューの当該単語長の中で
         for (int i = 0; i < taskIndexQueue[currentTaskNum].Length; i++) {
@@ -121,7 +130,8 @@ public class TypingSystem : MonoBehaviour {
 
         //できてないことろは赤く
         //赤色
-        TaskTextObject.text += "<color=#ff0000>";
+        //TaskTextObject.text += "<color=#ff0000>";
+        TaskTextObject.text += error;
         string TextError = "";
         //できるている範囲から、キューの当該単語長の中で
         for (int i = TextClear.Length; i < taskIndexQueue[currentTaskNum].Length; i++) {
@@ -136,7 +146,8 @@ public class TypingSystem : MonoBehaviour {
 
         //そこから先は白く
         //白色
-        TaskTextObject.text += "<color=#ffffff>";
+        //TaskTextObject.text += "<color=#ffffff>";
+        TaskTextObject.text += other;
         string TextOther = "";
         //できるている+できていない範囲から、キューの当該単語長の中で
         for (int i = TextClear.Length + TextError.Length; i < taskIndexQueue[currentTaskNum].Length; i++) {
@@ -150,5 +161,17 @@ public class TypingSystem : MonoBehaviour {
     //インプット情報を保存する→そのうちタスクテキストの縁ありで表示する仕様にする
     void displayInputText() {
         InputTextObject.text = inputText;
+    }
+
+    //マテリアル情報をカラーコード情報に返還
+    private string TransMaterialToColorCode(Material material) {
+        string colorCode = "<color=#";
+        //カラーを取り出したうえで、16進数に変換、格納
+        colorCode += ( (int)( material.color.r * 255 ) ).ToString("x2");
+        colorCode += ( (int)( material.color.g * 255 ) ).ToString("x2");
+        colorCode += ( (int)( material.color.b * 255 ) ).ToString("x2");
+        colorCode += ">";
+        //Debug.Log(colorCode);
+        return colorCode;
     }
 }

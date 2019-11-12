@@ -47,8 +47,8 @@ public class createTrapezoidPoleC : MonoBehaviour {
             }
             isCalledBackVertex[i] = false;
         }
-        Debug.Log("主輪外径(" + variablesC.radiusOut * 100 + "cm) 主輪内径(" + variablesC.radiusIn * 100 + "cm) 副輪外径　　　(" + variablesC.radiusOut_subCircle * 100 + "cm)副輪内径(" + variablesC.radiusIn_subCircle * 100 + "cm)\n"
-                 + "\t\t            副輪外径理論値(" + calcTheoreticalRadiusout() * 100 + "cm)");
+        /*Debug.Log("主輪外径(" + variablesC.radiusOut * 100 + "cm) 主輪内径(" + variablesC.radiusIn * 100 + "cm) 副輪外径　　　(" + variablesC.radiusOut_subCircle * 100 + "cm)副輪内径(" + variablesC.radiusIn_subCircle * 100 + "cm)\n"
+                 + "\t\t            副輪外径理論値(" + calcTheoreticalRadiusout() * 100 + "cm)");*/
         //システムキーの生成
         /*for (int i = 0; i < variablesC.systemCommandNum; i++) {
             GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -67,7 +67,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
                 //Debug.Log("副輪のcreateスクリプトを削除します");
             } catch (Exception e) {
                 //Debug.Log("主輪のcreateスクリプトを削除します");
-                Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
+                //Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
             } finally {
                 //コンポーネント削除
                 Destroy(this);

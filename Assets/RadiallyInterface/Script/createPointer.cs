@@ -20,6 +20,8 @@ public class createPointer : MonoBehaviour {
     //private GameObject[,,] fingers;
     //2cm角の球体
     private Vector3 pointerScale = new Vector3(0.02f, 0.02f, 0.02f);
+    //当たり判定
+    private float pointerColRad = 0.1f;
 
     /* LoPoly Rigged Hand 用 */
     private string[] LandR = new string[2] { "L", "R" };
@@ -80,6 +82,8 @@ public class createPointer : MonoBehaviour {
                     GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     //大きさ
                     sphere.transform.localScale = pointerScale;
+                    //当たり判定
+                    sphere.GetComponent<SphereCollider>().radius = pointerColRad;
                     //場所は目的部分のところ
                     sphere.transform.position = target.transform.position;
                     //部分を親に

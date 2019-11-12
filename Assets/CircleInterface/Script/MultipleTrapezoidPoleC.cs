@@ -92,7 +92,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         } else {
             createSorce = myParent.GetComponent<createTrapezoidPoleC>();
             //自分の親の名前から該当TextSetの行からアイテム数を取得
-            Debug.Log(myParent.name.Substring(9));
+            //Debug.Log(myParent.name.Substring(9));
             poleSum = GameObject.Find("central").GetComponent<centralSystemC>().GetTextSetItemNum(int.Parse(myParent.name.Substring(9)));
         }
 
@@ -402,10 +402,10 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
                 if (isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
                 }
                 meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
             }
@@ -418,10 +418,10 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
                 if (isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
                 }
                 meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
             }
@@ -477,7 +477,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             string myParentNum = myParent.name.Substring(9);
             myNum = int.Parse(transform.gameObject.name) + int.Parse(myParentNum) * 100;
         }
-        Debug.Log(myNum);
+        //Debug.Log(myNum);
         MyText = systemScript.tellKeyText(myNum);
 
     }
