@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class variablesC : MonoBehaviour {
+public class variables : MonoBehaviour {
 
     //現在の文字種
     //public static int CharacterType { get; set; }

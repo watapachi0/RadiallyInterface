@@ -24,15 +24,15 @@ public class createTrapezoidPoleC : MonoBehaviour {
             poleSum = createSorceObj.GetComponent<centralSystemC>().GetTextSetItemNum(int.Parse(transform.name.Substring(9)));
         } else {
             //現在のTextSetの段数を取得
-            poleSum = variablesC.poleSum;
+            poleSum = variables.poleSum;
             //Debug.Log(transform.name);
         }
 
         //頂点情報の初期化
-        vertex = new Vector3[poleSum * ( variablesC.trapezoidDivisionNum + 1 ) * 10];
+        vertex = new Vector3[poleSum * ( variables.trapezoidDivisionNum + 1 ) * 10];
         //台形柱の生成
         GameObject obj;
-        isCalledBackVertex = new bool[poleSum * ( variablesC.trapezoidDivisionNum + 1 )];
+        isCalledBackVertex = new bool[poleSum * ( variables.trapezoidDivisionNum + 1 )];
         for (int i = 0; i < poleSum; i++) {
             obj = new GameObject(( i + 1 ).ToString());
             obj.transform.position = transform.position;
@@ -47,10 +47,10 @@ public class createTrapezoidPoleC : MonoBehaviour {
             }
             isCalledBackVertex[i] = false;
         }
-        /*Debug.Log("主輪外径(" + variablesC.radiusOut * 100 + "cm) 主輪内径(" + variablesC.radiusIn * 100 + "cm) 副輪外径　　　(" + variablesC.radiusOut_subCircle * 100 + "cm)副輪内径(" + variablesC.radiusIn_subCircle * 100 + "cm)\n"
+        /*Debug.Log("主輪外径(" + variables.radiusOut * 100 + "cm) 主輪内径(" + variables.radiusIn * 100 + "cm) 副輪外径　　　(" + variables.radiusOut_subCircle * 100 + "cm)副輪内径(" + variables.radiusIn_subCircle * 100 + "cm)\n"
                  + "\t\t            副輪外径理論値(" + calcTheoreticalRadiusout() * 100 + "cm)");*/
         //システムキーの生成
-        /*for (int i = 0; i < variablesC.systemCommandNum; i++) {
+        /*for (int i = 0; i < variables.systemCommandNum; i++) {
             GameObject systemKey = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             systemKey.name = "systemKey" + i.ToString();
             systemKey.AddComponent<SystemKeyPoleC>();
@@ -79,8 +79,8 @@ public class createTrapezoidPoleC : MonoBehaviour {
             for (int i = 0; ( i < poleSum ) && isCalledBackVertex[i]; i++) {
                 if (i + 1 == poleSum && polygonalPillar == null) {
                     //多角形用の頂点群の準備
-                    variablesC.polygonalPillarVertex = new Vector3[poleSum * 10];
-                    variablesC.polygonalPillarVertex = vertex;
+                    variables.polygonalPillarVertex = new Vector3[poleSum * 10];
+                    variables.polygonalPillarVertex = vertex;
 
                     //中心の多角柱を描画する
                     GameObject obj = new GameObject(0.ToString());
@@ -108,8 +108,8 @@ public class createTrapezoidPoleC : MonoBehaviour {
         for (int i = 0; i < 8; i++)
             vertex[( poleNum - 0 ) * 8 + i] = vertexies[i % 4];
 
-        vertex[8 * poleSum * ( variablesC.trapezoidDivisionNum + 1 ) + poleNum - 0] = variablesC.createSourcePosition;
-        vertex[9 * poleSum * ( variablesC.trapezoidDivisionNum + 1 ) + poleNum - 0] = new Vector3(variablesC.createSourcePosition.x, variablesC.createSourcePosition.y, variablesC.createSourcePosition.z + variablesC.poleHeight);
+        vertex[8 * poleSum * ( variables.trapezoidDivisionNum + 1 ) + poleNum - 0] = variables.createSourcePosition;
+        vertex[9 * poleSum * ( variables.trapezoidDivisionNum + 1 ) + poleNum - 0] = new Vector3(variables.createSourcePosition.x, variables.createSourcePosition.y, variables.createSourcePosition.z + variables.poleHeight);
     }
 
     public void IsReadyToDestroy(bool ready) {
@@ -121,6 +121,6 @@ public class createTrapezoidPoleC : MonoBehaviour {
     }
 
     private float calcTheoreticalRadiusout() {
-        return ( variablesC.radiusOut - variablesC.radiusIn ) / 2f;
+        return ( variables.radiusOut - variables.radiusIn ) / 2f;
     }
 }

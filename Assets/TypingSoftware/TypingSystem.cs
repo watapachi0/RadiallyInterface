@@ -29,9 +29,9 @@ public class TypingSystem : MonoBehaviour {
         taskReady();
         decideTaskIndexQueue();
         //カラーコード生成
-        clear = TransMaterialToColorCode(variablesC.material_Typing_Clear);
-        error= TransMaterialToColorCode(variablesC.material_Typing_Error);
-        other= TransMaterialToColorCode(variablesC.material_Typing_Other);
+        clear = TransMaterialToColorCode(variables.material_Typing_Clear);
+        error= TransMaterialToColorCode(variables.material_Typing_Error);
+        other= TransMaterialToColorCode(variables.material_Typing_Other);
     }
 
     void Update() {

@@ -29,7 +29,7 @@ public class testCylinderBetweenTwoPoint : MonoBehaviour {
         InstantiateCylinder(cylinderPrefab, leftSphere.transform.position, rightSphere.transform.position);
 
         //カメラの位置を取得
-        if (variablesC.isOnXR) {
+        if (variables.isOnXR) {
             camera = GameObject.Find("Leap Rig").transform.Find("Main Camera").gameObject;
         } else {
             camera = GameObject.Find("Main CameraNonVR");

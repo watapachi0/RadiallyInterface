@@ -313,18 +313,18 @@ public class centralSystemC : MonoBehaviour {
     //protected readonly Vector3[] SystemCommandVector = new Vector3[10] { new Vector3(), Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero };
 
     private void Awake() {
-        //variablesCの初期化
-        //variablesC.poleSum = this.poleSum;
-        //variablesC.trapezoidDivisionNum = this.trapezoidDivisionNum;
-        //variablesC.radiusOut = this.radiusOut;
-        //variablesC.radiusIn = this.radiusIn;
-        //variablesC.poleHeight = this.poleHeight;
-        variablesC.systemCommandNum = 10;
-        //variablesC.systemCommandRadius = 5;
-        variablesC.useSystemCommand = this.useSystemCommand;
-        variablesC.systemCommandName = this.SystemCommandName;
-        variablesC.displaySystemCommand = this.dispSystemCommand;
-        //variablesC.SystemCommandVector = this.SystemCommandVector;
+        //variablesの初期化
+        //variables.poleSum = this.poleSum;
+        //variables.trapezoidDivisionNum = this.trapezoidDivisionNum;
+        //variables.radiusOut = this.radiusOut;
+        //variables.radiusIn = this.radiusIn;
+        //variables.poleHeight = this.poleHeight;
+        variables.systemCommandNum = 10;
+        //variables.systemCommandRadius = 5;
+        variables.useSystemCommand = this.useSystemCommand;
+        variables.systemCommandName = this.SystemCommandName;
+        variables.displaySystemCommand = this.dispSystemCommand;
+        //variables.SystemCommandVector = this.SystemCommandVector;
         //文字セット初期化
         if (isCircleInterface) {
             textSet = textSetHiraganaCircle;
@@ -333,13 +333,13 @@ public class centralSystemC : MonoBehaviour {
             textSet = textSetHiragana;
             variables.poleSum = textSet.GetLength(0);
         }
-        variablesC.poleSum = textSet.GetLength(0);
+        variables.poleSum = textSet.GetLength(0);
 
         //XRであるかどうか
-        variablesC.isOnXR = XRSettings.enabled;
-        variablesC.createSourcePosition = transform.position;
+        variables.isOnXR = XRSettings.enabled;
+        variables.createSourcePosition = transform.position;
 
-        subCircles = new GameObject[variablesC.poleSum + 1, 7];
+        subCircles = new GameObject[variables.poleSum + 1, 7];
     }
 
     void Start() {
@@ -349,7 +349,7 @@ public class centralSystemC : MonoBehaviour {
 
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         //XR用設定
-        if (variablesC.isOnXR) {
+        if (variables.isOnXR) {
             GameObject.Find("Main CameraNonVR").SetActive(false);
         }
     }
@@ -558,10 +558,10 @@ public class centralSystemC : MonoBehaviour {
     //副輪の呼び出しと削除
     private void subCircleGenerete() {
         //主輪の各キーに属する副輪を生成する
-        for (int i = 1; i <= /*variablesC.poleSum*/textSet.GetLength(0); i++) {
+        for (int i = 1; i <= /*variables.poleSum*/textSet.GetLength(0); i++) {
             //副輪のジェネレート
             GameObject SubCircle = new GameObject("subCircle" + i.ToString());
-            //variablesC.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
+            //variables.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
             createTrapezoidPoleC subTrapezoid = SubCircle.AddComponent<createTrapezoidPoleC>();
             subTrapezoid.PositionObj = keyObjects[i].transform.Find("text").gameObject;
             subTrapezoid.SetCreateSorce(this.gameObject);
@@ -666,15 +666,15 @@ next:
                 keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = true;
                 //色を濃くする
                 MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
-                meshrenderer.material = variablesC.material_TrapezoidPole_Normal;
+                meshrenderer.material = variables.material_TrapezoidPole_Normal;
 
                 //LineRendererの表示を濃くする
                 LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
-                lineRenderer.material = variablesC.material_LineRenderer;
+                lineRenderer.material = variables.material_LineRenderer;
 
                 //文字を薄くする
                 TextMesh textMeshRenderer = keyObjects[i].transform.Find("text").GetComponent<TextMesh>();
-                textMeshRenderer.color = variablesC.material_Text.color;
+                textMeshRenderer.color = variables.material_Text.color;
             }
         } else {
             //主輪を接触不可にし、色を変える
@@ -683,15 +683,15 @@ next:
                 keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = false;
                 //色を薄くする
                 MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
-                meshrenderer.material = variablesC.material_TrapezoidPole_Normal_Nonactive;
+                meshrenderer.material = variables.material_TrapezoidPole_Normal_Nonactive;
 
                 //LineRendererの表示を薄くする
                 LineRenderer lineRenderer = keyObjects[i].GetComponent<LineRenderer>();
-                lineRenderer.material = variablesC.material_LineRenderer_Nonactive;
+                lineRenderer.material = variables.material_LineRenderer_Nonactive;
 
                 //文字を薄くする
                 TextMesh textMeshRenderer = keyObjects[i].transform.Find("text").GetComponent<TextMesh>();
-                textMeshRenderer.color = variablesC.material_Text_Nonactive.color;
+                textMeshRenderer.color = variables.material_Text_Nonactive.color;
             }
         }
     }
@@ -701,51 +701,51 @@ next:
         if (setText == "英" || setText == "ａ") {
             if (isCircleInterface) {
                 //textSet = textSetAlphabetCircle;
-                //variablesC.poleSum = textSet.GetLength(0);
+                //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
                 textSet = textSetAlphabet;
-                variablesC.poleSum = textSet.GetLength(0);
+                variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "Ａ") {
             if (isCircleInterface) {
                 //textSet = textSetALPHABETCircle;
-                //variablesC.poleSum = textSet.GetLength(0);
+                //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
                 textSet = textSetALPHABET;
-                variablesC.poleSum = textSet.GetLength(0);
+                variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "かな") {
             if (isCircleInterface) {
                 //textSet = textSetHiraganaCircle;
-                //variablesC.poleSum = textSet.GetLength(0);
+                //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
                 textSet = textSetHiragana;
-                variablesC.poleSum = textSet.GetLength(0);
+                variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "カナ") {
             if (isCircleInterface) {
                 //textSet = textSetKatakanaCircle;
-                //variablesC.poleSum = textSet.GetLength(0);
+                //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
                 textSet = textSetKatakana;
-                variablesC.poleSum = textSet.GetLength(0);
+                variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "記/数") {
             if (isCircleInterface) {
                 //textSet = textSetSignNumCircle;
-                //variablesC.poleSum = textSet.GetLength(0);
+                //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
                 textSet = textSetSignNum;
-                variablesC.poleSum = textSet.GetLength(0);
+                variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "改/確") {

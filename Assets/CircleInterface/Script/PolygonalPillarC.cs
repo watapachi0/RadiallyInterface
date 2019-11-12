@@ -37,7 +37,7 @@ public class PolygonalPillarC : MonoBehaviour {
         if (myParent == null) {
             createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
             //現在のTextSetの段数を取得
-            poleSum = variablesC.poleSum;
+            poleSum = variables.poleSum;
         } else {
             createSorce = myParent.GetComponent<createTrapezoidPoleC>();
             //自分の親の名前から該当TextSetの行からアイテム数を取得
@@ -50,7 +50,7 @@ public class PolygonalPillarC : MonoBehaviour {
         //メッシュリセット
         mesh.Clear();
         //メッシュへの頂点情報の追加
-        mesh.vertices = variablesC.polygonalPillarVertex;
+        mesh.vertices = variables.polygonalPillarVertex;
         //メッシュへの面情報の追加
         SetFace();
         mesh.triangles = face;
@@ -62,7 +62,7 @@ public class PolygonalPillarC : MonoBehaviour {
         mesh_filter.mesh = mesh;
         //レンダラー追加 + マテリアルアタッチ
         meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
-        meshRenderer.material = variablesC.material_PolygonalPillar;
+        meshRenderer.material = variables.material_PolygonalPillar;
         //コライダーアタッチ
         meshCollider = this.gameObject.AddComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh;
@@ -72,7 +72,7 @@ public class PolygonalPillarC : MonoBehaviour {
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
 
-        if (!variablesC.isOnXR) {
+        if (!variables.isOnXR) {
             //当たり判定用 Event Trigger
             //イベントトリガーのアタッチと初期化
             EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
@@ -100,8 +100,8 @@ public class PolygonalPillarC : MonoBehaviour {
     //何個のオブジェクト中の何番目のオブジェクトか
     private void SetFace() {
         //底面それぞれ3頂点+(ポリゴン二枚なので)側面6頂点 * 角数 * 分割数
-        face = new int[12 * poleSum * ( variablesC.trapezoidDivisionNum + 1 )];
-        for (int i = 0; i < poleSum * ( variablesC.trapezoidDivisionNum + 1 ); i++) {
+        face = new int[12 * poleSum * ( variables.trapezoidDivisionNum + 1 )];
+        for (int i = 0; i < poleSum * ( variables.trapezoidDivisionNum + 1 ); i++) {
             //以下で、poleSum分割の三角柱ができる
             face[i * 12 + 0] = 8 * i + 2;  //側面1
             face[i * 12 + 1] = 8 * i + 1;  //
@@ -111,10 +111,10 @@ public class PolygonalPillarC : MonoBehaviour {
             face[i * 12 + 5] = 8 * i + 3;  //
             face[i * 12 + 6] = 8 * i + 4;  //底面1
             face[i * 12 + 7] = 8 * i + 5;  //
-            face[i * 12 + 8] = 8 * poleSum * ( variablesC.trapezoidDivisionNum + 1 ) + i + 1 - 1;   //底面1の角部分
+            face[i * 12 + 8] = 8 * poleSum * ( variables.trapezoidDivisionNum + 1 ) + i + 1 - 1;   //底面1の角部分
             face[i * 12 + 9] = 8 * i + 7;   //底面2
             face[i * 12 + 10] = 8 * i + 6;  //
-            face[i * 12 + 11] = 9 * poleSum * ( variablesC.trapezoidDivisionNum + 1 ) + i + 1 - 1;  //底面2の角部分
+            face[i * 12 + 11] = 9 * poleSum * ( variables.trapezoidDivisionNum + 1 ) + i + 1 - 1;  //底面2の角部分
         }
     }
 

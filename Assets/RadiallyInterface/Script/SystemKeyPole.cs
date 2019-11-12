@@ -127,7 +127,7 @@ public class SystemKeyPole : MonoBehaviour {
         //表示文字(更新されればError表示は消えるはず)
         TmeshC.text = "Error";
         //位置調整（台形の中心に設定）
-        TmeshC.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - variablesC.poleHeight / 2);
+        TmeshC.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - variables.poleHeight / 2);
         //大きさ
         textCentor.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         //子オブジェクトに設定

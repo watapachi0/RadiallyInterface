@@ -77,7 +77,7 @@ public class TrapezoidPoleC : MonoBehaviour {
         mesh_filter.mesh = mesh;
         //レンダラー追加 + マテリアルアタッチ
         meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
-        meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
+        meshRenderer.material = variables.material_TrapezoidPole_Normal;
         //コライダーアタッチ
         this.gameObject.AddComponent<MeshCollider>();
         this.gameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
@@ -121,9 +121,9 @@ public class TrapezoidPoleC : MonoBehaviour {
         //頂点数
         lineRenderer.positionCount = 16;
         //幅
-        lineRenderer.startWidth = variablesC.lineRendererWidth;
+        lineRenderer.startWidth = variables.lineRendererWidth;
         //頂点　一筆書きのため、重複あり
-        float ShiftSlightly = variablesC.lineShiftSlightly;    //見づらかったからすこしずらした
+        float ShiftSlightly = variables.lineShiftSlightly;    //見づらかったからすこしずらした
         Vector3[] lineVertecies = new Vector3[16] { vertex[0] + Vector3.back    * ShiftSlightly, vertex[2] + Vector3.back    * ShiftSlightly, vertex[4] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
                                                     vertex[7] + Vector3.forward * ShiftSlightly, vertex[5] + Vector3.forward * ShiftSlightly, vertex[3] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly,
                                                     vertex[7] + Vector3.forward * ShiftSlightly, vertex[1] + Vector3.forward * ShiftSlightly, vertex[0] + Vector3.back    * ShiftSlightly, vertex[6] + Vector3.back    * ShiftSlightly,
@@ -134,7 +134,7 @@ public class TrapezoidPoleC : MonoBehaviour {
         //線の端の丸み具合
         lineRenderer.numCapVertices = 20;
         //線の色
-        lineRenderer.material = variablesC.material_LineRenderer;
+        lineRenderer.material = variables.material_LineRenderer;
         //影を発生させない
         lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         //影の影響を受けない
@@ -151,43 +151,43 @@ public class TrapezoidPoleC : MonoBehaviour {
 
     private void CalcVertices() {
         //台形の外側の頂点座標その1
-        Vector3 vertex1 = new Vector3(variablesC.radiusOut * Mathf.Sin(( poleNum + 0 ) / (float)variablesC.poleSum * Mathf.PI * 2),
-                                      variablesC.radiusOut * Mathf.Cos(( poleNum + 0 ) / (float)variablesC.poleSum * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(variables.radiusOut * Mathf.Sin(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
+                                      variables.radiusOut * Mathf.Cos(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + variables.createSourcePosition;
         //台形の外側の頂点座標その2
-        Vector3 vertex2 = new Vector3(variablesC.radiusOut * Mathf.Sin(( poleNum + 1 ) / (float)variablesC.poleSum * Mathf.PI * 2),
-                                      variablesC.radiusOut * Mathf.Cos(( poleNum + 1 ) / (float)variablesC.poleSum * Mathf.PI * 2),
+        Vector3 vertex2 = new Vector3(variables.radiusOut * Mathf.Sin(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
+                                      variables.radiusOut * Mathf.Cos(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + variables.createSourcePosition;
         //台形の内側の頂点座標その1
-        Vector3 vertex3 = new Vector3(variablesC.radiusIn * Mathf.Sin(( poleNum + 0 ) / (float)variablesC.poleSum * Mathf.PI * 2),
-                                      variablesC.radiusIn * Mathf.Cos(( poleNum + 0 ) / (float)variablesC.poleSum * Mathf.PI * 2),
+        Vector3 vertex3 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
+                                      variables.radiusIn * Mathf.Cos(( poleNum + 0 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + variables.createSourcePosition;
         //台形の内側の頂点座標その2
-        Vector3 vertex4 = new Vector3(variablesC.radiusIn * Mathf.Sin(( poleNum + 1 ) / (float)variablesC.poleSum * Mathf.PI * 2),
-                                      variablesC.radiusIn * Mathf.Cos(( poleNum + 1 ) / (float)variablesC.poleSum * Mathf.PI * 2),
+        Vector3 vertex4 = new Vector3(variables.radiusIn * Mathf.Sin(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
+                                      variables.radiusIn * Mathf.Cos(( poleNum + 1 ) / (float)variables.poleSum * Mathf.PI * 2),
                                       0)
-                                      + variablesC.createSourcePosition;
+                                      + variables.createSourcePosition;
         //全頂点数8にそれぞれ座標が3つずつある
         for (int i = 0; i < 8 * 3; i++) {
             if (i % 8 == 0) {
                 vertex[i] = vertex3;
             } else if (i % 8 == 1) {
-                vertex[i] = new Vector3(vertex3.x, vertex3.y, variablesC.poleHeight);
+                vertex[i] = new Vector3(vertex3.x, vertex3.y, variables.poleHeight);
             } else if (i % 8 == 2) {
                 vertex[i] = vertex1;
             } else if (i % 8 == 3) {
-                vertex[i] = new Vector3(vertex1.x, vertex1.y, variablesC.poleHeight);
+                vertex[i] = new Vector3(vertex1.x, vertex1.y, variables.poleHeight);
             } else if (i % 8 == 4) {
                 vertex[i] = vertex2;
             } else if (i % 8 == 5) {
-                vertex[i] = new Vector3(vertex2.x, vertex2.y, variablesC.poleHeight);
+                vertex[i] = new Vector3(vertex2.x, vertex2.y, variables.poleHeight);
             } else if (i % 8 == 6) {
                 vertex[i] = vertex4;
             } else if (i % 8 == 7) {
-                vertex[i] = new Vector3(vertex4.x, vertex4.y, variablesC.poleHeight);
+                vertex[i] = new Vector3(vertex4.x, vertex4.y, variables.poleHeight);
             } else {
                 Debug.LogWarning("Calcration Error");
             }
@@ -202,23 +202,23 @@ public class TrapezoidPoleC : MonoBehaviour {
 
     private void OnMouseEnter() {
         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-        meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
+        meshRenderer.material = variables.material_TrapezoidPole_Touch;
     }
 
     private void OnMouseExit() {
-        meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
+        meshRenderer.material = variables.material_TrapezoidPole_Normal;
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.name.Substring(2) == "index_endPointer") {
             systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-            meshRenderer.material = variablesC.material_TrapezoidPole_Touch;
+            meshRenderer.material = variables.material_TrapezoidPole_Touch;
         }
     }
 
     private void OnTriggerExit(Collider other) {
         if (other.gameObject.name.Substring(2) == "index_endPointer")
-            meshRenderer.material = variablesC.material_TrapezoidPole_Normal;
+            meshRenderer.material = variables.material_TrapezoidPole_Normal;
     }
 
     private void make3Dtext() {
@@ -227,9 +227,9 @@ public class TrapezoidPoleC : MonoBehaviour {
         MeshRenderer MRC = textCentor.AddComponent<MeshRenderer>();
         TmeshC = textCentor.AddComponent<TextMesh>();
         //文字サイズ
-        TmeshC.fontSize = variablesC.systemTextFontSize;
+        TmeshC.fontSize = variables.systemTextFontSize;
         //文字色
-        TmeshC.color = variablesC.material_SystemText.color;
+        TmeshC.color = variables.material_SystemText.color;
         //アンカー位置を中心に
         TmeshC.anchor = TextAnchor.MiddleCenter;
         //真ん中寄せ
