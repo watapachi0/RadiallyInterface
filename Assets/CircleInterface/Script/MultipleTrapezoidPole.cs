@@ -16,7 +16,7 @@ using UnityEngine.EventSystems;
  * 
  */
 
-public class MultipleTrapezoidPoleC : MonoBehaviour {
+public class MultipleTrapezoidPole : MonoBehaviour {
 
     private int poleNum;
 
@@ -179,7 +179,6 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //NormalMapの再計算
         mesh_filter.mesh.RecalculateNormals();
 
-
         //XRじゃないなら
         if (!variables.isOnXR) {
             //暫定当たり判定用Event Trigger
@@ -232,12 +231,12 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     }
 
     void Update() {
-        if (/*CircleUIなら*/true && MyText == "") {
+        if (variables.isCircleSystem && MyText == "") {
             askMyText();
+            //stage情報取得
+            stage = variables.stage;
         }
 
-        //stage情報取得
-        stage = variables.stage;
         //テキストの更新
         TmeshC.text = MyText;
     }
@@ -246,7 +245,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //Circle用副輪の半径対応
         float radiusOut;
         float radiusIn;
-        if (isSubRingPole) {
+        if (variables.isCircleSystem && isSubRingPole) {
             radiusOut = variables.radiusOut_subCircle;
             radiusIn = variables.radiusIn_subCircle;
         } else {
@@ -322,6 +321,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
             EndVertex[2] = new Vector3(vertex4.x, vertex4.y, vertex4.z + variables.poleHeight);
             EndVertex[3] = vertex4;
         }
+
         createSorce.callBackVertex(new Vector3[4] { SideVertex[0], SideVertex[6], SideVertex[1], SideVertex[7] }, ( int.Parse(gameObject.name) - 1 ) * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum);
 
         //Textの座標を計算する
@@ -399,7 +399,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     public void OnTriggerEnterOwnMade(GameObject other) {
         if (isActiveObj && meshRenderer.material != variables.material_TrapezoidPole_Touch) {
             if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
-                if (isSubRingPole) {
+                if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
@@ -415,7 +415,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
     public void OnTriggerExitOwnMade(GameObject other) {
         if (isActiveObj && meshRenderer.material != variables.material_TrapezoidPole_Normal) {
             if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
-                if (isSubRingPole) {
+                if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
@@ -451,6 +451,7 @@ public class MultipleTrapezoidPoleC : MonoBehaviour {
         //大きさ
         float fontScale = 1 / 1000f;
         textCentor.transform.localScale = new Vector3(fontScale, fontScale, fontScale);
+        textCentor.transform.localScale = Vector3.one / fontScale;
         //子オブジェクトに設定
         textCentor.transform.parent = this.transform;
     }

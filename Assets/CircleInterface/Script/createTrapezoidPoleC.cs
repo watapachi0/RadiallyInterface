@@ -37,7 +37,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
             obj = new GameObject(( i + 1 ).ToString());
             obj.transform.position = transform.position;
             //TrapezoidPole trianglePoleC = obj.AddComponent<TrapezoidPoleC>();
-            MultipleTrapezoidPoleC trianglePole = obj.AddComponent<MultipleTrapezoidPoleC>();
+            MultipleTrapezoidPole trianglePole = obj.AddComponent<MultipleTrapezoidPole>();
             if (createSorceObj != null)
                 trianglePole.setMyParent(this.gameObject);
             if (createSorceObj != null) {

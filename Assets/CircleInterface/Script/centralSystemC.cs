@@ -629,7 +629,7 @@ go:
                     } else {
                         // Debug.Log("check");
                         //SetKeyCircle(i);
-                        subCircles[i, j].GetComponent<MultipleTrapezoidPoleC>().Enable(false);
+                        subCircles[i, j].GetComponent<MultipleTrapezoidPole>().Enable(false);
 
                         //   Debug.Log("run");
                     }
@@ -663,7 +663,7 @@ next:
             //主輪を接触可能にし、色を通常に戻す
             for (int i = 1; i < keyObjects.Length; i++) {
                 //当たり判定を戻す
-                keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = true;
+                keyObjects[i].GetComponent<MultipleTrapezoidPole>().isActiveObj = true;
                 //色を濃くする
                 MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
                 meshrenderer.material = variables.material_TrapezoidPole_Normal;
@@ -680,7 +680,7 @@ next:
             //主輪を接触不可にし、色を変える
             for (int i = 1; i < keyObjects.Length; i++) {
                 //当たり判定を消す
-                keyObjects[i].GetComponent<MultipleTrapezoidPoleC>().isActiveObj = false;
+                keyObjects[i].GetComponent<MultipleTrapezoidPole>().isActiveObj = false;
                 //色を薄くする
                 MeshRenderer meshrenderer = keyObjects[i].GetComponent<MeshRenderer>();
                 meshrenderer.material = variables.material_TrapezoidPole_Normal_Nonactive;
@@ -842,9 +842,9 @@ next:
 
             //RadiallyUI用文字割り当て
             private void SetKeyRadially() {
-        MultipleTrapezoidPoleC keyObjectITrapezoid;
+        MultipleTrapezoidPole keyObjectITrapezoid;
         for (int i = 1; i <= variables.poleSum; i++) {
-            keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
+            keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPole>();
             if (stage == 0) {
                 keyObjectITrapezoid.MyText = textSet[i * 3 - 3, 0] + textSet[i * 3 - 2, 0] + textSet[i * 3 - 1, 0];
             } else if (stage == 1) {
@@ -876,7 +876,7 @@ next:
     //20191102メソッド破棄
     /*private void SetKeyCircle(int poleNum) {
 
-        MultipleTrapezoidPoleC keyObjectITrapezoid;
+        MultipleTrapezoidPole keyObjectITrapezoid;
         int keySum;
         //主輪の話かどうか
         if (poleNum == 0) {
@@ -884,7 +884,7 @@ next:
 
             for (int i = 1; i < keySum; i++) {
 
-                keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPoleC>();
+                keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPole>();
 
                 keyObjectITrapezoid.MyText = textSet[i - 1, 0];
             }
@@ -893,7 +893,7 @@ next:
             try {
 
                 for (int i = 1; i < keySum; i++) {
-                    keyObjectITrapezoid = subCircles[poleNum, i].GetComponent<MultipleTrapezoidPoleC>();
+                    keyObjectITrapezoid = subCircles[poleNum, i].GetComponent<MultipleTrapezoidPole>();
                     Debug.Log("run instance : " + keyObjectITrapezoid.transform.position);
                     //keyObjectITrapezoid.MyText = textSet[poleNum, i];
                     Debug.Log("run ok");
@@ -914,7 +914,7 @@ next:
                 if (subCircles[CircleNum, i].name == "0") {
                     subCircles[CircleNum, i].GetComponent<PolygonalPillar>().Enable(disp);
                 } else {
-                    subCircles[CircleNum, i].GetComponent<MultipleTrapezoidPoleC>().Enable(disp);
+                    subCircles[CircleNum, i].GetComponent<MultipleTrapezoidPole>().Enable(disp);
                     //Debug.Log("Disp " + CircleNum);
                 }
             } catch (Exception e) {

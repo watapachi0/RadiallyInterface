@@ -28,7 +28,7 @@ public class fingerFeelCollider : MonoBehaviour {
 
     public void OnTriggerEnter(Collider other) {
         try {
-            other.gameObject.GetComponent<MultipleTrapezoidPoleC>().OnTriggerEnterOwnMade(this.gameObject);
+            other.gameObject.GetComponent<MultipleTrapezoidPole>().OnTriggerEnterOwnMade(this.gameObject);
             Debug.Log("run");
         } catch {
             Debug.Log("指がキーではないオブジェクトに接触しました");
@@ -42,7 +42,7 @@ public class fingerFeelCollider : MonoBehaviour {
 
     public void OnTriggerExit(Collider other) {
         try {
-            other.gameObject.GetComponent<MultipleTrapezoidPoleC>().OnTriggerExitOwnMade(this.gameObject);
+            other.gameObject.GetComponent<MultipleTrapezoidPole>().OnTriggerExitOwnMade(this.gameObject);
         } catch {
             Debug.Log("指がキーではないオブジェクトとの接触を終えました");
         }
