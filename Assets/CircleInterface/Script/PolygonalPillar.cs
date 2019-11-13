@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 
 public class PolygonalPillar : MonoBehaviour {
 
-    private createTrapezoidPoleC createSorce;
+    private createTrapezoidPole createSorce;
     private centralSystemC systemScript;
     private GameObject myParent = null;
     private int poleSum;
@@ -35,11 +35,11 @@ public class PolygonalPillar : MonoBehaviour {
     void Start() {
 
         if (myParent == null || !variables.isCircleSystem) {
-            createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
+            createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
             //現在のTextSetの段数を取得
             poleSum = variables.poleSum;
         } else {
-            createSorce = myParent.GetComponent<createTrapezoidPoleC>();
+            createSorce = myParent.GetComponent<createTrapezoidPole>();
             //自分の親の名前から該当TextSetの行からアイテム数を取得
             //Debug.Log(myParent.name);
             poleSum = systemScript.GetTextSetItemNum(int.Parse(myParent.name.Substring(9)));

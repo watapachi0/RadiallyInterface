@@ -7,7 +7,7 @@ public class SystemKeyPole : MonoBehaviour {
 
     private int myNum;
 
-    private createTrapezoidPoleC createSorce;
+    private createTrapezoidPole createSorce;
     private centralSystemC systemScript;
 
     //表示関係
@@ -16,7 +16,7 @@ public class SystemKeyPole : MonoBehaviour {
     //文字のゲームオブジェクト
     TextMesh TmeshC;
     private void Awake() {
-        createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
+        createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
         systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
     }
     void Start() {

@@ -562,7 +562,7 @@ public class centralSystemC : MonoBehaviour {
             //副輪のジェネレート
             GameObject SubCircle = new GameObject("subCircle" + i.ToString());
             //variables.createSourcePosition = keyObjects[i].transform.Find("text").transform.position;
-            createTrapezoidPoleC subTrapezoid = SubCircle.AddComponent<createTrapezoidPoleC>();
+            createTrapezoidPole subTrapezoid = SubCircle.AddComponent<createTrapezoidPole>();
             subTrapezoid.PositionObj = keyObjects[i].transform.Find("text").gameObject;
             subTrapezoid.SetCreateSorce(this.gameObject);
             subCircles[i, 0] = SubCircle;

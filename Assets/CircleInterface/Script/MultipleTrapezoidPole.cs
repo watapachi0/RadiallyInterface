@@ -20,7 +20,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
 
     private int poleNum;
 
-    private createTrapezoidPoleC createSorce;
+    private createTrapezoidPole createSorce;
     private centralSystemC systemScript;
     private GameObject myParent = null;
     private int subCircleNum;
@@ -86,11 +86,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         stage = variables.stage;
 
         if (myParent == null) {
-            createSorce = GameObject.Find("central").GetComponent<createTrapezoidPoleC>();
+            createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
             //現在のTextSetの段数を取得
             poleSum = variables.poleSum;
         } else {
-            createSorce = myParent.GetComponent<createTrapezoidPoleC>();
+            createSorce = myParent.GetComponent<createTrapezoidPole>();
             //自分の親の名前から該当TextSetの行からアイテム数を取得
             //Debug.Log(myParent.name.Substring(9));
             poleSum = GameObject.Find("central").GetComponent<centralSystemC>().GetTextSetItemNum(int.Parse(myParent.name.Substring(9)));

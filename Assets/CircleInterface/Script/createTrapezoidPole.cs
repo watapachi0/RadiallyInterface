@@ -4,7 +4,7 @@ using UnityEngine;
 //try catch用 System.Exception
 using System;
 
-public class createTrapezoidPoleC : MonoBehaviour {
+public class createTrapezoidPole : MonoBehaviour {
 
     private Vector3[] vertex;           //各台形柱が計算した頂点情報
     private bool[] isCalledBackVertex;  //頂点座標が返されているか確認
@@ -19,7 +19,7 @@ public class createTrapezoidPoleC : MonoBehaviour {
     private int poleSum = 0;
 
     void Start() {
-        if (createSorceObj != null) {
+        if (variables.isCircleSystem && createSorceObj != null) {
             //自分の名前から該当TextSetの行からアイテム数を取得
             poleSum = createSorceObj.GetComponent<centralSystemC>().GetTextSetItemNum(int.Parse(transform.name.Substring(9)));
         } else {
@@ -38,12 +38,13 @@ public class createTrapezoidPoleC : MonoBehaviour {
             obj.transform.position = transform.position;
             //TrapezoidPole trianglePoleC = obj.AddComponent<TrapezoidPoleC>();
             MultipleTrapezoidPole trianglePole = obj.AddComponent<MultipleTrapezoidPole>();
-            if (createSorceObj != null)
-                trianglePole.setMyParent(this.gameObject);
-            if (createSorceObj != null) {
-                trianglePole.isSubRingPole = true;
-            } else {
-                trianglePole.isSubRingPole = false;
+            if (variables.isCircleSystem) {
+                if (createSorceObj != null) {
+                    trianglePole.setMyParent(this.gameObject);
+                    trianglePole.isSubRingPole = true;
+                } else {
+                    trianglePole.isSubRingPole = false;
+                }
             }
             isCalledBackVertex[i] = false;
         }
@@ -60,45 +61,41 @@ public class createTrapezoidPoleC : MonoBehaviour {
     void Update() {
         //削除準備が整ったら削除
         if (isReadyToDestroy) {
-            //ずれていたら座標を合わせる(許容誤差1cm)
-            try {
-                if (createSorceObj != null || 0.01f <= Vector3.Distance(PositionObj.transform.position, transform.position))
-                    transform.position = PositionObj.transform.position;
-                //Debug.Log("副輪のcreateスクリプトを削除します");
-            } catch (Exception e) {
-                //Debug.Log("主輪のcreateスクリプトを削除します");
-                //Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
-            } finally {
-                //コンポーネント削除
-                Destroy(this);
-            }
-        }
-
-        ///親オブジェクトがいないとき（主輪である）ときのみ中心オブジェクトを作る
-        if (/*createSorceObj == null*/true) {
-            for (int i = 0; ( i < poleSum ) && isCalledBackVertex[i]; i++) {
-                if (i + 1 == poleSum && polygonalPillar == null) {
-                    //多角形用の頂点群の準備
-                    variables.polygonalPillarVertex = new Vector3[poleSum * 10];
-                    variables.polygonalPillarVertex = vertex;
-
-                    //中心の多角柱を描画する
-                    GameObject obj = new GameObject(0.ToString());
-                    polygonalPillar = obj.AddComponent<PolygonalPillar>();
-                    if (createSorceObj != null)
-                        polygonalPillar.setMyParent(this.gameObject);
-                    if (createSorceObj != null) {
-                        //親がいるときは伝える
-                        polygonalPillar.isSubRingPillar = true;
-                        //親がいるならそいつの子供になる
-                        this.gameObject.transform.parent = createSorceObj.transform;
-                    }
+            if (variables.isCircleSystem) {
+                //ずれていたら座標を合わせる(許容誤差1cm)
+                try {
+                    if (createSorceObj != null || 0.01f <= Vector3.Distance(PositionObj.transform.position, transform.position))
+                        transform.position = PositionObj.transform.position;
+                    //Debug.Log("副輪のcreateスクリプトを削除します");
+                } catch (Exception e) {
+                    //Debug.Log("主輪のcreateスクリプトを削除します");
+                    //Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
                 }
             }
-        } else {
-            //親がいるならそいつの子供になる
-            this.gameObject.transform.parent = createSorceObj.transform;
+            //コンポーネント削除
+            Destroy(this);
         }
+
+        //中心オブジェクトを作る
+        for (int i = 0; ( i < poleSum ) && isCalledBackVertex[i]; i++) {
+            if (i + 1 == poleSum && polygonalPillar == null) {
+                //多角形用の頂点群の準備
+                variables.polygonalPillarVertex = new Vector3[poleSum * 10];
+                variables.polygonalPillarVertex = vertex;
+
+                //中心の多角柱を描画する
+                GameObject obj = new GameObject(0.ToString());
+                polygonalPillar = obj.AddComponent<PolygonalPillar>();
+                if (createSorceObj != null) {
+                    polygonalPillar.setMyParent(this.gameObject);
+                    //親がいるときは伝える
+                    polygonalPillar.isSubRingPillar = true;
+                    //親がいるならそいつの子供になる
+                    this.gameObject.transform.parent = createSorceObj.transform;
+                }
+            }
+        }
+
         //削除準備OK
         IsReadyToDestroy(true);
     }

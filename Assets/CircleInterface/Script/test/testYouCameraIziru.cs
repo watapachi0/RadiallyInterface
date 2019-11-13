@@ -29,7 +29,7 @@ public class testYouCameraIziru : MonoBehaviour {
             mainCamera.GetComponent<Camera>().targetDisplay = 0;
             flg = 2;
         }
-        if (/*centralObject.transform.Find("0") || */centralObject.GetComponent<createTrapezoidPoleC>() == null) {
+        if (/*centralObject.transform.Find("0") || */centralObject.GetComponent<createTrapezoidPole>() == null) {
             mainCamera.transform.position = mainPosition;
             leapCamera.transform.position = leapPosition;
             centralObject.transform.position = centralPosition;
