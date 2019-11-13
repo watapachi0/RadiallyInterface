@@ -35,11 +35,11 @@ public class createTrapezoidPole : MonoBehaviour {
         isCalledBackVertex = new bool[poleSum * ( variables.trapezoidDivisionNum + 1 )];
         for (int i = 0; i < poleSum; i++) {
             obj = new GameObject(( i + 1 ).ToString());
-            obj.transform.position = transform.position;
             //TrapezoidPole trianglePoleC = obj.AddComponent<TrapezoidPoleC>();
             MultipleTrapezoidPole trianglePole = obj.AddComponent<MultipleTrapezoidPole>();
             if (variables.isCircleSystem) {
                 if (createSorceObj != null) {
+                    //obj.transform.position = transform.position;
                     trianglePole.setMyParent(this.gameObject);
                     trianglePole.isSubRingPole = true;
                 } else {

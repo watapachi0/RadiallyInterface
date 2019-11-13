@@ -29,19 +29,15 @@ public class TypingSystem : MonoBehaviour {
         decideTaskIndexQueue();
         //カラーコード生成
         clear = TransMaterialToColorCode(variables.material_Typing_Clear);
-        error= TransMaterialToColorCode(variables.material_Typing_Error);
-        other= TransMaterialToColorCode(variables.material_Typing_Other);
+        error = TransMaterialToColorCode(variables.material_Typing_Error);
+        other = TransMaterialToColorCode(variables.material_Typing_Other);
     }
 
     void Update() {
         if (currentTaskClear) {
             //inputText = "";
             //編集メソッドから中身をゼロにする
-            if (variables.isCircleSystem) {
-                this.centralSystem.EditInputText("");
-            } else {
-                //this.centralSystem.EditInputText("");
-            }
+            this.centralSystem.EditInputText("");
             currentTaskNum++;
             currentTaskClear = false;
         }

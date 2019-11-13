@@ -44,7 +44,7 @@ public class centralSystem : MonoBehaviour {
     //private bool hasSubCircle = false;
 
     //テスト中
-    public bool isCircleInterface;
+    //public bool isCircleInterface;
 
     //中心の多角柱を使用可にしていいか
     private bool canEnterPolygonalPiller = true;
@@ -82,7 +82,7 @@ public class centralSystem : MonoBehaviour {
                                                                        { "r", "ra"   , "ri", "ru"  , "re"   , "ro"   , "Error"},
                                                                        { "w", "wa"   , "wo", "nn"  , "改/確", "空/変", "Error"},
                                                                        { "o", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
-                                                                       { "-", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
+                                                                       { "BS", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
     //ひらがな
     protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か"   , "き", "く", "け"   , "こ"   , "Error"},
                                                                        { "あ", "--"   , "--", "--", "--"   , "--"   , "Error"},
@@ -98,7 +98,7 @@ public class centralSystem : MonoBehaviour {
                                                                        { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error"},
                                                                        { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error"},
                                                                        { "お", "--"   , "--", "--", "--"   , "--"   , "Error"},
-                                                                       { "--", "記/数", "BS", "英", "カナ" , "小"   , "Error"} };
+                                                                       { "BS", "BS"   ,"記/数",  "英", "カナ" , "小"   , "Error"} };
     //カタカナ
     protected readonly string[,] textSetKatakana = new string[15, 7] { { "カ", "カ"   , "キ", "ク", "ケ"   , "コ"   , "Error"},
                                                                        { "ア", "--"   , "--", "--", "--"   , "--"   , "Error"},
@@ -326,12 +326,13 @@ public class centralSystem : MonoBehaviour {
         variables.displaySystemCommand = this.dispSystemCommand;
         //variables.SystemCommandVector = this.SystemCommandVector;
         //文字セット初期化
-        if (isCircleInterface) {
+        if (variables.isCircleSystem) {
             textSet = textSetHiraganaCircle;
+            variables.poleSum = textSet.GetLength(0);
         } else {
             textSet = textSetHiragana;
+            variables.poleSum = textSet.GetLength(0) / 3;
         }
-        variables.poleSum = textSet.GetLength(0);
 
         //XRであるかどうか
         variables.isOnXR = XRSettings.enabled;
@@ -341,7 +342,7 @@ public class centralSystem : MonoBehaviour {
     }
 
     void Start() {
-        if (variables.isCircleSystem) {
+        if (/*variables.isCircleSystem*/true) {
             //主輪の取得と副輪の一斉表示
             IEnumerator getkey = GetKeyObjects();
             StartCoroutine(getkey);
@@ -536,6 +537,47 @@ public class centralSystem : MonoBehaviour {
     }
 
     private void ChuringSystemRadially() {
+        /* Exitイベント、副輪イベント処理 */
+        /* churingNumber    意味
+         * ***0             主輪の中心
+         * ***1~**99        主輪のキー
+         * *100             副輪の中心
+         * *101~*199        副輪のキー
+         * 1000~1199        各キーのExitイベント(解釈せずにreturnする)
+         * -1               システムコマンド
+         */
+        if (churingNumber == 0) {
+            //中心に触れた
+            isTouchMainPillar = true;
+        } else if (churingNumber == 1000) {
+            //中心から離れた
+            isTouchMainPillar = false;
+        }
+
+        //主輪の中心を触れながらキー入力はできない
+        if (isTouchMainPillar) {
+            if (1 <= churingNumber && churingNumber <= 99) {
+                //return;
+            }
+        }
+
+        //文字キーのExitは、0キー有効化のために使う
+        if (1001 <= churingNumber && churingNumber <= 1099) {
+            //Debug.Log("run");
+            //0キーに触れているか
+            //if (!isTouchMainPillar) {
+            //    Debug.Log("run22");
+            //触れていないなら（中心へ戻ったわけではない）0キーを有効化
+            polygonalPillar.Enable(true);
+            //}
+        }
+        if (100 <= churingNumber)
+            return;
+
+        /*Debug.Log("stage = " + stage + " . " +
+                         "churingNumber = " + churingNumber + " . " +
+                         "baseNumber = " + baseNumber + " .");
+                         */
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
             Debug.Log("run");
@@ -548,9 +590,18 @@ public class centralSystem : MonoBehaviour {
             if (baseNumber == variables.poleSum && churingNumber == 1) {
                 //最後のキーから1キーへの入力の際
                 consonant = textSet.GetLength(0) - 1;
+            } else if (baseNumber == variables.poleSum && ( 2 <= churingNumber && churingNumber <= baseNumber - 2 )) {
+                //最後のキーから2~最後-2キーへの入力の際
+
             } else if (baseNumber == 1 && churingNumber == variables.poleSum) {
                 //１キーから最後のキーへの入力の際
                 consonant = 0;
+            } else if (baseNumber == 1 && ( baseNumber + 2 <= churingNumber && churingNumber <= variables.poleSum - 1 )) {
+                //１キーから3最後のキーへの入力の際
+
+            } else if (baseNumber + 2 <= churingNumber || churingNumber <= baseNumber-2) {
+                //それ以外の隣り合わないキー
+
             } else {
                 //それ以外の隣り合うキー値が同じ場合の計算
                 consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
@@ -574,6 +625,8 @@ public class centralSystem : MonoBehaviour {
             setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
             //次の状態へ
             stage = 1;
+            //主輪の0キーを無効化
+            polygonalPillar.Enable(false);
             if (isGetKeyObjects)
                 SetKeyRadially();
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
@@ -581,9 +634,10 @@ public class centralSystem : MonoBehaviour {
             //まず、特殊なコマンドは実行する
             SystemCommandChuring();
             //表示用にわかりやすい名前に書き換える
-            ConvertToSystemCommand();
+            //ConvertToSystemCommand();
             //表示
-            InputText = setText;
+            InputText += setText;
+            SendText(InputText);
             //準備用の変数を初期化
             setText = "";
             //中心へ戻った
@@ -603,8 +657,12 @@ public class centralSystem : MonoBehaviour {
 
     //キーオブジェクトの取得
     IEnumerator GetKeyObjects() {
-        keyObjects = new GameObject[/*poleSum*/textSet.GetLength(0) + 1];
-        for (int i = 0; i <= /*poleSum*/textSet.GetLength(0); i++) {
+        if (variables.isCircleSystem) {
+            keyObjects = new GameObject[/*poleSum*/textSet.GetLength(0) + 1];
+        } else {
+            keyObjects = new GameObject[textSet.GetLength(0) / 3 + 1];
+        }
+        for (int i = 0; i < keyObjects.Length; i++) {
             if (keyObjects[i] == null) {
                 if (GameObject.Find(i.ToString())) {
                     keyObjects[i] = GameObject.Find(i.ToString());
@@ -620,7 +678,8 @@ public class centralSystem : MonoBehaviour {
         //インスタンスの取得
         polygonalPillar = keyObjects[0].GetComponent<PolygonalPillar>();
         //副輪の一斉表示
-        subCircleGenerete();
+        if (variables.isCircleSystem)
+            subCircleGenerete();
 
     }
 
@@ -784,53 +843,53 @@ next:
     //他文字セットなどのキーの解釈
     private void SystemCommandChuring() {
         if (setText == "英" || setText == "ａ") {
-            if (isCircleInterface) {
+            if (variables.isCircleSystem) {
                 //textSet = textSetAlphabetCircle;
                 //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
-                textSet = textSetAlphabet;
-                variables.poleSum = textSet.GetLength(0);
+                //textSet = textSetAlphabet;
+                //variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "Ａ") {
-            if (isCircleInterface) {
+            if (variables.isCircleSystem) {
                 //textSet = textSetALPHABETCircle;
                 //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
-                textSet = textSetALPHABET;
-                variables.poleSum = textSet.GetLength(0);
+                //textSet = textSetALPHABET;
+                //variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "かな") {
-            if (isCircleInterface) {
+            if (variables.isCircleSystem) {
                 //textSet = textSetHiraganaCircle;
                 //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
-                textSet = textSetHiragana;
-                variables.poleSum = textSet.GetLength(0);
+                //textSet = textSetHiragana;
+                //variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "カナ") {
-            if (isCircleInterface) {
+            if (variables.isCircleSystem) {
                 //textSet = textSetKatakanaCircle;
                 //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
-                textSet = textSetKatakana;
-                variables.poleSum = textSet.GetLength(0);
+                //textSet = textSetKatakana;
+                //variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "記/数") {
-            if (isCircleInterface) {
+            if (variables.isCircleSystem) {
                 //textSet = textSetSignNumCircle;
                 //variables.poleSum = textSet.GetLength(0);
                 //システムの再描画
             } else {
-                textSet = textSetSignNum;
-                variables.poleSum = textSet.GetLength(0);
+                //textSet = textSetSignNum;
+                //variables.poleSum = textSet.GetLength(0);
             }
             setText = "";
         } else if (setText == "改/確") {
@@ -861,6 +920,8 @@ next:
             }
         } else if (setText == "BS") {
             DeleteInputText(1);
+            setText = "";
+        } else if (setText == "--") {
             setText = "";
         }
     }

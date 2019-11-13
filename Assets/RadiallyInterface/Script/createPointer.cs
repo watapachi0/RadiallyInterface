@@ -21,7 +21,7 @@ public class createPointer : MonoBehaviour {
     //2cm角の球体
     private Vector3 pointerScale = new Vector3(0.02f, 0.02f, 0.02f);
     //当たり判定
-    private float pointerColRad = 0.1f;
+    private float pointerColRad = 0.05f;
 
     /* LoPoly Rigged Hand 用 */
     private string[] LandR = new string[2] { "L", "R" };

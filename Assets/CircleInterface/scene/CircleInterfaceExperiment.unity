@@ -309,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputTextObject: {fileID: 649797717}
   TaskTextObject: {fileID: 867047669}
-  centralSystemC: {fileID: 72408995}
+  centralSystem: {fileID: 72408995}
   taskIndex: []
   taskIndexQueue: []
   currentTaskNum: 0
@@ -1348,6 +1348,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 1.0000002
       objectReference: {fileID: 0}
+    - target: {fileID: 2413695774860994752, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
+        type: 3}
+      propertyPath: ModelPool.Array.data[0].IsEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2409200933663145779, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
         type: 3}
       propertyPath: m_LocalRotation.x
@@ -1592,11 +1597,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.0033526346
-      objectReference: {fileID: 0}
-    - target: {fileID: 2413695774860994752, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
-        type: 3}
-      propertyPath: ModelPool.Array.data[0].IsEnabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2348171388818620467, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
         type: 3}

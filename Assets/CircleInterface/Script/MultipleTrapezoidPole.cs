@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -385,7 +386,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     public void OnTriggerEnter(Collider other) {
-        OnTriggerEnterOwnMade(other.gameObject);
+            OnTriggerEnterOwnMade(other.gameObject);
     }
 
     public void OnTriggerExit(Collider other) {
@@ -397,15 +398,18 @@ public class MultipleTrapezoidPole : MonoBehaviour {
      * 独自メソッドとして再開発
      */
     public void OnTriggerEnterOwnMade(GameObject other) {
-        if (isActiveObj && meshRenderer.material != variables.material_TrapezoidPole_Touch) {
+        //Debug.Log("runrun"+ other.name.Substring(2));
+        if (isActiveObj && meshRenderer.material.color != variables.material_TrapezoidPole_Touch.color) {
             if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
                 if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
-                    systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-                    //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
+                    if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
+                        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString() + other.transform.position);
+                    //Debug.Log("ok " + other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Touch;
             }
@@ -413,15 +417,17 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     public void OnTriggerExitOwnMade(GameObject other) {
-        if (isActiveObj && meshRenderer.material != variables.material_TrapezoidPole_Normal) {
+        if (isActiveObj && meshRenderer.material.color != variables.material_TrapezoidPole_Normal.color) {
             if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
                 if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
-                    systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
-                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
+                    if (!(Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>())))
+                        systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString() + other.transform.position);
+                    //Debug.Log("ng "+other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Normal;
             }
@@ -450,8 +456,8 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         textCentor.transform.position = textPosition;
         //大きさ
         float fontScale = 1 / 1000f;
-        textCentor.transform.localScale = new Vector3(fontScale, fontScale, fontScale);
-        textCentor.transform.localScale = Vector3.one / fontScale;
+        //textCentor.transform.localScale = new Vector3(fontScale, fontScale, fontScale);
+        textCentor.transform.localScale = Vector3.one * fontScale;
         //子オブジェクトに設定
         textCentor.transform.parent = this.transform;
     }
