@@ -8,7 +8,7 @@ public class SystemKeyPole : MonoBehaviour {
     private int myNum;
 
     private createTrapezoidPole createSorce;
-    private centralSystemC systemScript;
+    private centralSystem systemScript;
 
     //表示関係
     MeshRenderer meshRenderer;
@@ -17,7 +17,7 @@ public class SystemKeyPole : MonoBehaviour {
     TextMesh TmeshC;
     private void Awake() {
         createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
-        systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
+        systemScript = GameObject.Find("central").GetComponent<centralSystem>();
     }
     void Start() {
         //systemKey(9文字)を頭から削除したものが自分の名前

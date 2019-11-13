@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 public class PolygonalPillar : MonoBehaviour {
 
     private createTrapezoidPole createSorce;
-    private centralSystemC systemScript;
+    private centralSystem systemScript;
     private GameObject myParent = null;
     private int poleSum;
 
@@ -29,7 +29,7 @@ public class PolygonalPillar : MonoBehaviour {
     MeshCollider meshCollider;
 
     private void Awake() {
-        systemScript = GameObject.Find("central").GetComponent<centralSystemC>();
+        systemScript = GameObject.Find("central").GetComponent<centralSystem>();
     }
 
     void Start() {

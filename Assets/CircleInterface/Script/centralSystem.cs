@@ -6,7 +6,7 @@ using UnityEngine.XR;
 //try catch用 System.Exception
 using System;
 
-public class centralSystemC : MonoBehaviour {
+public class centralSystem : MonoBehaviour {
 
     private int churingNumber = -100;//各ボタンから得られるカーソル位置情報
     protected int stage = 0;//インターフェースの処理段階       -100=Error  -2=システムアイコン入力済み  -1=外縁  0=Nutral  1=第一段階選択  2=第二段階選択時  3=入力決定
@@ -328,10 +328,8 @@ public class centralSystemC : MonoBehaviour {
         //文字セット初期化
         if (isCircleInterface) {
             textSet = textSetHiraganaCircle;
-            variables.poleSum = textSet.GetLength(0);
         } else {
             textSet = textSetHiragana;
-            variables.poleSum = textSet.GetLength(0);
         }
         variables.poleSum = textSet.GetLength(0);
 
@@ -343,9 +341,11 @@ public class centralSystemC : MonoBehaviour {
     }
 
     void Start() {
-        //主輪の取得と副輪の一斉表示
-        IEnumerator getkey = GetKeyObjects();
-        StartCoroutine(getkey);
+        if (variables.isCircleSystem) {
+            //主輪の取得と副輪の一斉表示
+            IEnumerator getkey = GetKeyObjects();
+            StartCoroutine(getkey);
+        }
 
         textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         //XR用設定
@@ -357,7 +357,7 @@ public class centralSystemC : MonoBehaviour {
     void Update() {
         textMesh.text = InputText;
         if (!isGetKeyObjects && GameObject.Find(0.ToString())) {
-            //GetKeyObjects();
+            //GetKeyObjects();  //コルーチンじゃない方
             //SetKeytext();
         }
     }
@@ -365,14 +365,17 @@ public class centralSystemC : MonoBehaviour {
     //外部から座標値を取得
     public void UpdateChuringNum(int nextNum) {
         churingNumber = nextNum;
-        ChuringSystem();
+        if (variables.isCircleSystem)
+            ChuringSystemCircle();
+        else
+            ChuringSystemRadially();
     }
 
-    private void ChuringSystem() {
+    private void ChuringSystemCircle() {
         /*Debug.Log("stage = " + stage + " . " +
                          "churingNumber = " + churingNumber + " . " +
                          "baseNumber = " + baseNumber + " .");
-                */         
+                */
         /* Exitイベント、副輪イベント処理 */
         /* churingNumber    意味
          * ***0             主輪の中心
@@ -532,6 +535,72 @@ public class centralSystemC : MonoBehaviour {
         }
     }
 
+    private void ChuringSystemRadially() {
+        if (churingNumber < 0) {
+            //churingNumberがマイナス＝システムキーに触れたとき
+            Debug.Log("run");
+            //数値を反転し、システムキーの名前を参照する
+            setText = SystemCommandName[-churingNumber];
+            stage = 3;
+        } else if (stage == 1 && baseNumber != churingNumber && churingNumber != 0) {
+            //子音および母音選択状態で、最初のキー値と入力キー値が違い、中心に戻ったわけではない場合
+            //子音が決定するので計算
+            if (baseNumber == variables.poleSum && churingNumber == 1) {
+                //最後のキーから1キーへの入力の際
+                consonant = textSet.GetLength(0) - 1;
+            } else if (baseNumber == 1 && churingNumber == variables.poleSum) {
+                //１キーから最後のキーへの入力の際
+                consonant = 0;
+            } else {
+                //それ以外の隣り合うキー値が同じ場合の計算
+                consonant = ( ( baseNumber - 1 ) * 3 + 1 ) + ( churingNumber - baseNumber );
+            }
+            //子音と母音から再計算
+            setText = textSet[consonant, churingNumber - 1 + 1];
+            //次の状態へ
+            stage = 2;
+            if (isGetKeyObjects)
+                SetKeyRadially();
+        } else if (stage == 2 && 1 <= churingNumber && churingNumber <= variables.poleSum + 1) {
+            //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
+            setText = textSet[consonant, churingNumber - 1 + 1];
+            if (isGetKeyObjects)
+                SetKeyRadially();
+        } else if (stage == 0 && 0 < churingNumber && churingNumber <= variables.poleSum + 1) {
+            //ニュートラル状態で、入力キー値が1～キー数の間の場合実行
+            //最初のキー値を決定
+            baseNumber = churingNumber;
+            //とりあえず母音を保存
+            setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
+            //次の状態へ
+            stage = 1;
+            if (isGetKeyObjects)
+                SetKeyRadially();
+        } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
+            //入力状態で、中心へ戻った場合
+            //まず、特殊なコマンドは実行する
+            SystemCommandChuring();
+            //表示用にわかりやすい名前に書き換える
+            ConvertToSystemCommand();
+            //表示
+            InputText = setText;
+            //準備用の変数を初期化
+            setText = "";
+            //中心へ戻った
+            stage = 0;
+            //各テキストの初期化
+            if (isGetKeyObjects)
+                SetKeyRadially();
+        } else if (stage == 3) {
+            //stage3で、システムキー以外の接触のとき
+            //なにもしない
+        } else {
+            Debug.LogWarning("Error. stage = " + stage + " ." +
+                             " churingNumber = " + churingNumber + " ." +
+                             " baseNumber = " + baseNumber);
+        }
+    }
+
     //キーオブジェクトの取得
     IEnumerator GetKeyObjects() {
         keyObjects = new GameObject[/*poleSum*/textSet.GetLength(0) + 1];
@@ -554,6 +623,22 @@ public class centralSystemC : MonoBehaviour {
         subCircleGenerete();
 
     }
+
+    /*
+    private void GetKeyObjects() {
+        keyObjects = new GameObject[variables.poleSum + 1];
+        for (int i = 0; i <= variables.poleSum; i++) {
+            if (keyObjects[i] == null) {
+                if (GameObject.Find(i.ToString()))
+                    keyObjects[i] = GameObject.Find(i.ToString());
+                else
+                    break;
+            }
+            if (i == variables.poleSum) {
+                isGetKeyObjects = true;
+            }
+        }
+    }*/
 
     //副輪の呼び出しと削除
     private void subCircleGenerete() {
@@ -840,8 +925,8 @@ next:
         }
     }*/
 
-            //RadiallyUI用文字割り当て
-            private void SetKeyRadially() {
+    //RadiallyUI用文字割り当て
+    private void SetKeyRadially() {
         MultipleTrapezoidPole keyObjectITrapezoid;
         for (int i = 1; i <= variables.poleSum; i++) {
             keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPole>();

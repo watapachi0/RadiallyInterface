@@ -21,7 +21,7 @@ public class createTrapezoidPole : MonoBehaviour {
     void Start() {
         if (variables.isCircleSystem && createSorceObj != null) {
             //自分の名前から該当TextSetの行からアイテム数を取得
-            poleSum = createSorceObj.GetComponent<centralSystemC>().GetTextSetItemNum(int.Parse(transform.name.Substring(9)));
+            poleSum = createSorceObj.GetComponent<centralSystem>().GetTextSetItemNum(int.Parse(transform.name.Substring(9)));
         } else {
             //現在のTextSetの段数を取得
             poleSum = variables.poleSum;

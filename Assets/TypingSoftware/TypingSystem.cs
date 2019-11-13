@@ -7,7 +7,6 @@ public class TypingSystem : MonoBehaviour {
 
     public TextMesh InputTextObject;//入力を表示する欄
     public TextMesh TaskTextObject;//タスクを表示する欄
-    public centralSystemC centralSystemC;
     public centralSystem centralSystem;
 
     [SerializeField]
@@ -39,7 +38,7 @@ public class TypingSystem : MonoBehaviour {
             //inputText = "";
             //編集メソッドから中身をゼロにする
             if (variables.isCircleSystem) {
-                this.centralSystemC.EditInputText("");
+                this.centralSystem.EditInputText("");
             } else {
                 //this.centralSystem.EditInputText("");
             }
