@@ -271,14 +271,14 @@ public class MultipleTrapezoidPole : MonoBehaviour {
             OnTriggerExitOwnMade(null);
         }
 
-        /*
+        
         if (flgExit && !flgEnter) {
             OnTriggerExitOwnMade(enterObject);
             doneEnter = false;
             enterObject = null;
         }
         flgExit = false;
-        flgEnter = false;*/
+        flgEnter = false;
     }
 
     private void CalcVertices() {
@@ -457,7 +457,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
-                   // if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
+                    if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
                         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString() + other.transform.position);
                     //Debug.Log("ok " + other.transform.position);
@@ -475,7 +475,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
-                    //if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
+                    if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
                         systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
                     Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString() + other.transform.position);
                     //Debug.Log("ng "+other.transform.position);

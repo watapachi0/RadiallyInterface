@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/RadiallyInterface/Scenes/TrianglePole.unity
+    path: Assets/RadiallyInterface/TrianglePole.unity
     guid: d788ba706346ee74ab8f8973f97e464f
   m_configObjects: {}
