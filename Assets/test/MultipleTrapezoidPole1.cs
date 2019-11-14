@@ -247,7 +247,6 @@ public class MultipleTrapezoidPole1 : MonoBehaviour {
         Vector3 a, b, c;
         for (int i = 0; i < 0 + 1; i++) {
             for (int j = 0; j < 6; j++) {
-                Debug.Log("");
                 a = meshVec[normalNumber[j * 3 + 0] + 4] + transform.position;
                 b = meshVec[normalNumber[j * 3 + 1] + 4] + transform.position;
                 c = meshVec[normalNumber[j * 3 + 2] + 4] + transform.position;
@@ -278,12 +277,10 @@ public class MultipleTrapezoidPole1 : MonoBehaviour {
                 }
             }
             if (col) {
-                Debug.Log("run");
                 return col;
             } else {
             }
         }
-
         return col;
     }
 }

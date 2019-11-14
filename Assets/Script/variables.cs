@@ -65,7 +65,7 @@ public class variables : MonoBehaviour {
 
     //タイピングソフトのクリアー部分の文字の色
     public static Material material_Typing_Clear { get; set; }
-    
+
     //タイピングソフトのエラー部分の文字の色
     public static Material material_Typing_Error { get; set; }
 
@@ -113,6 +113,12 @@ public class variables : MonoBehaviour {
 
     //指のオブジェクト 左手人差指、右手人差指の順
     public static GameObject[] fingers { get; set; } = new GameObject[2];
+
+    //ピンチ動作時に奥行き方向にどれだけ指とシステムとを離すか
+    public static float pinchDistance { get; set; }
+
+    //ピンチ判定を行う指間の距離
+    public static float pinchLength { get; set; }
 
     //システムがCircleの方であるか
     public static bool isCircleSystem { get; private set; }
@@ -206,6 +212,12 @@ public class variables : MonoBehaviour {
     [SerializeField, Header("円環外側のシステムキーの半径(単位cm)")]
     private float SystemCommandRadius;
 
+    [SerializeField, Header("ピンチ時のシステムと指の距離(単位cm)")]
+    private float PinchDistance;
+
+    [SerializeField, Header("ピンチ判定の相対座標の閾値(単位cm)")]
+    private float PinchLength;
+
     [SerializeField, Header("テキストのフォントサイズ( X cm角。小数点第二位まで有効)"), Tooltip("システム上に表示されるテキストのフォントサイズ")]
     private float SystemTextFontSize;
 
@@ -263,6 +275,10 @@ public class variables : MonoBehaviour {
 
         //システムキーの半径
         systemCommandRadius = SystemCommandRadius / 100;
+        //ピンチ時の指とシステムの距離
+        pinchDistance = PinchDistance / 100;
+        //ピンチ判定用の相対座標の閾値
+        pinchLength = PinchLength / 100;
         //テキストのマテリアル
         material_SystemText = Material_SystemText;
         //テキストのフォントサイズ
@@ -273,7 +289,7 @@ public class variables : MonoBehaviour {
 
         //システムの種別判定
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName.Substring(0,6) == "Circle") {
+        if (sceneName.Substring(0, 6) == "Circle") {
             isCircleSystem = true;
         } else {
             isCircleSystem = false;

@@ -17,12 +17,8 @@ public class ObjTransRota : MonoBehaviour {
     private GameObject LIndex;
     private GameObject RIndex;
 
-    //ピンチ判定用の相対座標の閾値
-    [SerializeField]
-    private float pinchDistance;
-
     //ピンチで操作する対象オブジェクト
-    public GameObject targetObject;
+    private GameObject targetObject;
 
     //左手がピンチ中
     private bool isLPinch = false;
@@ -37,7 +33,7 @@ public class ObjTransRota : MonoBehaviour {
     private GameObject[] controlCubes = new GameObject[6];
 
     void Start() {
-
+        targetObject = GameObject.Find("central");
     }
 
     void Update() {
@@ -45,7 +41,7 @@ public class ObjTransRota : MonoBehaviour {
         if (!isRPinch) {
             if (!LThumb.activeInHierarchy) {
                 isLPinch = false;
-            } else if (Vector3.Distance(LThumb.transform.position, LIndex.transform.position) <= pinchDistance) {
+            } else if (Vector3.Distance(LThumb.transform.position, LIndex.transform.position) <= variables.pinchLength) {
                 isLPinch = true;
             } else {
                 isLPinch = false;
@@ -55,7 +51,7 @@ public class ObjTransRota : MonoBehaviour {
         if (!isLPinch) {
             if (!RThumb.activeInHierarchy) {
                 isRPinch = false;
-            } else if (Vector3.Distance(RThumb.transform.position, RIndex.transform.position) <= pinchDistance) {
+            } else if (Vector3.Distance(RThumb.transform.position, RIndex.transform.position) <= variables.pinchLength) {
                 isRPinch = true;
             } else {
                 isRPinch = false;
@@ -64,7 +60,7 @@ public class ObjTransRota : MonoBehaviour {
 
         if (isLPinch) {
             //L人差し指位置にシステムを配置
-            targetObject.transform.position = LIndex.transform.position;
+            targetObject.transform.position = LIndex.transform.position + new Vector3(0, 0, variables.pinchDistance);
             /*
             //R人差し指の座標を保存
             if (indexBaseObject == null) {
@@ -78,7 +74,7 @@ public class ObjTransRota : MonoBehaviour {
             */
         } else if (isRPinch) {
             //R人差し指位置にシステムを配置
-            targetObject.transform.position = RIndex.transform.position;
+            targetObject.transform.position = RIndex.transform.position + new Vector3(0, 0, variables.pinchDistance);
             /*
             //L人差し指の座標を保存
             if (indexBaseObject == null) {
@@ -144,10 +140,10 @@ public class ObjTransRota : MonoBehaviour {
                     //directionVector = new Vector3(0, 0, directionVector.z > 0 ? 1 : -1);
                 } else {
                     // z < x > y  x最大
-                   // directionVector = new Vector3(directionVector.z > 0 ? 1 : -1, 0, 0);
+                    // directionVector = new Vector3(directionVector.z > 0 ? 1 : -1, 0, 0);
                 }
             }
         }
-        targetObject.transform.localEulerAngles+=directionVector;
+        targetObject.transform.localEulerAngles += directionVector;
     }
 }

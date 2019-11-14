@@ -32,11 +32,12 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     private bool flgEnter = false;
     private bool flgExit = false;
     private GameObject enterObject = null;
-    private bool inCol=false;
+    private bool inCol = false;
 
     //頂点座標
     Vector3[] EndVertex = new Vector3[4];
     Vector3[] SideVertex = new Vector3[24];
+    Vector3[] StartVertex = new Vector3[4];
     //LineRenderer用の頂点情報
     Vector3[] LineVertex;
     Vector3[] lineVertecies;   //lineVertexの配置を格納
@@ -79,6 +80,8 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         1,3,5,};
     //各台形の内向き法線ベクトル
     Vector3[,] normalVector;
+    //基準の法線群
+    Vector3[,] normalBasicVec;
 
     //文字のゲームオブジェクト
     public TextMesh TmeshC;
@@ -105,6 +108,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
 
         //法線初期化
         normalVector = new Vector3[variables.trapezoidDivisionNum + 1, 6];
+        normalBasicVec = new Vector3[variables.trapezoidDivisionNum + 1, 6];
 
         if (myParent == null) {
             createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
@@ -254,6 +258,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     void Update() {
+        //RadiallyはcentralSystemのコルーチン内で初期化される
         if (variables.isCircleSystem && MyText == "") {
             askMyText();
             //stage情報取得
@@ -264,21 +269,13 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         TmeshC.text = MyText;
 
         inCol = fireInnerProductCollider();
-        if (!doneEnter&& inCol) {
+        if (!doneEnter && inCol) {
             doneEnter = true;
             OnTriggerEnterOwnMade(null);
-        }else if(doneEnter && !inCol) {
+        } else if (doneEnter && !inCol) {
+            doneEnter = false;
             OnTriggerExitOwnMade(null);
         }
-
-        
-        if (flgExit && !flgEnter) {
-            OnTriggerExitOwnMade(enterObject);
-            doneEnter = false;
-            enterObject = null;
-        }
-        flgExit = false;
-        flgEnter = false;
     }
 
     private void CalcVertices() {
@@ -425,23 +422,23 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     public void OnTriggerEnter(Collider other) {
-       /* if (other.name.Substring(2) == "index_endPointer") {
-            if (!doneEnter) {
-                doneEnter = true;
-                enterObject = other.gameObject;
-                OnTriggerEnterOwnMade(enterObject);
-            } else {
-                flgEnter = true;
-            }
-        }*/
-        OnTriggerEnterOwnMade(other.gameObject);
+        /* if (other.name.Substring(2) == "index_endPointer") {
+             if (!doneEnter) {
+                 doneEnter = true;
+                 enterObject = other.gameObject;
+                 OnTriggerEnterOwnMade(enterObject);
+             } else {
+                 flgEnter = true;
+             }
+         }*/
+        //OnTriggerEnterOwnMade(other.gameObject);
     }
 
     public void OnTriggerExit(Collider other) {
         /*if (other.name.Substring(2) == "index_endPointer") {
             flgExit = true;
         }*/
-        OnTriggerExitOwnMade(other.gameObject);
+        //OnTriggerExitOwnMade(other.gameObject);
     }
 
     /* 以下2つはもともとトリガーイベントだったが、
@@ -455,11 +452,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
-                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
-                    if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
-                        systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-                    //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString() + other.transform.position);
+                    // if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name));
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
                     //Debug.Log("ok " + other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Touch;
@@ -473,11 +470,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
-                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
-                    if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
-                        systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString() + other.transform.position);
+                    //if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
+                    systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
+                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
                     //Debug.Log("ng "+other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Normal;
@@ -529,11 +526,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     //自分の数字をシステムに問い合わせる
     private void askMyText() {
         int myNum;// = int.Parse(transform.gameObject.name);
-        if (!isSubRingPole) {
-            myNum = int.Parse(transform.gameObject.name);
-        } else {
+        if (isSubRingPole) {
             string myParentNum = myParent.name.Substring(9);
             myNum = int.Parse(transform.gameObject.name) + int.Parse(myParentNum) * 100;
+        } else {
+            myNum = int.Parse(transform.gameObject.name);
         }
         //Debug.Log(myNum);
         MyText = systemScript.tellKeyText(myNum);
@@ -543,13 +540,17 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     private void culcNormal(Vector3[] meshVec) {
         //参考
         //https://docs.unity3d.com/ja/2018.4/Manual/ComputingNormalPerpendicularVector.html
-        int a, b, c;
+        Vector3 a, b, c;
         for (int i = 0; i < variables.trapezoidDivisionNum + 1; i++) {
             for (int j = 0; j < 6; j++) {
-                a = normalNumber[j * 3 + 0];
-                b = normalNumber[j * 3 + 1];
-                c = normalNumber[j * 3 + 2];
-                normalVector[i, j] = Vector3.Cross(meshVec[16 * i + b] - meshVec[16 * i + a], meshVec[16 * i + c] - meshVec[16 * i + a]);
+                a = meshVec[i * 16 + normalNumber[j * 3 + 0] + 4];
+                b = meshVec[i * 16 + normalNumber[j * 3 + 1] + 4];
+                c = meshVec[i * 16 + normalNumber[j * 3 + 2] + 4];
+                Vector3 side1 = b - a;
+                Vector3 side2 = c - a;
+                normalVector[i, j] = Vector3.Cross(side1, side2);
+                normalVector[i, j] /= normalVector[i, j].magnitude;
+                normalBasicVec[i, j] = a;
             }
         }
     }
@@ -560,24 +561,17 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         for (int i = 0; i < variables.fingers.Length; i++) {
             for (int j = 0; j < variables.trapezoidDivisionNum + 1; j++) {
                 for (int k = 0; k < 6; k++) {
-                    if (Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position) > 0) {
+                    if (Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position - ( normalBasicVec[j, k] + transform.position )) > 0) {
                         //内側を向いている
                         col = true;
-                        //Debug.Log(Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position));
-                       // Debug.Log(k);
                     } else {
-                        //Debug.Log(Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position));
-                        //Debug.Log(k);
                         col = false;
                         k = 100;
                     }
                 }
-                //Debug.Log(col);
                 if (col) {
-                   //Debug.Log("run");
                     return col;
                 } else {
-                    //Debug.Log(col);
                 }
             }
         }

@@ -55,7 +55,7 @@ public class centralSystem : MonoBehaviour {
     protected string[,] textSet;
 
     //実験用のタイピングスクリプト
-    public TypingSystem typingSystem;
+    private TypingSystem typingSystem;
 
     //Radially用textSet
     /* か行見出し　か行あ段　か行い段  …
@@ -342,6 +342,8 @@ public class centralSystem : MonoBehaviour {
     }
 
     void Start() {
+        typingSystem = GetComponent<TypingSystem>();
+
         if (/*variables.isCircleSystem*/true) {
             //主輪の取得と副輪の一斉表示
             IEnumerator getkey = GetKeyObjects();
@@ -674,6 +676,10 @@ public class centralSystem : MonoBehaviour {
                 }
             }
             if (i == variables.poleSum) {
+                //Radiallyならここで文字の初期化
+                if (!variables.isCircleSystem) {
+                    SetKeyRadially();
+                }
                 isGetKeyObjects = true;
             }
         }
