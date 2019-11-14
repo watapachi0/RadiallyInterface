@@ -497,7 +497,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         //文字サイズ
         TmeshC.fontSize = variables.systemTextFontSize;
         //文字色
-        TmeshC.color = variables.material_SystemText.color;
+        TmeshC.color = variables.material_Text.color;
         //アンカー位置を中心に
         TmeshC.anchor = TextAnchor.MiddleCenter;
         //真ん中寄せ

@@ -21,7 +21,7 @@ public class centralSystem : MonoBehaviour {
     protected float radiusOut = 1f;       //システムの外縁の半径
     protected float radiusIn = 0.7f;        //ニュートラルエリアの半径
     protected float poleHeight = 1f;      //システムの厚み
-    private TextMesh textMesh;
+    //private TextMesh textMesh;
 
     /* キーを取得済みフラグ */
     private bool isGetKeyObjects = false;
@@ -350,7 +350,7 @@ public class centralSystem : MonoBehaviour {
             StartCoroutine(getkey);
         }
 
-        textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
+        //textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         //XR用設定
         if (variables.isOnXR) {
             GameObject.Find("Main CameraNonVR").SetActive(false);
@@ -358,7 +358,7 @@ public class centralSystem : MonoBehaviour {
     }
 
     void Update() {
-        textMesh.text = InputText;
+        //textMesh.text = InputText;
         if (!isGetKeyObjects && GameObject.Find(0.ToString())) {
             //GetKeyObjects();  //コルーチンじゃない方
             //SetKeytext();
