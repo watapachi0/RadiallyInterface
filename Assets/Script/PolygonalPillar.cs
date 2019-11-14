@@ -50,9 +50,16 @@ public class PolygonalPillar : MonoBehaviour {
         //メッシュリセット
         mesh.Clear();
         //メッシュへの頂点情報の追加
-        mesh.vertices = variables.polygonalPillarVertex;
+        int PPVindex;
+        if (myParent == null) {
+            PPVindex = 0;
+        } else {
+            PPVindex = int.Parse(myParent.name.Substring(9));
+        }
+        mesh.vertices = variables.polygonalPillarVertex[PPVindex];
         //メッシュへの面情報の追加
         SetFace();
+        //Debug.Log("mesh : "+mesh.vertices.Length+" face : "+face[face.Length-1]+" poly : "+ variables.polygonalPillarVertex.GetLength(0));
         mesh.triangles = face;
 
         //メッシュフィルター追加

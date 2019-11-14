@@ -22,10 +22,10 @@ public class createTrapezoidPole : MonoBehaviour {
         if (variables.isCircleSystem && createSorceObj != null) {
             //自分の名前から該当TextSetの行からアイテム数を取得
             poleSum = createSorceObj.GetComponent<centralSystem>().GetTextSetItemNum(int.Parse(transform.name.Substring(9)));
+            //Debug.Log(transform.name +" polesum: "+poleSum);
         } else {
             //現在のTextSetの段数を取得
             poleSum = variables.poleSum;
-            //Debug.Log(transform.name);
         }
 
         //頂点情報の初期化
@@ -80,8 +80,16 @@ public class createTrapezoidPole : MonoBehaviour {
         for (int i = 0; ( i < poleSum ) && isCalledBackVertex[i]; i++) {
             if (i + 1 == poleSum && polygonalPillar == null) {
                 //多角形用の頂点群の準備
-                variables.polygonalPillarVertex = new Vector3[poleSum * 10];
-                variables.polygonalPillarVertex = vertex;
+                //Debug.Log("name " + transform.name+" sum "+ poleSum+" vertex "+vertex.Length);
+                int PPVindex;
+                if (transform.name == "central") {
+                    PPVindex = 0;
+                    variables.polygonalPillarVertex = new Vector3[variables.poleSum+1][];
+                } else {
+                    PPVindex = int.Parse(transform.name.Substring(9));
+                }
+                variables.polygonalPillarVertex[PPVindex] = new Vector3[poleSum * 10];
+                variables.polygonalPillarVertex[PPVindex] = vertex;
 
                 //中心の多角柱を描画する
                 GameObject obj = new GameObject(0.ToString());

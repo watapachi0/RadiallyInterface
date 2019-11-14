@@ -34,7 +34,7 @@ public class variables : MonoBehaviour {
     public static int poleSum { get; set; }
 
     //多角形作成用頂点群
-    public static Vector3[] polygonalPillarVertex { get; set; }
+    public static Vector3[][] polygonalPillarVertex { get; set; }
 
     //多角形のマテリアル
     public static Material material_PolygonalPillar { get; set; }
@@ -161,8 +161,8 @@ public class variables : MonoBehaviour {
     [SerializeField, Header("円環の縁取りのずらし量(単位cm)")]
     private float LineShiftSlightly;
 
-    [SerializeField, Header("システムのキーの数（規定値 5 ）"), Tooltip("変更する際はスクリプトの見直すが必要")]
-    private int PoleSum;
+    //[SerializeField, Header("システムのキーの数（規定値 5 ）"), Tooltip("変更する際はスクリプトの見直すが必要")]
+    //private int PoleSum;
 
     [SerializeField, Header("円環内部の多角形のマテリアル")]
     private Material Material_PolygonalPillar;
@@ -227,7 +227,7 @@ public class variables : MonoBehaviour {
         //厚さ
         poleHeight = PoleHeight / 100;
         //キー数
-        poleSum = PoleSum;
+        //poleSum = PoleSum;
         //縁取りの太さ
         lineRendererWidth = LineRendererWidth / 100;
         //縁取りのずらし

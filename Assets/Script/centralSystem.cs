@@ -28,7 +28,7 @@ public class centralSystem : MonoBehaviour {
     /* キーオブジェクト */                          //中身はキーを再表示する度に再設定
     private GameObject[] keyObjects;
     //private GameObject[] keySubObjects;         //副輪の精製後の一時保管用
-    private GameObject[,] subCircles;           //副輪をまとめて取得
+    private GameObject[][] subCircles;           //副輪をまとめて取得
     //副輪オブジェクト
     //private GameObject subCircle;
     //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
@@ -178,17 +178,17 @@ public class centralSystem : MonoBehaviour {
                                                                              { "wa", "wa"   , "wo", "nn"  , "改/確", "空/変", "Error"},
                                                                              { "!?", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
     //ひらがな
-    protected readonly string[,] textSetHiraganaCircle = new string[11, 7] { { "あ", "あ"   , "い", "う", "え"   , "お"   , "Error"},
-                                                                             { "か", "か"   , "き", "く", "け"   , "こ"   , "Error"},
-                                                                             { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "Error"},
-                                                                             { "た", "た"   , "ち", "つ", "て"   , "と"   , "Error"},
-                                                                             { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error"},
-                                                                             { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "Error"},
-                                                                             { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error"},
-                                                                             { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "Error"},
-                                                                             { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error"},
-                                                                             { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error"},
-                                                                             { "BS", "記/数", "英", "BS", "カナ" , "小"   , "Error"} };
+    protected readonly string[,] textSetHiraganaCircle = new string[11, 9] { { "あ", "あ"   , "い", "う", "え"   , "お"   , "Error", "Error", "Error"},
+                                                                             { "か", "か"   , "き", "く", "け"   , "こ"   , "゛", "Error", "Error"},
+                                                                             { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "゛", "Error", "Error"},
+                                                                             { "た", "た"   , "ち", "つ", "て"   , "と"   , "゛", "Error", "Error"},
+                                                                             { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error", "Error", "Error"},
+                                                                             { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "゛", "゜", "Error"},
+                                                                             { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error", "Error", "Error"},
+                                                                             { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "小"   , "Error", "Error"},
+                                                                             { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error", "Error", "Error"},
+                                                                             { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error", "Error", "Error"},
+                                                                             { "BS", "記/数", "英", "BS", "カナ" , "小"   , "Error", "Error", "Error"} };
     //カタカナ
     protected readonly string[,] textSetKatakanaCircle = new string[11, 7] { { "ア", "ア"   , "イ", "ウ", "エ"   , "オ"   , "Error"},
                                                                              { "カ", "カ"   , "キ", "ク", "ケ"   , "コ"   , "Error"},
@@ -338,7 +338,7 @@ public class centralSystem : MonoBehaviour {
         variables.isOnXR = XRSettings.enabled;
         variables.createSourcePosition = transform.position;
 
-        subCircles = new GameObject[variables.poleSum + 1, 7];
+        subCircles = new GameObject[variables.poleSum + 1][];
     }
 
     void Start() {
@@ -417,7 +417,9 @@ public class centralSystem : MonoBehaviour {
         if (churingNumber == 100) {
             //ただし、主輪の0キーを無効にだけする
             //システムの大きさや円環の大きさ次第で主輪0キーと副輪0キーが重なるため
-            polygonalPillar.Enable(false);
+            //文字選択後に副輪の０キーに手が戻ってもいいように。
+            if (stage <= 1)
+                polygonalPillar.Enable(false);
             return;
         }
 
@@ -599,7 +601,7 @@ public class centralSystem : MonoBehaviour {
             } else if (baseNumber == 1 && ( baseNumber + 2 <= churingNumber && churingNumber <= variables.poleSum - 1 )) {
                 //１キーから3最後のキーへの入力の際
 
-            } else if (baseNumber + 2 <= churingNumber || churingNumber <= baseNumber-2) {
+            } else if (baseNumber + 2 <= churingNumber || churingNumber <= baseNumber - 2) {
                 //それ以外の隣り合わないキー
 
             } else {
@@ -709,7 +711,8 @@ public class centralSystem : MonoBehaviour {
             createTrapezoidPole subTrapezoid = SubCircle.AddComponent<createTrapezoidPole>();
             subTrapezoid.PositionObj = keyObjects[i].transform.Find("text").gameObject;
             subTrapezoid.SetCreateSorce(this.gameObject);
-            subCircles[i, 0] = SubCircle;
+            subCircles[i] = new GameObject[textSet.GetLength(1)];
+            subCircles[i][0] = SubCircle;
             //Debug.LogError("");
             /* 以下で副輪の取得などしたいが、createTrapezoidPoleやMultipleTrapezoidPoleらの処理が追いつかずエラーが出る
              * そのため、コルーチンで処理を行う
@@ -728,10 +731,10 @@ public class centralSystem : MonoBehaviour {
         for (int i = 0; i <= subObjectsNum; i++) {
             try {
                 //取得したいオブジェクトやその親がジェネレートされるまで処理しない
-                if (subCircles[poleNum, 0].transform.Find(( i ).ToString()).gameObject != null) {
+                if (subCircles[poleNum][0].transform.Find(( i ).ToString()).gameObject != null) {
                     //問題なければ取得する
                     //Debug.Log("取得中 " + i + " 番目");
-                    subCircles[poleNum, i + 1] = subCircles[poleNum, 0].transform.Find(( i ).ToString()).gameObject;
+                    subCircles[poleNum][i + 1] = subCircles[poleNum][0].transform.Find(( i ).ToString()).gameObject;
                     //Debug.Log("run");
                     //文字セット用
                     //keySubObjects[i] = subCircles[poleSum, i];
@@ -752,43 +755,46 @@ go:
 
         //副輪のキーをまとめて非アクティブ化
         //Debug.Log("run = " + subCircles.GetLength(1));
-        for (int i = 1; i < subCircles.GetLength(0); i++) {
-            /*back:
-                        ;
-                        try {
-                            SetKeyCircle(i);
-                            goto ok;
-                        } catch {
-                            i--;
-                        }
-                        yield return null;
-                        goto back;
-            ok:
-                        ;*/
-            for (int j = 1; j < subCircles.GetLength(1); j++) {
-                try {
-                    //Debug.Log(subCircles[i, j].name);
-                    if (subCircles[i, j].name == "0") {
-                        subCircles[i, j].GetComponent<PolygonalPillar>().Enable(false);
-                    } else {
-                        // Debug.Log("check");
-                        //SetKeyCircle(i);
-                        subCircles[i, j].GetComponent<MultipleTrapezoidPole>().Enable(false);
-
-                        //   Debug.Log("run");
+        //for (int i = 1; i < subCircles.GetLength(0); i++) {
+        /*back:
+                    ;
+                    try {
+                        SetKeyCircle(i);
+                        goto ok;
+                    } catch {
+                        i--;
                     }
+                    yield return null;
+                    goto back;
+        ok:
+                    ;*/
+        //Debug.Log(GetTextSetItemNum(poleNum));
+        for (int j = 1; j <= GetTextSetItemNum(poleNum) + 1; j++) {
+            try {
+                if (subCircles[poleNum][j].name == "0") {
+                    //Debug.Log("check  0");
+                    subCircles[poleNum][j].GetComponent<PolygonalPillar>().Enable(false);
+                    //Debug.Log("run  0");
+                } else {
+                    //Debug.Log("check  "+  subCircles[poleNum][j].name );
+                    //SetKeyCircle(i);
+                    subCircles[poleNum][j].GetComponent<MultipleTrapezoidPole>().Enable(false);
 
-                    goto next;
-                } catch (Exception e) {
-                    j--;
-                    //Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
+                    //Debug.Log("run  "+  subCircles[poleNum][j].name );
                 }
-                yield return null;
-next:
-                ;
-            }
 
+                goto next;
+            } catch (Exception e) {
+                j--;
+                Debug.LogWarning("try failed : ///\n" + e.Message + "///\n" + e.TargetSite + "///\n" + e.StackTrace);
+            }
+            yield return null;
+next:
+            ;
+            //                Debug.Log(j);
         }
+
+        //}
 
         //hasSubCircle = true;
         //Debug.Log("run in the method");
@@ -899,19 +905,17 @@ next:
             //
             setText = "";
         } else if (setText == "゛") {
-            //本来の仕様
-            /*int i = 0, j = 0;
+            int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 1, j];
-            }*/
+            }
         } else if (setText == "゜") {
-            //本来の仕様
-            /*int i = 0, j = 0;
+            int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 2, j];
-            }*/
+            }
         } else if (setText == "小") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
@@ -1054,13 +1058,13 @@ next:
 
     //副輪を表示する
     private void DisplaySubCircle(int CircleNum, bool disp) {
-        for (int i = 1; i < subCircles.GetLength(1); i++) {
+        for (int i = 1; i <= GetTextSetItemNum(CircleNum) + 1; i++) {
             try {
                 //Debug.Log(subCircles[CircleNum, i].name);
-                if (subCircles[CircleNum, i].name == "0") {
-                    subCircles[CircleNum, i].GetComponent<PolygonalPillar>().Enable(disp);
+                if (subCircles[CircleNum][i].name == "0") {
+                    subCircles[CircleNum][i].GetComponent<PolygonalPillar>().Enable(disp);
                 } else {
-                    subCircles[CircleNum, i].GetComponent<MultipleTrapezoidPole>().Enable(disp);
+                    subCircles[CircleNum][i].GetComponent<MultipleTrapezoidPole>().Enable(disp);
                     //Debug.Log("Disp " + CircleNum);
                 }
             } catch (Exception e) {
