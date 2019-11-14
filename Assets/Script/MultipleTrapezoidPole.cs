@@ -434,14 +434,14 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 flgEnter = true;
             }
         }*/
-        //OnTriggerEnterOwnMade(other.gameObject);
+        OnTriggerEnterOwnMade(other.gameObject);
     }
 
     public void OnTriggerExit(Collider other) {
         /*if (other.name.Substring(2) == "index_endPointer") {
             flgExit = true;
         }*/
-        //OnTriggerExitOwnMade(other.gameObject);
+        OnTriggerExitOwnMade(other.gameObject);
     }
 
     /* 以下2つはもともとトリガーイベントだったが、
@@ -457,9 +457,9 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
-                    if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
+                   // if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
                         systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString() + other.transform.position);
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString() + other.transform.position);
                     //Debug.Log("ok " + other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Touch;
@@ -475,7 +475,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
-                    if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
+                    //if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
                         systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
                     Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString() + other.transform.position);
                     //Debug.Log("ng "+other.transform.position);
@@ -559,25 +559,25 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         bool col = false;
         for (int i = 0; i < variables.fingers.Length; i++) {
             for (int j = 0; j < variables.trapezoidDivisionNum + 1; j++) {
-                for (int k = 0; k < 1; k++) {
+                for (int k = 0; k < 6; k++) {
                     if (Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position) > 0) {
                         //内側を向いている
                         col = true;
                         //Debug.Log(Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position));
-                        Debug.Log(k);
+                       // Debug.Log(k);
                     } else {
                         //Debug.Log(Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position));
-                        Debug.Log(k);
+                        //Debug.Log(k);
                         col = false;
                         k = 100;
                     }
                 }
-                Debug.Log(col);
+                //Debug.Log(col);
                 if (col) {
-                    Debug.Log("run");
+                   //Debug.Log("run");
                     return col;
                 } else {
-                    Debug.Log(col);
+                    //Debug.Log(col);
                 }
             }
         }

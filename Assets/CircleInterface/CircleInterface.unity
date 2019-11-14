@@ -178,6 +178,15 @@ MonoBehaviour:
   Material_LineRenderer_Nonactive: {fileID: 2100000, guid: 39ef95f0a54fff34596f665a8ddf4e1b,
     type: 2}
   Material_SystemText: {fileID: 2100000, guid: 8f9a2cd7ed47af94c9ec1ce7e40f7da6, type: 2}
+  Material_Text: {fileID: 2100000, guid: 6f38af8635d956743897f9de98285afc, type: 2}
+  Material_Text_Nonactive: {fileID: 2100000, guid: cf52b25735c0c924fb96dc21bbe1c815,
+    type: 2}
+  Material_Typing_Clear: {fileID: 2100000, guid: 7f93d5d6334ef5e49b8ed3f1052342a8,
+    type: 2}
+  Material_Typing_Error: {fileID: 2100000, guid: 237ea2e3da6f30949a58ddcb088b8e0f,
+    type: 2}
+  Material_Typing_Other: {fileID: 2100000, guid: 68d0eb36a93e76b49a9f50282483cfee,
+    type: 2}
   SystemCommandRadius: 30
   SystemTextFontSize: 3
   TrapezoidDivisionNum: 5
@@ -207,6 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c5c991e008f0c4fa8cebbcc9a5b766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doRenderSphere: 1
+  doRenderLeapHands: 1
 --- !u!114 &72408994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 639b8331b9f2acd4ea6efcf785c2a190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isCircleInterface: 1
+  typingSystem: {fileID: 0}
 --- !u!114 &72408996
 MonoBehaviour:
   m_ObjectHideFlags: 0
