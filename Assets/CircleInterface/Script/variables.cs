@@ -111,6 +111,9 @@ public class variables : MonoBehaviour {
     //キーの縁取りの本体からのずらし加減
     public static float lineShiftSlightly { get; set; }
 
+    //指のオブジェクト 左手人差指、右手人差指の順
+    public static GameObject[] fingers { get; set; } = new GameObject[2];
+
     //システムがCircleの方であるか
     public static bool isCircleSystem { get; private set; }
 

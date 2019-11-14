@@ -27,6 +27,13 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     private int subCircleNum;
     private int poleSum;
 
+    //何回も入力が走る対策
+    private bool doneEnter = false;
+    private bool flgEnter = false;
+    private bool flgExit = false;
+    private GameObject enterObject = null;
+    private bool inCol=false;
+
     //頂点座標
     Vector3[] EndVertex = new Vector3[4];
     Vector3[] SideVertex = new Vector3[24];
@@ -63,6 +70,16 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                                    5 + 8,  3 + 8,  7 + 8,
     };
 
+    //法線を計算するための頂点の組み合わせ
+    int[] normalNumber = new int[] {1,2,3,
+        3,4,5,
+        5,6,7,
+        6,4,2,
+        0,1,6,
+        1,3,5,};
+    //各台形の内向き法線ベクトル
+    Vector3[,] normalVector;
+
     //文字のゲームオブジェクト
     public TextMesh TmeshC;
 
@@ -85,6 +102,9 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     void Start() {
         //stage情報初期化
         stage = variables.stage;
+
+        //法線初期化
+        normalVector = new Vector3[variables.trapezoidDivisionNum + 1, 6];
 
         if (myParent == null) {
             createSorce = GameObject.Find("central").GetComponent<createTrapezoidPole>();
@@ -162,6 +182,8 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         Mesh combinedMesh = new Mesh();
         combinedMesh.name = transform.name;
         combinedMesh.CombineMeshes(combineInstanceAry);
+        //内向き法線の計算
+        culcNormal(combinedMesh.vertices);
 
         //メッシュフィルター追加
         MeshFilter mesh_filter = new MeshFilter();
@@ -240,6 +262,23 @@ public class MultipleTrapezoidPole : MonoBehaviour {
 
         //テキストの更新
         TmeshC.text = MyText;
+
+        inCol = fireInnerProductCollider();
+        if (!doneEnter&& inCol) {
+            doneEnter = true;
+            OnTriggerEnterOwnMade(null);
+        }else if(doneEnter && !inCol) {
+            OnTriggerExitOwnMade(null);
+        }
+
+        /*
+        if (flgExit && !flgEnter) {
+            OnTriggerExitOwnMade(enterObject);
+            doneEnter = false;
+            enterObject = null;
+        }
+        flgExit = false;
+        flgEnter = false;*/
     }
 
     private void CalcVertices() {
@@ -253,22 +292,22 @@ public class MultipleTrapezoidPole : MonoBehaviour {
             radiusOut = variables.radiusOut;
             radiusIn = variables.radiusIn;
         }
-        //台形の外側の頂点座標その1
+        //台形の外側左の頂点座標その1
         Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       radiusOut * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
-        //台形の外側の頂点座標その2 
+        //台形の外側右の頂点座標その2 
         Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       radiusOut * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
-        //台形の内側の頂点座標その1
+        //台形の内側左の頂点座標その1
         Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       radiusIn * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
-        //台形の内側の頂点座標その2
+        //台形の内側右の頂点座標その2
         Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       radiusIn * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
                                       0)
@@ -386,11 +425,23 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     public void OnTriggerEnter(Collider other) {
-            OnTriggerEnterOwnMade(other.gameObject);
+       /* if (other.name.Substring(2) == "index_endPointer") {
+            if (!doneEnter) {
+                doneEnter = true;
+                enterObject = other.gameObject;
+                OnTriggerEnterOwnMade(enterObject);
+            } else {
+                flgEnter = true;
+            }
+        }*/
+        //OnTriggerEnterOwnMade(other.gameObject);
     }
 
     public void OnTriggerExit(Collider other) {
-        OnTriggerExitOwnMade(other.gameObject);
+        /*if (other.name.Substring(2) == "index_endPointer") {
+            flgExit = true;
+        }*/
+        //OnTriggerExitOwnMade(other.gameObject);
     }
 
     /* 以下2つはもともとトリガーイベントだったが、
@@ -424,7 +475,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
                     //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
-                    if (!(Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>())))
+                    if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
                         systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
                     Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString() + other.transform.position);
                     //Debug.Log("ng "+other.transform.position);
@@ -486,6 +537,50 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         }
         //Debug.Log(myNum);
         MyText = systemScript.tellKeyText(myNum);
+    }
 
+    //各台形の法線を計算する
+    private void culcNormal(Vector3[] meshVec) {
+        //参考
+        //https://docs.unity3d.com/ja/2018.4/Manual/ComputingNormalPerpendicularVector.html
+        int a, b, c;
+        for (int i = 0; i < variables.trapezoidDivisionNum + 1; i++) {
+            for (int j = 0; j < 6; j++) {
+                a = normalNumber[j * 3 + 0];
+                b = normalNumber[j * 3 + 1];
+                c = normalNumber[j * 3 + 2];
+                normalVector[i, j] = Vector3.Cross(meshVec[16 * i + b] - meshVec[16 * i + a], meshVec[16 * i + c] - meshVec[16 * i + a]);
+            }
+        }
+    }
+
+    //内積を用いて当たり判定を行う
+    private bool fireInnerProductCollider() {
+        bool col = false;
+        for (int i = 0; i < variables.fingers.Length; i++) {
+            for (int j = 0; j < variables.trapezoidDivisionNum + 1; j++) {
+                for (int k = 0; k < 1; k++) {
+                    if (Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position) > 0) {
+                        //内側を向いている
+                        col = true;
+                        //Debug.Log(Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position));
+                        Debug.Log(k);
+                    } else {
+                        //Debug.Log(Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position));
+                        Debug.Log(k);
+                        col = false;
+                        k = 100;
+                    }
+                }
+                Debug.Log(col);
+                if (col) {
+                    Debug.Log("run");
+                    return col;
+                } else {
+                    Debug.Log(col);
+                }
+            }
+        }
+        return col;
     }
 }

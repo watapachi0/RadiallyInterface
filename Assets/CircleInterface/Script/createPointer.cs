@@ -122,7 +122,8 @@ public class createPointer : MonoBehaviour {
          * 左手人差指先
          * 右手人差指先
          */
-
+        variables.fingers[0] = fingers[0, 1, 4];
+        variables.fingers[1] = fingers[1, 1, 4];
     }
 
     void Update() {

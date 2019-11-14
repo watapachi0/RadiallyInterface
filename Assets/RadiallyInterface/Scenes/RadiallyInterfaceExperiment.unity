@@ -188,7 +188,7 @@ MonoBehaviour:
     type: 2}
   SystemCommandRadius: 30
   SystemTextFontSize: 3
-  TrapezoidDivisionNum: 5
+  TrapezoidDivisionNum: 0
 --- !u!4 &72408992
 Transform:
   m_ObjectHideFlags: 0
