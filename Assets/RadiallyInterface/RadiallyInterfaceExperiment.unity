@@ -186,9 +186,9 @@ MonoBehaviour:
   Material_Typing_Other: {fileID: 2100000, guid: 68d0eb36a93e76b49a9f50282483cfee,
     type: 2}
   SystemCommandRadius: 30
-  PinchDistance: 10
+  PinchDistance: 3
   PinchLength: 1
-  SystemTextFontSize: 3
+  SystemTextFontSize: 2.5
   TrapezoidDivisionNum: 29
 --- !u!4 &72408992
 Transform:
@@ -616,7 +616,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1182740606}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.397, z: 0}
+  m_LocalPosition: {x: 0, y: 0.269, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 72408992}
@@ -1420,7 +1420,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2088284368}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.28, z: 0}
+  m_LocalPosition: {x: 0, y: 0.152, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children: []
   m_Father: {fileID: 72408992}

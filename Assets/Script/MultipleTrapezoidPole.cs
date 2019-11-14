@@ -268,7 +268,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         //テキストの更新
         TmeshC.text = MyText;
 
-        inCol = fireInnerProductCollider();
+        if (!variables.isCircleSystem)
+            inCol = fireInnerProductCollider();
+        else if (isActiveObj && meshRenderer.enabled)
+            inCol = fireInnerProductCollider();
+
         if (!doneEnter && inCol) {
             doneEnter = true;
             OnTriggerEnterOwnMade(null);

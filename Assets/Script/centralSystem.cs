@@ -911,17 +911,19 @@ next:
             //
             setText = "";
         } else if (setText == "゛") {
-            int i = 0, j = 0;
+            //本来の仕様は以下であるが、実験のためにコメントアウト
+            /*int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 1, j];
-            }
+            }*/
         } else if (setText == "゜") {
-            int i = 0, j = 0;
+            //本来の仕様は以下であるが、実験のためにコメントアウト
+            /*int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
                 DeleteInputText(1);
                 setText = RetranslationSet[i * 4 + 2, j];
-            }
+            }*/
         } else if (setText == "小") {
             int i = 0, j = 0;
             if (HaveRetranslationText(ref i, ref j)) {
@@ -996,8 +998,8 @@ next:
         }
     }*/
 
-    //RadiallyUI用文字割り当て
-    private void SetKeyRadially() {
+            //RadiallyUI用文字割り当て
+            private void SetKeyRadially() {
         MultipleTrapezoidPole keyObjectITrapezoid;
         for (int i = 1; i <= variables.poleSum; i++) {
             keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPole>();
