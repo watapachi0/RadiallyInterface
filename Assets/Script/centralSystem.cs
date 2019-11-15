@@ -490,10 +490,10 @@ public class centralSystem : MonoBehaviour {
 
                     //副輪の再入力を認るときは以下をコメントアウト
                     stage = 3;
-                    SystemCommandChuring();
-                    InputText += setText;
-                    SendText(InputText);
-                    setText = "";
+                    //SystemCommandChuring();
+                    //InputText += setText;
+                    //SendText(InputText);
+                    //setText = "";
                 }
             } else if (stage == 2) {
                 //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
@@ -538,6 +538,7 @@ public class centralSystem : MonoBehaviour {
             //主輪を戻す
             enableMainCircle(true);
         }
+        subCircles[consonant + 1][1].GetComponent<PolygonalPillar>().MyText = setText;
     }
 
     private void ChuringSystemRadially() {
@@ -572,7 +573,7 @@ public class centralSystem : MonoBehaviour {
             //if (!isTouchMainPillar) {
             //    Debug.Log("run22");
             //触れていないなら（中心へ戻ったわけではない）0キーを有効化
-            polygonalPillar.Enable(true);
+            //polygonalPillar.Enable(true);
             //}
         }
         if (100 <= churingNumber)
@@ -627,10 +628,11 @@ public class centralSystem : MonoBehaviour {
             baseNumber = churingNumber;
             //とりあえず母音を保存
             setText = textSet[( baseNumber - 1 ) * 3 + 1, 0];
+
             //次の状態へ
             stage = 1;
-            //主輪の0キーを無効化
-            polygonalPillar.Enable(false);
+            //0キーを無効化
+            //polygonalPillar.Enable(false);
             if (isGetKeyObjects)
                 SetKeyRadially();
         } else if (( stage == 1 || stage == 2 || stage == 3 ) && churingNumber == 0) {
@@ -657,6 +659,7 @@ public class centralSystem : MonoBehaviour {
                              " churingNumber = " + churingNumber + " ." +
                              " baseNumber = " + baseNumber);
         }
+        polygonalPillar.MyText = setText;
     }
 
     //キーオブジェクトの取得
@@ -998,8 +1001,8 @@ next:
         }
     }*/
 
-            //RadiallyUI用文字割り当て
-            private void SetKeyRadially() {
+    //RadiallyUI用文字割り当て
+    private void SetKeyRadially() {
         MultipleTrapezoidPole keyObjectITrapezoid;
         for (int i = 1; i <= variables.poleSum; i++) {
             keyObjectITrapezoid = keyObjects[i].GetComponent<MultipleTrapezoidPole>();
