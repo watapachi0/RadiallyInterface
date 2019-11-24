@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 //using System.Windows.Forms;
 using UnityEngine;
 using UnityEngine.XR;
@@ -9,30 +9,17 @@ using System;
 public class centralSystem : MonoBehaviour {
 
     private int churingNumber = -100;//各ボタンから得られるカーソル位置情報
-    protected int stage = 0;//インターフェースの処理段階       -100=Error  -2=システムアイコン入力済み  -1=外縁  0=Nutral  1=第一段階選択  2=第二段階選択時  3=入力決定
+    protected int stage = 0;
     protected string InputText = "";
     protected string setText = "";
     private int baseNumber;
     private int consonant;  //子音
 
-    /* システムの形決定 */
-    //protected int poleSum;            //キーの数
-    private int trapezoidDivisionNum = 5;     //キー当たりのメッシュ数　1以上
-    protected float radiusOut = 1f;       //システムの外縁の半径
-    protected float radiusIn = 0.7f;        //ニュートラルエリアの半径
-    protected float poleHeight = 1f;      //システムの厚み
-    //private TextMesh textMesh;
-
     /* キーを取得済みフラグ */
     private bool isGetKeyObjects = false;
-    /* キーオブジェクト */                          //中身はキーを再表示する度に再設定
+    /* キーオブジェクト */
     private GameObject[] keyObjects;
-    //private GameObject[] keySubObjects;         //副輪の精製後の一時保管用
     private GameObject[][] subCircles;           //副輪をまとめて取得
-    //副輪オブジェクト
-    //private GameObject subCircle;
-    //副輪の表示処理が終わった後、LateUpdateにてGameObjectを取得するためのフラグ
-    private bool doLateUpdat = false;
     //主輪の中心キーのスクリプトのインスタンス
     private PolygonalPillar polygonalPillar;
 
@@ -40,16 +27,6 @@ public class centralSystem : MonoBehaviour {
     private bool isTouchMainPillar = false;
     //副輪の中心に触れているか
     private bool isTouchSubPillar = false;
-    //副輪が存在するか
-    //private bool hasSubCircle = false;
-
-    //テスト中
-    //public bool isCircleInterface;
-
-    //中心の多角柱を使用可にしていいか
-    private bool canEnterPolygonalPiller = true;
-    //それぞれの意見
-    private bool[] couldEnterPP;
 
     /*[親のpointNum,set]*/
     protected string[,] textSet;
@@ -68,37 +45,37 @@ public class centralSystem : MonoBehaviour {
      * ：
      */
     //デバッグ用
-    protected readonly string[,] textSetDebug = new string[15, 7] {    { "k", "ka"   , "ki", "ku"  , "ke"   , "ko"   , "Error"},
-                                                                       { "a", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
-                                                                       { "s", "sa"   , "si", "su"  , "se"   , "so"   , "Error"},
-                                                                       { "t", "ta"   , "ti", "tu"  , "te"   , "to"   , "Error"},
-                                                                       { "i", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
-                                                                       { "n", "na"   , "ni", "nu"  , "ne"   , "no"   , "Error"},
-                                                                       { "h", "ha"   , "hi", "hu"  , "he"   , "ho"   , "Error"},
-                                                                       { "u", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
-                                                                       { "m", "ma"   , "mi", "mu"  , "me"   , "mo"   , "Error"},
-                                                                       { "y", "ya"   , "゛", "yu"  , "゜"   , "yo"   , "Error"},
-                                                                       { "e", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
-                                                                       { "r", "ra"   , "ri", "ru"  , "re"   , "ro"   , "Error"},
-                                                                       { "w", "wa"   , "wo", "nn"  , "改/確", "空/変", "Error"},
-                                                                       { "o", "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+    protected readonly string[,] textSetDebug = new string[15, 7] {    { "k" , "ka"   , "ki", "ku"  , "ke"   , "ko"   , "Error"},
+                                                                       { "a" , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "s" , "sa"   , "si", "su"  , "se"   , "so"   , "Error"},
+                                                                       { "t" , "ta"   , "ti", "tu"  , "te"   , "to"   , "Error"},
+                                                                       { "i" , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "n" , "na"   , "ni", "nu"  , "ne"   , "no"   , "Error"},
+                                                                       { "h" , "ha"   , "hi", "hu"  , "he"   , "ho"   , "Error"},
+                                                                       { "u" , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "m" , "ma"   , "mi", "mu"  , "me"   , "mo"   , "Error"},
+                                                                       { "y" , "ya"   , "゛", "yu"  , "゜"   , "yo"   , "Error"},
+                                                                       { "e" , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
+                                                                       { "r" , "ra"   , "ri", "ru"  , "re"   , "ro"   , "Error"},
+                                                                       { "w" , "wa"   , "wo", "nn"  , "改/確", "空/変", "Error"},
+                                                                       { "o" , "--"   , "--", "--"  , "--"   , "--"   , "Error"},
                                                                        { "BS", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
     //ひらがな
-    protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か"   , "き", "く", "け"   , "こ"   , "Error"},
-                                                                       { "あ", "--"   , "--", "--", "--"   , "--"   , "Error"},
-                                                                       { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "Error"},
-                                                                       { "た", "た"   , "ち", "つ", "て"   , "と"   , "Error"},
-                                                                       { "い", "--"   , "--", "--", "--"   , "--"   , "Error"},
-                                                                       { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error"},
-                                                                       { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "Error"},
-                                                                       { "う", "--"   , "--", "--", "--"   , "--"   , "Error"},
-                                                                       { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error"},
-                                                                       { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "Error"},
-                                                                       { "え", "--"   , "--", "--", "--"   , "--"   , "Error"},
-                                                                       { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error"},
-                                                                       { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error"},
-                                                                       { "お", "--"   , "--", "--", "--"   , "--"   , "Error"},
-                                                                       { "BS", "BS"   ,"記/数",  "英", "カナ" , "小"   , "Error"} };
+    protected readonly string[,] textSetHiragana = new string[15, 7] { { "か", "か", "き"   , "く", "け"   , "こ"   , "Error"},
+                                                                       { "あ", "--", "--"   , "--", "--"   , "--"   , "Error"},
+                                                                       { "さ", "さ", "し"   , "す", "せ"   , "そ"   , "Error"},
+                                                                       { "た", "た", "ち"   , "つ", "て"   , "と"   , "Error"},
+                                                                       { "い", "--", "--"   , "--", "--"   , "--"   , "Error"},
+                                                                       { "な", "な", "に"   , "ぬ", "ね"   , "の"   , "Error"},
+                                                                       { "は", "は", "ひ"   , "ふ", "へ"   , "ほ"   , "Error"},
+                                                                       { "う", "--", "--"   , "--", "--"   , "--"   , "Error"},
+                                                                       { "ま", "ま", "み"   , "む", "め"   , "も"   , "Error"},
+                                                                       { "や", "や", "゛"   , "ゆ", "゜"   , "よ"   , "Error"},
+                                                                       { "え", "--", "--"   , "--", "--"   , "--"   , "Error"},
+                                                                       { "ら", "ら", "り"   , "る", "れ"   , "ろ"   , "Error"},
+                                                                       { "わ", "わ", "を"   , "ん", "改/確", "空/変", "Error"},
+                                                                       { "お", "--", "--"   , "--", "--"   , "--"   , "Error"},
+                                                                       { "BS", "BS", "記/数", "英", "カナ" , "小"   , "Error"} };
     //カタカナ
     protected readonly string[,] textSetKatakana = new string[15, 7] { { "カ", "カ"   , "キ", "ク", "ケ"   , "コ"   , "Error"},
                                                                        { "ア", "--"   , "--", "--", "--"   , "--"   , "Error"},
@@ -166,7 +143,7 @@ public class centralSystem : MonoBehaviour {
 
     //Circle用textset
     //デバッグ用
-    protected readonly string[,] textSetDebugCircle = new string[11, 7] {    { "a", "a"    , "i",  "u"   , "e"    , "o"    , "Error"},
+    protected readonly string[,] textSetDebugCircle = new string[11, 7] {    { "a" , "a"    , "i",  "u"   , "e"    , "o"    , "Error"},
                                                                              { "ka", "ka"   , "ki", "ku"  , "ke"   , "ko"   , "Error"},
                                                                              { "sa", "sa"   , "si", "su"  , "se"   , "so"   , "Error"},
                                                                              { "ta", "ta"   , "ti", "tu"  , "te"   , "to"   , "Error"},
@@ -179,11 +156,11 @@ public class centralSystem : MonoBehaviour {
                                                                              { "!?", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
     //ひらがな
     protected readonly string[,] textSetHiraganaCircle = new string[11, 9] { { "あ", "あ"   , "い", "う", "え"   , "お"   , "Error", "Error", "Error"},
-                                                                             { "か", "か"   , "き", "く", "け"   , "こ"   , "゛", "Error", "Error"},
-                                                                             { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "゛", "Error", "Error"},
-                                                                             { "た", "た"   , "ち", "つ", "て"   , "と"   , "゛", "Error", "Error"},
+                                                                             { "か", "か"   , "き", "く", "け"   , "こ"   , "゛"   , "Error", "Error"},
+                                                                             { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "゛"   , "Error", "Error"},
+                                                                             { "た", "た"   , "ち", "つ", "て"   , "と"   , "゛"   , "Error", "Error"},
                                                                              { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error", "Error", "Error"},
-                                                                             { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "゛", "゜", "Error"},
+                                                                             { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "゛"   , "゜"   , "Error"},
                                                                              { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error", "Error", "Error"},
                                                                              { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "小"   , "Error", "Error"},
                                                                              { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error", "Error", "Error"},
@@ -248,64 +225,64 @@ public class centralSystem : MonoBehaviour {
      *      :
      */
     protected readonly string[,] RetranslationSet = new string[48, 6] { { "あ", "い", "う", "え", "お", "Error" },
-                                                                       { ""  , ""  , "ゔ", ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { "ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "Error" },
+                                                                        { ""  , ""  , "ゔ", ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "Error" },
 
-                                                                       { "か", "き", "く", "け", "こ", "Error" },
-                                                                       { "が", "ぎ", "ぐ", "げ", "ご", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "か", "き", "く", "け", "こ", "Error" },
+                                                                        { "が", "ぎ", "ぐ", "げ", "ご", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
 
-                                                                       { "さ", "し", "す", "せ", "そ", "Error" },
-                                                                       { "ざ", "じ", "ず", "ぜ", "ぞ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "さ", "し", "す", "せ", "そ", "Error" },
+                                                                        { "ざ", "じ", "ず", "ぜ", "ぞ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
 
-                                                                       { "た", "ち", "つ", "て", "と", "Error" },
-                                                                       { "だ", "ぢ", "づ", "で", "ど", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , "っ", ""  , ""  , "Error" },
+                                                                        { "た", "ち", "つ", "て", "と", "Error" },
+                                                                        { "だ", "ぢ", "づ", "で", "ど", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , "っ", ""  , ""  , "Error" },
 
-                                                                       { "は", "ひ", "ふ", "へ", "ほ", "Error" },
-                                                                       { "ば", "び", "ぶ", "べ", "ぼ", "Error" },
-                                                                       { "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "は", "ひ", "ふ", "へ", "ほ", "Error" },
+                                                                        { "ば", "び", "ぶ", "べ", "ぼ", "Error" },
+                                                                        { "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
 
-                                                                       { "や", ""  , "ゆ", ""  , "よ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { "ゃ", ""  , "ゅ", ""  , "ょ", "Error" },
+                                                                        { "や", ""  , "ゆ", ""  , "よ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "ゃ", ""  , "ゅ", ""  , "ょ", "Error" },
 
-                                                                       { "ア", "イ", "ウ", "エ", "オ", "Error" },
-                                                                       { ""  , ""  , "ヴ", ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { "ァ", "ィ", "ゥ", "ェ", "ォ", "Error" },
+                                                                        { "ア", "イ", "ウ", "エ", "オ", "Error" },
+                                                                        { ""  , ""  , "ヴ", ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "ァ", "ィ", "ゥ", "ェ", "ォ", "Error" },
 
-                                                                       { "カ", "キ", "ク", "ケ", "コ", "Error" },
-                                                                       { "ガ", "ギ", "グ", "ゲ", "ゴ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { "ヵ", ""  , ""  , "ヶ", ""  , "Error" },
+                                                                        { "カ", "キ", "ク", "ケ", "コ", "Error" },
+                                                                        { "ガ", "ギ", "グ", "ゲ", "ゴ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "ヵ", ""  , ""  , "ヶ", ""  , "Error" },
 
-                                                                       { "サ", "シ", "ス", "セ", "ソ", "Error" },
-                                                                       { "ザ", "ジ", "ズ", "ゼ", "ゾ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "サ", "シ", "ス", "セ", "ソ", "Error" },
+                                                                        { "ザ", "ジ", "ズ", "ゼ", "ゾ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
 
-                                                                       { "タ", "チ", "ツ", "テ", "ト", "Error" },
-                                                                       { "ダ", "ヂ", "ヅ", "デ", "ド", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , "ッ", ""  , ""  , "Error" },
+                                                                        { "タ", "チ", "ツ", "テ", "ト", "Error" },
+                                                                        { "ダ", "ヂ", "ヅ", "デ", "ド", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , "ッ", ""  , ""  , "Error" },
 
-                                                                       { "ハ", "ヒ", "フ", "ヘ", "ホ", "Error" },
-                                                                       { "バ", "ビ", "ブ", "ベ", "ボ", "Error" },
-                                                                       { "パ", "ピ", "プ", "ペ", "ポ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "ハ", "ヒ", "フ", "ヘ", "ホ", "Error" },
+                                                                        { "バ", "ビ", "ブ", "ベ", "ボ", "Error" },
+                                                                        { "パ", "ピ", "プ", "ペ", "ポ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
 
-                                                                       { "ヤ", ""  , "ユ", ""  , "ヨ", "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { ""  , ""  , ""  , ""  , ""  , "Error" },
-                                                                       { "ャ", ""  , "ュ", ""  , "ョ", "Error" } };
+                                                                        { "ヤ", ""  , "ユ", ""  , "ヨ", "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { ""  , ""  , ""  , ""  , ""  , "Error" },
+                                                                        { "ャ", ""  , "ュ", ""  , "ョ", "Error" } };
 
     private bool[] useSystemCommand = new bool[10] { true, true, true, true, true, true, true, true, true, true };
     protected readonly string[] SystemCommandName = new string[10] { "改/確", "空/変", "記/数", "BS", "カナ", "小", "英", "かな", "Ａ", "ａ" };
@@ -1099,6 +1076,7 @@ next:
         }
     }
 
+    /*
     //各キーから多角柱のEnterイベントを起こしていいか意見をもらう
     public void PolygonalPillerEnterEvent(bool opinion) {
         if (opinion == false) {
@@ -1112,7 +1090,7 @@ next:
             }
         }
 
-    }
+    }*/
 
     //現在のtextSetの任意の行の"Error"が出るまでのアイテム数を数える
     public int GetTextSetItemNum(int dan) {

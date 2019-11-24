@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
-using System;
+//using System;
 using System.IO;
 
 public class logSave : MonoBehaviour {
@@ -26,6 +26,7 @@ public class logSave : MonoBehaviour {
         } else {
             systemName = "Radially";
         }
+
         /* プラットホーム依存コンパイル */
 # if UNITY_EDITOR
         filePath += "/log" + nowdate + " " + systemName + ".txt";
@@ -56,25 +57,25 @@ public class logSave : MonoBehaviour {
     }
 
     private string NowTime() {
-        string dateTimeStr = System.DateTime.Now.Hour.ToString() + "-"
-                           + System.DateTime.Now.Minute.ToString() + "-"
+        string dateTimeStr = System.DateTime.Now.Hour  .ToString()  + "-"
+                           + System.DateTime.Now.Minute.ToString()  + "-"
                            + System.DateTime.Now.Second.ToString();
         return dateTimeStr;
     }
 
     private string Nowdate() {
-        string dateTimeStr = System.DateTime.Now.Year.ToString() + "-"
-                           + System.DateTime.Now.Month.ToString() + "-"
-                           + System.DateTime.Now.Day.ToString() + " "
-                           + System.DateTime.Now.Hour.ToString() + "-"
-                           + System.DateTime.Now.Minute.ToString() + "-"
+        string dateTimeStr = System.DateTime.Now.Year  .ToString()  + "-"
+                           + System.DateTime.Now.Month .ToString()  + "-"
+                           + System.DateTime.Now.Day   .ToString()  + " "
+                           + System.DateTime.Now.Hour  .ToString()  + "-"
+                           + System.DateTime.Now.Minute.ToString()  + "-"
                            + System.DateTime.Now.Second.ToString();
         return dateTimeStr;
     }
 
     private float NowTimeNum() {
-        float dateTimeFlo = System.DateTime.Now.Hour * 3600
-                          + System.DateTime.Now.Minute * 60
+        float dateTimeFlo = System.DateTime.Now.Hour        * 3600
+                          + System.DateTime.Now.Minute      * 60
                           + System.DateTime.Now.Second
                           + System.DateTime.Now.Millisecond * 0.001f;
         return dateTimeFlo;

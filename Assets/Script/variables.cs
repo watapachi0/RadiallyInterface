@@ -1,19 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class variables : MonoBehaviour {
-
-    //現在の文字種
-    //public static int CharacterType { get; set; }
-    /* int  type
-     * -1   デバッグ用
-     * 0    標準。表示なし
-     * 1    ひらがな
-     * 2    アルファベット
-     * 3    数字記号
-     */
 
     //多角形部分の半径・円環の内側の半径
     public static float radiusIn { get; set; }
@@ -86,9 +76,6 @@ public class variables : MonoBehaviour {
 
     //そのシステムアイコンを使えるようにするか
     public static bool[] useSystemCommand { get; set; }
-
-    //システムアイコンの座標
-    //public static Vector3[] systemCommandVector { get; set; }
 
     //システムアイコンの配置される円の半径
     public static float systemCommandRadius { get; set; }
@@ -172,10 +159,7 @@ public class variables : MonoBehaviour {
 
     [SerializeField, Header("円環の縁取りのずらし量(単位cm)")]
     private float LineShiftSlightly;
-
-    //[SerializeField, Header("システムのキーの数（規定値 5 ）"), Tooltip("変更する際はスクリプトの見直すが必要")]
-    //private int PoleSum;
-
+    
     [SerializeField, Header("円環内部の多角形のマテリアル")]
     private Material Material_PolygonalPillar;
 
@@ -237,8 +221,6 @@ public class variables : MonoBehaviour {
     private string LogDirectory;
 
     private void Awake() {
-        //文字種初期化
-        //CharacterType = 0;
         //内径
         radiusIn = RadiusIn / 100;
         //外形
