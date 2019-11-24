@@ -523,6 +523,7 @@ public class centralSystem : MonoBehaviour {
             //表示
             InputText += setText;
             SendText(InputText);
+            variables.logInstance.LogSaving("key down " + InputText);
             //準備用の変数を初期化
             setText = "";
             //中心へ戻った
@@ -585,7 +586,7 @@ public class centralSystem : MonoBehaviour {
                          */
         if (churingNumber < 0) {
             //churingNumberがマイナス＝システムキーに触れたとき
-            Debug.Log("run");
+            //Debug.Log("run");
             //数値を反転し、システムキーの名前を参照する
             setText = SystemCommandName[-churingNumber];
             stage = 3;
@@ -644,6 +645,7 @@ public class centralSystem : MonoBehaviour {
             //表示
             InputText += setText;
             SendText(InputText);
+            variables.logInstance.LogSaving("key down " + InputText);
             //準備用の変数を初期化
             setText = "";
             //中心へ戻った

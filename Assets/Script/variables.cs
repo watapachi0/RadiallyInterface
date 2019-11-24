@@ -145,6 +145,12 @@ public class variables : MonoBehaviour {
      * ring2 消す
      */
 
+    //ログ出力用インスタンス
+    public static logSave logInstance { get; set; }
+
+    //ログ出力ディレクトリ
+    public static string logDirectory { get; set; }
+
     /* Inspector用 */
     [SerializeField, Header("円環の内径(単位cm)")]
     private float RadiusIn;
@@ -224,6 +230,11 @@ public class variables : MonoBehaviour {
     [SerializeField, Header("キーの分割数"), Tooltip("キーを表示するための台形のポリゴンを任意の回数分割する"), Range(0, 29)]//MeshColliderのConvexが三角形ポリゴン255枚以下の必要があるため
     private int TrapezoidDivisionNum;
 
+    [SerializeField, Header("ログ出力用インスタンス")]
+    private logSave LogInstance;
+
+    [SerializeField, Header("ログ出力ディレクトリ"), Tooltip("絶対パスにて入力。最後に￥は不要。")]
+    private string LogDirectory;
 
     private void Awake() {
         //文字種初期化
@@ -294,5 +305,11 @@ public class variables : MonoBehaviour {
         } else {
             isCircleSystem = false;
         }
+
+        //ログ出力用
+        logInstance = LogInstance;
+
+        //ログ出力ディレクトリ
+        logDirectory = LogDirectory;
     }
 }
