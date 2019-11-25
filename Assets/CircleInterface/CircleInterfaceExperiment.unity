@@ -178,7 +178,7 @@ MonoBehaviour:
     type: 2}
   Material_LineRenderer_Nonactive: {fileID: 2100000, guid: 39ef95f0a54fff34596f665a8ddf4e1b,
     type: 2}
-  Material_SystemText: {fileID: 2100000, guid: 66782254237b3d041b79716d07520f7b, type: 2}
+  Material_SystemText: {fileID: 2100000, guid: 8f9a2cd7ed47af94c9ec1ce7e40f7da6, type: 2}
   Material_Text: {fileID: 2100000, guid: 6f38af8635d956743897f9de98285afc, type: 2}
   Material_Text_Nonactive: {fileID: 2100000, guid: cf52b25735c0c924fb96dc21bbe1c815,
     type: 2}
