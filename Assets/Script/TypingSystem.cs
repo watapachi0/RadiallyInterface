@@ -51,8 +51,8 @@ public class TypingSystem : MonoBehaviour {
         }
         /* とりあえず　終わり */
         else {
-            displayInputText();
             displayTaskText();
+            displayInputText();
         }
     }
 
@@ -136,9 +136,38 @@ public class TypingSystem : MonoBehaviour {
         string TextError = "";
         //できるている範囲から、キューの当該単語長の中で
         for (int i = TextClear.Length; i < taskIndexQueue[currentTaskNum].Length; i++) {
+
+            //エラー文字を1文字に保つ
+            if (false) {
+                //間違えた文字をそのまま表示するならtrue
+                //BSなしで、間違えた文字を次の文字で上書きするならfalse
+            } else if (i + 1 == taskIndexQueue[currentTaskNum].Length && i == TextClear.Length && inputText.Length > i + 1) {
+                //最後の一文字で＆＆そこまで正解（最後の一文字ミス）＆＆タスクより長い文字列
+                inputText = inputText.Substring(0, i) + inputText[i + 1];
+                centralSystem.EditInputText(inputText);
+                displayTaskText();
+                return;
+            } else if (i > TextClear.Length && i < inputText.Length) {
+                //エラー文字２文字目について
+                inputText = inputText.Substring(0, i - 1) + inputText[i];
+                centralSystem.EditInputText(inputText);
+                displayTaskText();
+                return;
+            } else if (i == TextClear.Length && i + 1 < inputText.Length) {
+                //エラー文字1文字目について
+                if (taskIndexQueue[currentTaskNum][i] == inputText[i + 1]) {
+                    //入力のテキストの次文字、とタスク文字とが同じなら
+                    inputText = inputText.Substring(0, i) + inputText[i + 1];
+                    centralSystem.EditInputText(inputText);
+                    displayTaskText();
+                    return;
+                }
+            }
+
             //入力済み単語長を超えていればbreak
-            if (i >= inputText.Length)
+            if (inputText.Length <= i)
                 break;
+
             //なければそのままスルー
             TextError += taskIndexQueue[currentTaskNum][i];
         }
@@ -159,7 +188,7 @@ public class TypingSystem : MonoBehaviour {
         TaskTextObject.text += TextOther + "</color>";
     }
 
-    //インプット情報を保存する→そのうちタスクテキストの縁ありで表示する仕様にする
+    //インプット情報を保存する→タスクテキストの縁ありで表示
     void displayInputText() {
         InputTextObject.text = inputText;
     }
