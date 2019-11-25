@@ -294,23 +294,23 @@ public class MultipleTrapezoidPole : MonoBehaviour {
             radiusIn = variables.radiusIn;
         }
         //台形の外側左の頂点座標その1
-        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex1 = new Vector3(radiusOut * Mathf.Cos(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2) * -1,
+                                      radiusOut * Mathf.Sin(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
         //台形の外側右の頂点座標その2 
-        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusOut * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex2 = new Vector3(radiusOut * Mathf.Cos(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2) * -1,
+                                      radiusOut * Mathf.Sin(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
         //台形の内側左の頂点座標その1
-        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex3 = new Vector3(radiusIn * Mathf.Cos(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2) * -1,
+                                      radiusIn * Mathf.Sin(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 0 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
         //台形の内側右の頂点座標その2
-        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Sin(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
-                                      radiusIn * Mathf.Cos(( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) * Mathf.PI * 2),
+        Vector3 vertex4 = new Vector3(radiusIn * Mathf.Cos(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2) * -1,
+                                      radiusIn * Mathf.Sin(( ( (float)poleNum * ( variables.trapezoidDivisionNum + 1 ) + DivisionNum + 1 ) / (float)( poleSum * ( variables.trapezoidDivisionNum + 1 ) ) - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2),
                                       0)
                                       + variables.createSourcePosition;
         //全頂点数8にそれぞれ座標が2つずつある
