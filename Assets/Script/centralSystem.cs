@@ -29,7 +29,11 @@ public class centralSystem : MonoBehaviour {
     private bool isTouchSubPillar = false;
 
     /*[親のpointNum,set]*/
-    protected string[,] textSet;
+    public string[,] textSet { get; private set; }
+
+    //50key用接触済みフラグ
+    private bool touchFlg = false;
+    private int? touchNum = null;
 
     //実験用のタイピングスクリプト
     private TypingSystem typingSystem;
@@ -215,6 +219,15 @@ public class centralSystem : MonoBehaviour {
                                                                              { "9"     , "9" , "--"  , "--", "改/確", "空/変", "Error"},
                                                                              { "0"     , "0" , "かな", "BS", "英"   , "カナ" , "Error"} };
 
+    //50音システム
+    //ひらがな
+    protected readonly string[,] textSetHiragana50Key = new string[5, 12] { {""     , "BS"   , "わ", "ら", "や", "ま", "は", "な", "た", "さ", "か", "あ" },
+                                                                            {"カナ" , ""     , "小", "り", "゛", "み", "ひ", "に", "ち", "し", "き", "い" },
+                                                                            {"英"   , ""     , "を", "る", "ゆ", "む", "ふ", "ぬ", "つ", "す", "く", "う" },
+                                                                            {"記/数", "改/確", ""  , "れ", "゜", "め", "へ", "ね", "て", "せ", "け", "え" },
+                                                                            {""     , "空/変", "ん", "ろ", "よ", "も", "ほ", "の", "と", "そ", "こ", "お" },};
+
+
     //濁点、半濁点、小文字対応
     /* あ行の検索index   あ   い   う   …
      * あ行の濁点文字    あ゛ い゛ う゛ …
@@ -307,8 +320,12 @@ public class centralSystem : MonoBehaviour {
             textSet = textSetHiraganaCircle;
             variables.poleSum = textSet.GetLength(0);
         } else {
-            textSet = textSetHiragana;
-            variables.poleSum = textSet.GetLength(0) / 3;
+            if (variables.is50Kana) {
+                textSet = textSetHiragana50Key;
+            } else {
+                textSet = textSetHiragana;
+                variables.poleSum = textSet.GetLength(0) / 3;
+            }
         }
 
         //XRであるかどうか
@@ -347,8 +364,12 @@ public class centralSystem : MonoBehaviour {
         churingNumber = nextNum;
         if (variables.isCircleSystem)
             ChuringSystemCircle();
-        else
-            ChuringSystemRadially();
+        else {
+            if (variables.is50Kana)
+                ChuringSystem50Key();
+            else
+                ChuringSystemRadially();
+        }
     }
 
     private void ChuringSystemCircle() {
@@ -639,6 +660,36 @@ public class centralSystem : MonoBehaviour {
                              " baseNumber = " + baseNumber);
         }
         polygonalPillar.MyText = setText;
+    }
+
+    private void ChuringSystem50Key() {
+        if (churingNumber < 1000 && touchNum == null) {
+            //キーに初めて触った
+            touchFlg = true;
+            touchNum = churingNumber;
+        } else if (churingNumber < 2000) {
+            //キーの横から指が出た
+            touchFlg = false;
+        } else if (churingNumber < 3000 &&!touchFlg) {
+            //キーの横から出た指がほかのところで手前に戻った
+            touchNum = null;
+        } else {
+            //キーが手前に出た（ChuringNumber = 2000～2999）
+            churingNumber -= 2000;
+            setText = textSet[churingNumber / 100, churingNumber % 100];
+            //まず、特殊なコマンドは実行する
+            SystemCommandChuring();
+            //表示用にわかりやすい名前に書き換える
+            //ConvertToSystemCommand();
+            //表示
+            InputText += setText;
+            SendText(InputText);
+            variables.logInstance.LogSaving("key down " + InputText);
+            //準備用の変数を初期化
+            setText = "";
+            touchFlg = false;
+            touchNum = null;
+        }
     }
 
     //キーオブジェクトの取得
@@ -1067,12 +1118,16 @@ next:
 
     //CircleUI用
     public string tellKeyText(int keyNumber) {
-        if (keyNumber < 100) {
-            //主輪用
-            return textSet[keyNumber - 1, 0];
+        if (variables.is50Kana) {
+            return textSet[keyNumber / 100, keyNumber % 100];
         } else {
-            //副輪用
-            return textSet[(int)( keyNumber / 100 ) - 1, keyNumber % 100];
+            if (keyNumber < 100) {
+                //主輪用
+                return textSet[keyNumber - 1, 0];
+            } else {
+                //副輪用
+                return textSet[(int)( keyNumber / 100 ) - 1, keyNumber % 100];
+            }
         }
     }
 

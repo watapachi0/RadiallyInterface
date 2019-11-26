@@ -146,7 +146,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 //メッシュリセット
                 meshFirst.Clear();
                 //メッシュへの頂点情報の追加
-                meshFirst.vertices = EndVertex;
+                meshFirst.vertices = StartVertex;
                 //メッシュへの面情報の追加
                 meshFirst.triangles = EndFace;
 
@@ -354,10 +354,10 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         //端面用
         if (DivisionNum == 0) {
             //最初の端面
-            EndVertex[0] = vertex1;
-            EndVertex[1] = new Vector3(vertex1.x, vertex1.y, vertex1.z + variables.poleHeight);
-            EndVertex[2] = vertex3;
-            EndVertex[3] = new Vector3(vertex3.x, vertex3.y, vertex3.z + variables.poleHeight);
+            StartVertex[0] = vertex1;
+            StartVertex[1] = new Vector3(vertex1.x, vertex1.y, vertex1.z + variables.poleHeight);
+            StartVertex[2] = vertex3;
+            StartVertex[3] = new Vector3(vertex3.x, vertex3.y, vertex3.z + variables.poleHeight);
         } else if (DivisionNum == variables.trapezoidDivisionNum) {
             //最後の端面
             EndVertex[0] = new Vector3(vertex2.x, vertex2.y, vertex2.z + variables.poleHeight);
@@ -568,6 +568,13 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         for (int i = 0; i < variables.fingers.Length; i++) {
             for (int j = 0; j < variables.trapezoidDivisionNum + 1; j++) {
                 for (int k = 0; k < 6; k++) {
+                    if (variables.isLeftHandLastTouch) {
+                        if (i == 1)
+                            break;
+                    } else {
+                        if (i == 0)
+                            break;
+                    }
                     if (Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position - ( normalBasicVec[j, k] + transform.position )) > 0) {
                         //内側を向いている
                         col = true;

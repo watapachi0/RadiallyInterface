@@ -300,6 +300,13 @@ public class PolygonalPillar : MonoBehaviour {
         for (int i = 0; i < variables.fingers.Length; i++) {
             for (int j = 0; j < (variables.trapezoidDivisionNum + 1)*variables.poleSum; j++) {
                 for (int k = 0; k < 1; k++) {
+                    if (variables.isLeftHandLastTouch) {
+                        if (i == 1)
+                            break;
+                    } else {
+                        if (i == 0)
+                            break;
+                    }
                     if (Vector3.Dot(normalVector[j, k], variables.fingers[i].transform.position - ( normalBasicVec[j, k] + transform.position )) > 0) {
                         //内側を向いている
                         col = true;

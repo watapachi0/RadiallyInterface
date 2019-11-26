@@ -138,6 +138,24 @@ public class variables : MonoBehaviour {
     //ログ出力ディレクトリ
     public static string logDirectory { get; set; }
 
+    //50音システムであるか？
+    public static bool is50Kana { get; set; }
+
+    //50音システムにおけるキーの横方向間隔
+    public static float cubesIntervalX { get; set; }
+
+    //50音システムにおけるキーの縦方向間隔
+    public static float cubesIntervalY { get; set; }
+
+    //50音システムのキーの横の長さ
+    public static float cubeWidth { get; set; }
+
+    //50音システムのキーの縦の長さ
+    public static float cubeVertical { get; set; }
+
+    //二手択一用
+    public static bool isLeftHandLastTouch { get; set; }
+
     /* Inspector用 */
     [SerializeField, Header("円環の内径(単位cm)")]
     private float RadiusIn;
@@ -159,7 +177,7 @@ public class variables : MonoBehaviour {
 
     [SerializeField, Header("円環の縁取りのずらし量(単位cm)")]
     private float LineShiftSlightly;
-    
+
     [SerializeField, Header("円環内部の多角形のマテリアル")]
     private Material Material_PolygonalPillar;
 
@@ -219,6 +237,18 @@ public class variables : MonoBehaviour {
 
     [SerializeField, Header("ログ出力ディレクトリ"), Tooltip("絶対パスにて入力。最後に￥は不要。")]
     private string LogDirectory;
+
+    [SerializeField, Header("50音システムにおけるキーの横方向間隔(単位cm)")]
+    private float CubesIntervalX;
+
+    [SerializeField, Header("50音システムにおけるキーの縦方向間隔(単位cm)")]
+    private float CubesIntervalY;
+
+    [SerializeField, Header("50音システムのキーの横の長さ(単位cm)")]
+    private float CubeWidth;
+
+    [SerializeField, Header("/50音システムのキーの縦の長さ(単位cm)")]
+    private float CubeVertical;
 
     private void Awake() {
         //内径
@@ -287,11 +317,23 @@ public class variables : MonoBehaviour {
         } else {
             isCircleSystem = false;
         }
+        if (sceneName.Substring(0, 6) == "50Kana") {
+            is50Kana = true;
+        } else {
+            is50Kana = false;
+        }
 
         //ログ出力用
         logInstance = LogInstance;
 
         //ログ出力ディレクトリ
         logDirectory = LogDirectory;
+
+        //50音システムの各値初期化
+        cubesIntervalX = CubesIntervalX / 100;
+        cubesIntervalY = CubesIntervalY / 100;
+        cubeWidth = CubeWidth / 100;
+        cubeVertical = CubeVertical / 100;
+
     }
 }

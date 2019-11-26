@@ -61,6 +61,7 @@ public class ObjTransRota : MonoBehaviour {
         if (isLPinch) {
             //L人差し指位置にシステムを配置
             targetObject.transform.position = LIndex.transform.position + new Vector3(0, 0, variables.pinchDistance);
+            variables.isLeftHandLastTouch = true;
             /*
             //R人差し指の座標を保存
             if (indexBaseObject == null) {
@@ -75,6 +76,7 @@ public class ObjTransRota : MonoBehaviour {
         } else if (isRPinch) {
             //R人差し指位置にシステムを配置
             targetObject.transform.position = RIndex.transform.position + new Vector3(0, 0, variables.pinchDistance);
+            variables.isLeftHandLastTouch = false;
             /*
             //L人差し指の座標を保存
             if (indexBaseObject == null) {
