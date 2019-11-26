@@ -347,7 +347,11 @@ public class centralSystem : MonoBehaviour {
         //textMesh = GameObject.Find("InputText").GetComponent<TextMesh>();
         //XR用設定
         if (variables.isOnXR) {
-            GameObject.Find("Main CameraNonVR").SetActive(false);
+            try {
+                GameObject.Find("Main CameraNonVR").SetActive(false);
+            } catch {
+
+            }
         }
     }
 

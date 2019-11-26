@@ -195,6 +195,10 @@ MonoBehaviour:
   TrapezoidDivisionNum: 5
   LogInstance: {fileID: 72408999}
   LogDirectory: C:/logSave
+  CubesIntervalX: 0
+  CubesIntervalY: 0
+  CubeWidth: 0
+  CubeVertical: 0
 --- !u!4 &72408992
 Transform:
   m_ObjectHideFlags: 0
@@ -563,7 +567,7 @@ PrefabInstance:
     - target: {fileID: 2413695773881596377, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
         type: 3}
       propertyPath: m_TargetDisplay
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2413695773881596377, guid: c32219dd1f4f99f4b83eef4b3aae01ba,
         type: 3}
@@ -1640,7 +1644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &698978055
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1683,7 +1687,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1

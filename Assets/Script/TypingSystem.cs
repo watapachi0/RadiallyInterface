@@ -59,9 +59,14 @@ public class TypingSystem : MonoBehaviour {
     //一覧のテキストファイルから読み込んで変数に格納
     void taskReady() {
         //wordファイルの場所
+# if UNITY_EDITOR
         string filePath = Application.dataPath + "/word.txt";
+#elif UNITY_STANDALONE_WIN
+        string filePath = Application.dataPath + "/../word.txt";
+# endif
+        FileInfo fi = new FileInfo(filePath);
         //stream reader 初期化
-        StreamReader streamReader = new StreamReader(filePath, true);
+        StreamReader streamReader = new StreamReader(fi.OpenRead(), true);
         //ファイルの行数取得
         for (taskNum = 0; !streamReader.EndOfStream; taskNum++)
             streamReader.ReadLine();
