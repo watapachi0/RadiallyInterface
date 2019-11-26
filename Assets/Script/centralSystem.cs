@@ -160,13 +160,13 @@ public class centralSystem : MonoBehaviour {
                                                                              { "!?", "記/数", "BS", "かな", "カナ" , "小"   , "Error"} };
     //ひらがな
     protected readonly string[,] textSetHiraganaCircle = new string[11, 9] { { "あ", "あ"   , "い", "う", "え"   , "お"   , "Error", "Error", "Error"},
-                                                                             { "か", "か"   , "き", "く", "け"   , "こ"   , "゛"   , "Error", "Error"},
-                                                                             { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "゛"   , "Error", "Error"},
-                                                                             { "た", "た"   , "ち", "つ", "て"   , "と"   , "゛"   , "Error", "Error"},
+                                                                             { "か", "か"   , "き", "く", "け"   , "こ"   , "Error"   , "Error", "Error"},
+                                                                             { "さ", "さ"   , "し", "す", "せ"   , "そ"   , "Error"   , "Error", "Error"},
+                                                                             { "た", "た"   , "ち", "つ", "て"   , "と"   , "Error"   , "Error", "Error"},
                                                                              { "な", "な"   , "に", "ぬ", "ね"   , "の"   , "Error", "Error", "Error"},
-                                                                             { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "゛"   , "゜"   , "Error"},
+                                                                             { "は", "は"   , "ひ", "ふ", "へ"   , "ほ"   , "Error"   ,"Error"   , "Error"},
                                                                              { "ま", "ま"   , "み", "む", "め"   , "も"   , "Error", "Error", "Error"},
-                                                                             { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "小"   , "Error", "Error"},
+                                                                             { "や", "や"   , "゛", "ゆ", "゜"   , "よ"   , "Error"   , "Error", "Error"},
                                                                              { "ら", "ら"   , "り", "る", "れ"   , "ろ"   , "Error", "Error", "Error"},
                                                                              { "わ", "わ"   , "を", "ん", "改/確", "空/変", "Error", "Error", "Error"},
                                                                              { "BS", "記/数", "英", "BS", "カナ" , "小"   , "Error", "Error", "Error"} };
@@ -221,11 +221,11 @@ public class centralSystem : MonoBehaviour {
 
     //50音システム
     //ひらがな
-    protected readonly string[,] textSetHiragana50Key = new string[5, 12] { {""     , "BS"   , "わ", "ら", "や", "ま", "は", "な", "た", "さ", "か", "あ" },
-                                                                            {"カナ" , ""     , "小", "り", "゛", "み", "ひ", "に", "ち", "し", "き", "い" },
-                                                                            {"英"   , ""     , "を", "る", "ゆ", "む", "ふ", "ぬ", "つ", "す", "く", "う" },
-                                                                            {"記/数", "改/確", ""  , "れ", "゜", "め", "へ", "ね", "て", "せ", "け", "え" },
-                                                                            {""     , "空/変", "ん", "ろ", "よ", "も", "ほ", "の", "と", "そ", "こ", "お" },};
+    protected readonly string[,] textSetHiragana50Key = new string[5, 12] { {""     , "BS", "わ", "ら", "や", "ま", "は", "な", "た", "さ", "か", "あ" },
+                                                                            {"カナ" , "改", "小", "り", "゛", "み", "ひ", "に", "ち", "し", "き", "い" },
+                                                                            {"英"   , "変", "を", "る", "ゆ", "む", "ふ", "ぬ", "つ", "す", "く", "う" },
+                                                                            {"記"   , "確", ""  , "れ", "゜", "め", "へ", "ね", "て", "せ", "け", "え" },
+                                                                            {"数"   , "空", "ん", "ろ", "よ", "も", "ほ", "の", "と", "そ", "こ", "お" },};
 
 
     //濁点、半濁点、小文字対応
@@ -492,6 +492,18 @@ public class centralSystem : MonoBehaviour {
                     //InputText += setText;
                     //SendText(InputText);
                     //setText = "";
+
+                    //入力を副輪で完結させる
+                    SystemCommandChuring();
+                    //表示用にわかりやすい名前に書き換える
+                    //ConvertToSystemCommand();
+                    //表示
+                    InputText += setText;
+                    SendText(InputText);
+                    variables.logInstance.LogSaving("key down " + InputText);
+                    //準備用の変数を初期化
+                    setText = "";
+
                 }
             } else if (stage == 2) {
                 //子音決定済み母音選択状態で、入力キー値が1～キー数の間の場合実行
@@ -515,15 +527,15 @@ public class centralSystem : MonoBehaviour {
         //もともと中心にいたわけではなく、中心へ戻った場合
         if (churingNumber == 0) {
             //まず、特殊なコマンドは実行する
-            SystemCommandChuring();
+            //SystemCommandChuring();
             //表示用にわかりやすい名前に書き換える
             //ConvertToSystemCommand();
             //表示
-            InputText += setText;
-            SendText(InputText);
-            variables.logInstance.LogSaving("key down " + InputText);
+            //InputText += setText;
+            //SendText(InputText);
+            //variables.logInstance.LogSaving("key down " + InputText);
             //準備用の変数を初期化
-            setText = "";
+            //setText = "";
             //中心へ戻った
             stage = 0;
             //各テキストの初期化

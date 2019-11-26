@@ -162,7 +162,7 @@ MonoBehaviour:
   RadiusOut: 8
   RadiusIn_subCircle: 4
   RadiusOut_subCircle: 6
-  PoleHeight: 10
+  PoleHeight: 4
   LineRendererWidth: 0.5
   LineShiftSlightly: 0.2
   Material_PolygonalPillar: {fileID: 2100000, guid: b2e764a0577f9074a8ea73c77d5d6a61,
@@ -192,14 +192,14 @@ MonoBehaviour:
   SystemCommandRadius: 30
   PinchDistance: 3
   PinchLength: 1
-  SystemTextFontSize: 3
+  SystemTextFontSize: 2
   TrapezoidDivisionNum: 5
   LogInstance: {fileID: 72408999}
   LogDirectory: C:/logSave
-  CubesIntervalX: 1
-  CubesIntervalY: 1
-  CubeWidth: 2
-  CubeVertical: 2
+  CubesIntervalX: 0.5
+  CubesIntervalY: 0.5
+  CubeWidth: 3
+  CubeVertical: 3
 --- !u!4 &72408992
 Transform:
   m_ObjectHideFlags: 0
