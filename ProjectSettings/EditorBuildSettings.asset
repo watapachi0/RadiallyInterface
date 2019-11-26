@@ -5,7 +5,25 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/CircleInterface/CircleInterfaceExperiment.unity
+    guid: 0697c95c02807174eb63b8ef180af783
   - enabled: 1
+    path: Assets/50Kana/50Kana.unity
+    guid: 814f79b77e4b074489e85610c29299b3
+  - enabled: 0
+    path: Assets/RadiallyInterface/RadiallyInterfaceExperiment.unity
+    guid: a5a71618e749c1945bfc31ce2466072a
+  - enabled: 0
+    path: Assets/TypingSoftware/test.unity
+    guid: e41e13796554df64a99eb44167cd4086
+  - enabled: 0
+    path: Assets/CircleInterface/CircleInterface.unity
+    guid: 4ba648660e603cc4f855c1138c289cb6
+  - enabled: 0
+    path: Assets/RadiallyInterface/RadiallyInterface.unity
+    guid: a80eafa8fe770844c8160505615b0c03
+  - enabled: 0
     path: Assets/RadiallyInterface/TrianglePole.unity
     guid: d788ba706346ee74ab8f8973f97e464f
   m_configObjects: {}
