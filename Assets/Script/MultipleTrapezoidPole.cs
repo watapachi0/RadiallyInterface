@@ -459,11 +459,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 ).ToString());
                 } else {
                     // if (Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()))
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name));
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) ).ToString());
                     //Debug.Log("ok " + other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Touch;
@@ -477,11 +477,11 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                 if (variables.isCircleSystem && isSubRingPole) {
                     //副輪のときは+100した名前を送る
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 100 + 1000);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 100 + 1000 ).ToString());
                 } else {
                     //if (!( Physics.OverlapSphere(other.transform.position, 0.01f).Any(col => col == GetComponent<Collider>()) ))
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 1000);
-                    Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
+                    //Debug.Log("i am " + ( int.Parse(gameObject.name) + 1000 ).ToString());
                     //Debug.Log("ng "+other.transform.position);
                 }
                 meshRenderer.material = variables.material_TrapezoidPole_Normal;

@@ -151,12 +151,16 @@ public class TypingSystem : MonoBehaviour {
                 inputText = inputText.Substring(0, i) + inputText[i + 1];
                 centralSystem.EditInputText(inputText);
                 displayTaskText();
+                variables.logInstance.LogSaving("delete",true);
+                variables.logInstance.LogSaving("now string\t" + inputText, false);
                 return;
             } else if (i > TextClear.Length && i < inputText.Length) {
                 //エラー文字２文字目について
                 inputText = inputText.Substring(0, i - 1) + inputText[i];
                 centralSystem.EditInputText(inputText);
                 displayTaskText();
+                variables.logInstance.LogSaving("delete", true);
+                variables.logInstance.LogSaving("now string\t" + inputText, false);
                 return;
             } else if (i == TextClear.Length && i + 1 < inputText.Length) {
                 //エラー文字1文字目について
@@ -165,6 +169,8 @@ public class TypingSystem : MonoBehaviour {
                     inputText = inputText.Substring(0, i) + inputText[i + 1];
                     centralSystem.EditInputText(inputText);
                     displayTaskText();
+                    variables.logInstance.LogSaving("delete", true);
+                    variables.logInstance.LogSaving("now string\t" + inputText, false);
                     return;
                 }
             }
