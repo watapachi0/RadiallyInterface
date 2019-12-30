@@ -683,17 +683,6 @@ public class centralSystem : MonoBehaviour {
     private void ChuringSystem50Key() {
         if (churingNumber < 1000 && touchNum == null) {
             //キーに初めて触った
-            touchFlg = true;
-            touchNum = churingNumber;
-        } else if (churingNumber < 2000) {
-            //キーの横から指が出た
-            touchFlg = false;
-        } else if (churingNumber < 3000 &&!touchFlg) {
-            //キーの横から出た指がほかのところで手前に戻った
-            touchNum = null;
-        } else {
-            //キーが手前に出た（ChuringNumber = 2000～2999）
-            churingNumber -= 2000;
             setText = textSet[churingNumber / 100, churingNumber % 100];
             //まず、特殊なコマンドは実行する
             SystemCommandChuring();
@@ -708,6 +697,10 @@ public class centralSystem : MonoBehaviour {
             setText = "";
             touchFlg = false;
             touchNum = null;
+        } else if (churingNumber < 3000) {
+
+        } else {
+          
         }
     }
 

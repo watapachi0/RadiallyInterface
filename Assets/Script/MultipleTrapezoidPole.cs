@@ -5,20 +5,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
- * 
+ *
  * オブジェクトの描画と各種コンポーネントのアタッチのみ行う
  * 台形
- * 
+ *
  * TrapezoidPoleC.csから拡張した内容
  * 任意の数に台形を分割し、一つのメッシュとして用いる
  * 台形
  * 台形分割は21分割以下にすること（MeshRendererの都合で256ポリゴン以下である必要がある。Cube12面*21＜256）
  * //　　　　台形分割は31分割以下にすること（MeshRendererの都合で256ポリゴン以下である必要がある。端4枚+側面8枚*31＜256）
- * 
+ *
  */
 
 public class MultipleTrapezoidPole : MonoBehaviour {
-
+    float TimeCount = 150.0f;
     private int poleNum;
 
     private createTrapezoidPole createSorce;
@@ -258,6 +258,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
     }
 
     void Update() {
+      TimeCount -= Time.deltaTime;
         //RadiallyはcentralSystemのコルーチン内で初期化される
         if (variables.isCircleSystem && MyText == "") {
             askMyText();
@@ -267,6 +268,8 @@ public class MultipleTrapezoidPole : MonoBehaviour {
 
         //テキストの更新
         TmeshC.text = MyText;
+
+      if(TimeCount <= 0){
 
         if (!variables.isCircleSystem)
             inCol = fireInnerProductCollider();
@@ -279,7 +282,12 @@ public class MultipleTrapezoidPole : MonoBehaviour {
         } else if (doneEnter && !inCol) {
             doneEnter = false;
             OnTriggerExitOwnMade(null);
+
+            TimeCount = 150.0f;
+
         }
+      }
+
     }
 
     private void CalcVertices() {
@@ -301,7 +309,7 @@ public class MultipleTrapezoidPole : MonoBehaviour {
                                       radiusOut * Mathf.Sin(( ( nNum + 0 ) / nSum - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2f),
                                       0)
                                       + variables.createSourcePosition;
-        //台形の外側右の頂点座標その2 
+        //台形の外側右の頂点座標その2
         Vector3 vertex2 = new Vector3(radiusOut * Mathf.Cos(( ( nNum + 1 ) / nSum - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2f) * -1,
                                       radiusOut * Mathf.Sin(( ( nNum + 1 ) / nSum - 1f / ( 2f * poleSum ) ) * Mathf.PI * 2f),
                                       0)

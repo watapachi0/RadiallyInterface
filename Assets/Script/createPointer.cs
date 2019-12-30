@@ -34,7 +34,7 @@ public class createPointer : MonoBehaviour {
     //再計算が必要
     private bool needReCulc = false;
 
-    void Start() {
+    void Start() {/*
         fingers = new GameObject[LandR.Length, fingerName.Length, fingerJoint.Length];
         fingersRenderer = new MeshRenderer[LandR.Length, fingerName.Length, fingerJoint.Length];
         for (int LR = 0; LR < LandR.Length; LR++) {
@@ -58,14 +58,14 @@ public class createPointer : MonoBehaviour {
             hand = hand.transform.Find(LandR[LR] + "_Wrist").gameObject;
             //腕の下の手のひらを取得
             hand = hand.transform.Find(LandR[LR] + "_Palm").gameObject;
-
+*/
             /* 以下一行バージョン */
             //if (LR == 0)
             //    hand = GameObject.Find("Leap Rig").transform.Find("Hand Models").transform.Find("LoPoly Rigged Hand Left").transform.Find(LandR[LR] + "_Wrist").transform.Find(LandR[LR] + "_Palm").gameObject;
             //else
             //    hand = GameObject.Find("Leap Rig").transform.Find("Hand Models").transform.Find("LoPoly Rigged Hand Right").transform.Find(LandR[LR] + "_Wrist").transform.Find(LandR[LR] + "_Palm").gameObject;
             /* 以下一行バージョン 終 */
-
+/*
             //行列に保存
             fingers[LR, 0, 0] = hand;
 
@@ -116,14 +116,17 @@ public class createPointer : MonoBehaviour {
         GetComponent<ObjTransRota>().SetThumbAndIndex(fingers[0, 5, 4],
                                                       fingers[1, 5, 4],
                                                       fingers[0, 1, 4],
-                                                      fingers[1, 1, 4]);
+                                                    fingers[1, 1, 4]);*/
         /* 左手親指先
          * 右手親指先
          * 左手人差指先
          * 右手人差指先
          */
-        variables.fingers[0] = fingers[0, 1, 4];
-        variables.fingers[1] = fingers[1, 1, 4];
+
+         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        variables.fingers[0] = GameObject.Find("Sphere"); //ここに指定したいゲームオブジェクトを入れる
+        variables.fingers[1] = GameObject.Find("Sphere") ;//ここに指定したいゲームオブジェクトを入れる
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     void Update() {

@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class CubeKey : MonoBehaviour {
 
+
+    int TimeCount = 0;
     private centralSystem systemScript;
 
     //何回も入力が走る対策
@@ -144,7 +146,7 @@ public class CubeKey : MonoBehaviour {
         mesh_filter.mesh.RecalculateNormals();
 
         //XRじゃないなら
-        if (!variables.isOnXR) {
+        if (!variables.isOnXR&&false) {
             //暫定当たり判定用Event Trigger
             //イベントトリガーのアタッチと初期化
             EventTrigger currentTrigger = this.gameObject.AddComponent<EventTrigger>();
@@ -171,6 +173,10 @@ public class CubeKey : MonoBehaviour {
         //クリエイト元を親にする
         transform.parent = systemScript.gameObject.transform;
         transform.position = myPosition + transform.parent.position;
+
+
+            MeshCollider sc = gameObject.AddComponent(typeof(MeshCollider)) as MeshCollider;
+            sc.sharedMesh =combinedMesh;
     }
 
     void Update() {
@@ -185,16 +191,21 @@ public class CubeKey : MonoBehaviour {
         //テキストの更新
         TmeshC.text = MyText;
 
-        if (meshRenderer.enabled)
-            inCol = fireInnerProductCollider();
+//        if(TimeCount <= 0){
+          if (!doneEnter && inCol) {
+            if(TimeCount>=100){
+              doneEnter = true;
+              OnTriggerEnterOwnMade(null);
+            }else{
+              TimeCount++;
+            }
+          } else if (doneEnter && !inCol) {
+              doneEnter = false;
+              OnTriggerExitOwnMade(null);
 
-        if (!doneEnter && inCol) {
-            doneEnter = true;
-            OnTriggerEnterOwnMade(null);
-        } else if (doneEnter && !inCol) {
-            doneEnter = false;
-            OnTriggerExitOwnMade(null);
-        }
+              TimeCount = 0;
+          }
+
     }
 
     //インスペクターからの変更時に再計算
@@ -273,7 +284,7 @@ public class CubeKey : MonoBehaviour {
     public void OnTriggerExitOwnMade(GameObject other) {
         if (meshRenderer.material.color != variables.material_TrapezoidPole_Normal.color) {
             if (( other == null ) || ( other != null && other.name.Substring(2) == "index_endPointer" )) {
-                if (wasOutFromFront()) {
+                if (true) {
                     systemScript.UpdateChuringNum(int.Parse(gameObject.name) + 2000);
                     Debug.Log("i am " + ( int.Parse(gameObject.name) + 2000 ).ToString());
                     meshRenderer.material = variables.material_TrapezoidPole_Normal;
@@ -337,8 +348,33 @@ public class CubeKey : MonoBehaviour {
             normalBasicVec[j] = a;
         }
     }
+void OnMouseOver (){
+  inCol=true;
+}
 
-    //内積を用いて当たり判定を行う
+void OnMouseExit(){
+  inCol=false;
+}
+
+/*
+    //マウスを用いて「内積の当たり判定」を呼び出し入力を行う
+    void OnTrrigerEnter(Collider collider){
+      if(collider.gameObject.Comparetag("fireInnerProductCollider")){
+          StartCoroutine("Input");
+      }
+    }
+
+    void OnTrrigerExit(Collider collider){
+      if(collider.gameObject.Comparetag("fireInnerProductCollider")){
+          stopCoroutine("input");
+      }
+    }
+    IEnumerator input(){
+      yield return new WaitForSecond(1);
+      tranceform.rotation = Quanternion.Euler(new Vector3(20f, 0, 0));
+    }
+*/
+      //内積を用いて当たり判定を行う
     private bool fireInnerProductCollider() {
         bool col = false;
         for (int i = 0; i < variables.fingers.Length; i++) {
@@ -379,4 +415,3 @@ public class CubeKey : MonoBehaviour {
         return col;
     }
 }
-

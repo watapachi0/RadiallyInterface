@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
- * 
+ *
  * オブジェクトの描画と各種コンポーネントのアタッチのみ行う
  * 多角柱
- * 
- * 
+ *
+ *
  */
 
 public class PolygonalPillar : MonoBehaviour {
+  float TimeCount = 150.0f;
 
     private createTrapezoidPole createSorce;
     private centralSystem systemScript;
@@ -154,10 +155,11 @@ public class PolygonalPillar : MonoBehaviour {
     }
 
     private void Update() {
+        TimeCount -= Time.deltaTime;
 
         //テキストの更新
         TmeshC.text = MyText;
-
+      if(TimeCount <= 0){
         if (!variables.isCircleSystem)
             inCol = fireInnerProductCollider();
         else if (meshRenderer.enabled)
@@ -170,6 +172,9 @@ public class PolygonalPillar : MonoBehaviour {
             doneEnter = false;
             OnTriggerExitOwnMade(null);
         }
+
+        TimeCount = 150.0f;
+      }
     }
 
     //何個のオブジェクト中の何番目のオブジェクトか
